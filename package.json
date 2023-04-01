@@ -1,0 +1,34 @@
+{
+  "dependencies": {
+    "always-tail": "^0.2.0",
+    "basic-ftp": "^5.0.2",
+    "canvas": "^2.11.0",
+    "crypto": "^1.0.1",
+    "csprng": "^0.1.2",
+    "discord-api-types": "^0.36.1",
+    "discord.js": "^14.6.0",
+    "dotenv": "^16.0.1",
+    "geoip-lite": "^1.4.6",
+    "request": "^2.88.2",
+    "tail": "^2.2.4"
+  },
+  "name": "mafia-bot",
+  "version": "0.5.5D",
+  "description": "Bot for MAFIA PR Discord server",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --ignore logs/ bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "none"
+  ],
+  "author": "Max_",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
