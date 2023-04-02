@@ -8,6 +8,10 @@ const locals = require('../localization.json');
 
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } = require('discord.js');
 
+const BF2DEMO_URL = 'https://www.prmafia.online/br/demos/';
+const PRDEMO_URL = 'https://www.prmafia.online/br/trackers/';
+const TRACKER_VIEWER_URL = 'https://www.prmafia.online/br/realitytracker_master/index.html?demo=../trackers/';
+
 module.exports = (client) => {
     client.handleTrackersDemos = async () => {
 		var ticketsLog = 'logs/tickets.log';
@@ -209,15 +213,15 @@ module.exports = (client) => {
 				new ButtonBuilder()
 					.setLabel('Download Battle Recorder')
 					.setStyle(ButtonStyle.Link)
-					.setURL('https://www.prmafia.online/br/demos/'+demoPath+'.bf2demo'),
+					.setURL(BF2DEMO_URL+demoPath+'.bf2demo'),
 				new ButtonBuilder()
 					.setLabel('Download Tracker')
 					.setStyle(ButtonStyle.Link)
-					.setURL('https://www.prmafia.online/br/trackers/'+fileName1+'.PRdemo'),
+					.setURL(PRDEMO_URL+fileName1+'.PRdemo'),
 				new ButtonBuilder()
 					.setLabel('View Tracker')
 					.setStyle(ButtonStyle.Link)
-					.setURL('https://www.prmafia.online/br/realitytracker_master/index.html?demo=../trackers/'+fileName1+'.PRdemo')
+					.setURL(TRACKER_VIEWER_URL+fileName1+'.PRdemo')
 			);
 			const ftp = require("basic-ftp")
 			example()

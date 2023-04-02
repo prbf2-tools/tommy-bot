@@ -10,6 +10,11 @@ const locals = require('../localization.json');
 
 const { MessageActionRow, MessageButton, MessageEmbed, MessageAttachment } = require('discord.js');
 
+const BAN_PUB_CH = '995387208947204257';
+const BAN_ADMIN_CH = '995520998554218557';
+const LOG_ADMIN_CH = '995520998554218557';
+const LOG_JOIN_CH = '995521059119960144';
+
 module.exports = (client) => {
     client.handleLogs = async () => {/*
        ██        ██████     ███       ███ ███ ████     ███       ███            █████         █████       ██████  
@@ -74,8 +79,8 @@ module.exports = (client) => {
                 timestamp: new Date(),
             }
 
-            client.channels.cache.get('995387208947204257').send({ embeds: [banSendPub] }); //742795954729517077
-            client.channels.cache.get('995520998554218557').send({ embeds: [banSendAdmin] });
+            client.channels.cache.get(BAN_PUB_CH).send({ embeds: [banSendPub] }); //742795954729517077
+            client.channels.cache.get(BAN_ADMIN_CH).send({ embeds: [banSendAdmin] });
         });
  
  
@@ -630,10 +635,10 @@ module.exports = (client) => {
                                 }
                             }
                         }
-                        client.channels.cache.get('995520998554218557').send({ embeds: [adminLogPost]});
+                        client.channels.cache.get(LOG_ADMIN_CH).send({ embeds: [adminLogPost]});
                         
                     } else {
-                        client.channels.cache.get('995520998554218557').send("`"+adminLogSplit+"`");
+                        client.channels.cache.get(LOG_ADMIN_CH).send("`"+adminLogSplit+"`");
                     }
                 }
             
@@ -684,7 +689,7 @@ module.exports = (client) => {
                     +'\n**Creation Date: **'+joinLogSplit[4]
                     +'\n**Joined: **'+joinLogSplit[0].replace('[','').replace(']',''),
                 }
-                client.channels.cache.get('995521059119960144').send({ embeds: [joinLogPost] });
+                client.channels.cache.get(LOG_JOIN_CH).send({ embeds: [joinLogPost] });
             });
 
 

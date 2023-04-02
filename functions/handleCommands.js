@@ -2,8 +2,8 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fs = require("fs");
 
-const clientId = '994028593837527120';
-const guildId = '993921259219980338';
+const CLIENT_ID = '994028593837527120';
+const GUILD_ID = '993921259219980338';
 
 
 module.exports = (client) => {
@@ -27,7 +27,7 @@ module.exports = (client) => {
                 console.log('\x1b[42m','==================================== \n            BOT RESTARTED!            \n ====================================','\x1b[0m');
                 console.log('Started refreshing application (/) commands.')
                 await rest.put(
-                    Routes.applicationGuildCommands(clientId, guildId), {
+                    Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
                         body: client.commandArray
                     },
                 );
