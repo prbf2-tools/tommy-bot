@@ -29,11 +29,11 @@ const insertAdmins = () => {
       const adminRole = filterRoleless[i].role;
       const adminRoleNumber =
         adminRole === "senior"
-          ? "0"
+          ? 0
           : adminRole === "admin"
-          ? "1"
+          ? 1
           : adminRole === "trial"
-          ? "2"
+          ? 2
           : null;
       if (!adminRoleNumber) {
         console.log(`Error with ${adminHashNoSpace}!`);
