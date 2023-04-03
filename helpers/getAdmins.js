@@ -35,12 +35,5 @@ export const getAdmins = () => {
     const filteredAdmins = admins.filter((admin) => admin !== undefined);
     db.data.admins = filteredAdmins;
     db.write();
-  }, 3000);
+  }, 5 * 60 * 1000); // 5 minutes
 };
-
-//Admins Role IDs
-//993997234070896741 - Mafioso
-//995782398803464192 - Sysadmin
-//995093704366891079 - Senior Admin
-//995093551216078858 - Admin
-//1062472543275057212 - Trial Admin
