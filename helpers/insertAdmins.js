@@ -4,7 +4,7 @@ const path = require("path");
 
 const pathToRealityAdmin =
   "C:/Users/Administrator/Desktop/Mafia/mods/pr/python/game/realityconfig_admin.py";
-const pathToDb = path.join(__dirname, "db");
+const pathToDb = path.join(__dirname, "..", "db");
 
 const insertAdmins = () => {
   try {
