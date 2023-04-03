@@ -6,7 +6,7 @@ module.exports = {
     name: "adminhashid",
   },
   async execute(interaction) {
-    const hashDb = db.hashDb;
+    const hashDb = db.get("hashDb");
     const user = interaction.user;
     const hashId = interaction.fields.getTextInputValue("hashId");
     const ingameName = interaction.fields.getTextInputValue("ingameName");
@@ -20,7 +20,7 @@ module.exports = {
         ephemeral: true,
       });
     } else if (userExists) {
-      hashDb.splice(hashDb.indexOf(userExists), 1);
+      hashDb.remove({ id: user.id }).write();
       hashDb.push({
         id: user.id,
         hashId,
