@@ -35,6 +35,7 @@ const insertAdmins = () => {
           : adminRole === "trial"
           ? 2
           : null;
+      console.log(adminRoleNumber);
       if (!adminRoleNumber) {
         console.log(`Error with ${adminHashNoSpace}!`);
         continue;
