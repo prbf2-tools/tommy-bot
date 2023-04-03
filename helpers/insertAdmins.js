@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { db } = require("../db/db.js");
 const path = require("path");
+const PRISM = require("../functions/handlePRISM.js");
 
 const pathToRealityAdmin =
   "C:/Users/Administrator/Desktop/Mafia/mods/pr/python/game/realityconfig_admin.py";
@@ -47,6 +48,9 @@ const insertAdmins = () => {
       `adm_adminHashes = ${str}`
     );
     fs.writeFileSync(pathToRealityAdmin, realityconfigFileUpdated);
+    setTimeout(() => {
+      PRISM.writePrism("say", `!init`);
+    }, 2000);
     console.log("Admins inserted!");
   } catch (err) {
     console.log(`Error Inserting Admins: ${err}`);
