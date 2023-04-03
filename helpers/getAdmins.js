@@ -15,7 +15,7 @@ const getAdmins = (client) => {
     const guild = await client.guilds.fetch(process.env.GUILD_ID);
     const members = guild.members.cache;
     const ownerId = guild.ownerId;
-    const hashDb = db.data.hashDb;
+    const hashDb = db.hashDb;
     await guild.members.fetch(ownerId);
     for (const member of members) {
       const commonRoles = getCommonValues(member._roles, roles);

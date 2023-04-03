@@ -6,7 +6,7 @@ module.exports = {
     name: "adminhashid",
   },
   async execute(interaction) {
-    const hashDb = db.data.hashId;
+    const hashDb = db.hashDb;
     const user = interaction.user;
     const hashId = interaction.fields.getTextInputValue("hashId");
     const ingameName = interaction.fields.getTextInputValue("ingameName");
