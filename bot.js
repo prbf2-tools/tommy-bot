@@ -1,5 +1,4 @@
 require("dotenv").config();
-const client = require("./helpers/client/client.js");
 const fs = require("fs");
 const { Collection } = require("discord.js");
 
@@ -27,5 +26,6 @@ const commandFolders = fs.readdirSync("./commands");
   client.handlePRISM();
   client.handleInfo();
   client.handleTrackersDemos();
+  getAdmins(client);
   client.login(process.env.TOKEN);
 })();
