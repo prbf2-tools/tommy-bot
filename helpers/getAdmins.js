@@ -22,8 +22,14 @@ const getAdmins = async (client) => {
     for (const member of members) {
       const memberId = member[1].id;
       const memberRoles = member[1]._roles;
+      const hashRecord = await hashDb.find({ id: memberId }).value();
       const commonRoles = getCommonValues(memberRoles, roles);
-      if (commonRoles.length === 0) continue;
+      if (commonRoles.length === 0 && !hashRecord) {
+        continue;
+      } else if (commonRoles.length === 0 && hashRecord) {
+        hashDb.remove({ id: memberId }).write();
+        continue;
+      }
       const adminRolesString = commonRoles.map((role) => rolesObj[role]);
       const role = adminRolesString.includes("senior")
         ? "senior"
@@ -32,7 +38,6 @@ const getAdmins = async (client) => {
         : adminRolesString.includes("trial")
         ? "trial"
         : "user";
-      const hashRecord = await hashDb.find({ id: memberId }).value();
       if (hashRecord?.hashId === "6052278e0673488f9e4b5f59a66daf11") {
         console.log(hashRecord);
         console.log(hashRecord.role);
