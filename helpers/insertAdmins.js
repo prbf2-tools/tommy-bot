@@ -46,10 +46,7 @@ const insertAdmins = () => {
       objectToReplace,
       `adm_adminHashes = ${str}`
     );
-    fs.writeFileSync(
-      path.join(pathToDb, "realityconfig_admin.py"),
-      realityconfigFileUpdated
-    );
+    fs.writeFileSync(pathToRealityAdmin, realityconfigFileUpdated);
     console.log("Admins inserted!");
   } catch (err) {
     console.log(`Error Inserting Admins: ${err}`);
