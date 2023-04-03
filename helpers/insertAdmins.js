@@ -39,7 +39,7 @@ const insertAdmins = () => {
         console.log(`Error with ${adminHashNoSpace}!`);
         continue;
       }
-      str += `    "${adminHashNoSpace}":  "${adminRoleNumber}",  #${adminName}\n`;
+      str += `    "${adminHashNoSpace}":  ${adminRoleNumber},  #${adminName}\n`;
     }
     str += "}";
     const realityconfigFileUpdated = realityconfigFile.replace(
