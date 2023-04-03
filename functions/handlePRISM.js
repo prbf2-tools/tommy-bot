@@ -19,7 +19,7 @@ var theCCK = rand(160, 36);
 var fs = require('fs');
 //const { data } = require("../commands/moderation/prban");
 
-function messageHandler(messages) {
+function messageHandler(client, messages) {
     const data = messages.toString('utf-8')
     //console.log(data)      // <--------------------------------------------------------------- DEBUG HERE <---------------------------------------------------------------------
     subject = data.split('\1')[1].split('\2')[0]
@@ -41,7 +41,7 @@ function messageHandler(messages) {
     }
     // PRISM interactive chat to Discord
     else if (subject == 'chat') {
-        chat(fields)
+        chat(client, fields)
     }
 }
 
@@ -53,7 +53,7 @@ function login() {
     netClient.write(login2)
 }
 
-function chat(fields) {
+function chat(client, fields) {
     fieldsReady = fields.join('##^##').split('\n').map(v => v.split('##^##'))
 
 
@@ -152,7 +152,7 @@ function chat(fields) {
 }
 
 
-module.exports = (client) => {
+export default (client) => {
     client.handlePRISM = async () => {
         const hexString = '\1login1\2' + '1\3' + process.env.PRISM_USRNAME + '\3' + theCCK + '\4\0';
         const netConnect = () => { netClient.connect(process.env.PRISM_PORT, process.env.PRISM_IP) }
@@ -189,7 +189,7 @@ module.exports = (client) => {
                 const length = msg_buffer.indexOf("\4\0");
                 const msg = msg_buffer.substr(0, length);
                 msg_buffer = msg_buffer.substr(length + 2);
-                messageHandler(msg);
+                messageHandler(client, msg);
             }
         })
         // useful, subject can be 'say' with an args to be an in-game commands that will be executed. No way to catch the responce yet.
