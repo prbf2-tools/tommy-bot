@@ -17,7 +17,7 @@ const insertAdmins = () => {
       "utf8"
     );
     const hashDb = db.get("hashDb").value();
-    const filterRoleless = hashDb.filter((hash) => !hash.role);
+    const filterRoleless = hashDb.filter((hash) => hash.role);
     const objectToReplace = realityconfigFile.match(
       /adm_adminHashes = {[\s\S]*?}/
     );
@@ -39,7 +39,7 @@ const insertAdmins = () => {
         console.log(`Error with ${adminHashNoSpace}!`);
         continue;
       }
-      str += `    "${adminHashNoSpace}":  "${adminRole}",  #${adminName}\n`;
+      str += `    "${adminHashNoSpace}":  "${adminRoleNumber}",  #${adminName}\n`;
     }
     str += "}";
     const realityconfigFileUpdated = realityconfigFile.replace(
