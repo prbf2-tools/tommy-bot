@@ -47,6 +47,10 @@ const insertAdmins = () => {
       objectToReplace,
       `adm_adminHashes = ${str}`
     );
+    if (realityconfigFile === realityconfigFileUpdated) {
+      console.log("Admins already inserted!");
+      return;
+    }
     fs.writeFileSync(pathToRealityAdmin, realityconfigFileUpdated);
     setTimeout(() => {
       PRISM.writePrism("say", `!init`);
