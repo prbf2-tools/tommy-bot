@@ -1,5 +1,7 @@
 const { db } = require("../db/db.js");
 const { getCommonValues } = require("./getCommonValues.js");
+const { insertAdmins } = require("./insertAdmins.js");
+
 const rolesObj = {
   "993997234070896741": "senior", //Mafioso
   "995782398803464192": "senior", //Sysadmin
