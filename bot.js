@@ -6,6 +6,7 @@ const {
   Partials,
   Collection,
 } = require("discord.js");
+const { getAdmins } = require("./helpers/getAdmins.js");
 
 const client = new Client({
   intents: [
