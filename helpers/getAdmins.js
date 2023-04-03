@@ -29,7 +29,9 @@ const getAdmins = async (client) => {
         ? "senior"
         : adminRolesString.includes("admin")
         ? "admin"
-        : "trial";
+        : adminRolesString.includes("trial")
+        ? "trial"
+        : "user";
       const hashRecord = hashDb.find({ id: memberId }).value();
       if (!hashRecord || hashRecord.role === role) continue;
       hashDb.find({ id: memberId }).assign({ role }).write();
