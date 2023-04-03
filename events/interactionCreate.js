@@ -9,7 +9,7 @@ module.exports = {
             try {
 
                 if (command.permissions && command.permissions.length > 0) {
-                    if (!interaction.member.permissions.has(command.permissions)) return await interation.reply({ content: "You do not have permissions to use this command.", ephemeral: true})
+                    if (!interaction.member.permissions.has(command.permissions)) return await interation.reply({ content: "You do not have permissions to use this command.", ephemeral: true })
                 }
 
                 await command.execute(interaction);
@@ -23,7 +23,7 @@ module.exports = {
         } else if (interaction.isSelectMenu()) { //======== SELECT MENUS ===========
         } else if (interaction.isButton()) { //======== BUTTONS ===========
             const button = client.buttons.get(interaction.customId);
-            if (!button) return await interaction.reply({ content: `There was no button code found for this button. ${interaction.user.username}`})
+            if (!button) return await interaction.reply({ content: `There was no button code found for this button. ${interaction.user.username}` })
 
             try {
                 await button.execute(interaction);
@@ -36,7 +36,7 @@ module.exports = {
             }
         } else if (interaction.isModalSubmit()) { //======== MODALS ===========
             const modal = client.modals.get(interaction.customId);
-            if (!modal) return await interaction.reply({ content: "There was no modal code found for this modal."})
+            if (!modal) return await interaction.reply({ content: "There was no modal code found for this modal." })
 
             try {
                 await modal.execute(interaction);

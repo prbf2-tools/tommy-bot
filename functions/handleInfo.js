@@ -14,7 +14,7 @@ const SERVER_ID = 'e36e256110bcb081fdf8aace80b6f40db983b5ad';
 module.exports = (client) => {
     client.handleInfo = async () => {
         setInterval(function() {
-            request(RMOD_SV_INFO_URL, function (error, response, body) {
+            request(RMOD_SV_INFO_URL, function(error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var info = JSON.parse(body)
                     let mafiaInfo = info.servers.find((info2) => {
@@ -33,9 +33,9 @@ module.exports = (client) => {
                     //client.channels.cache.get('1031263100420235366').setName('Map: '+mapName)
                     //client.channels.cache.get(' TO CHANGE').setName(gameModes+', '+layers)   //used to be 1031263231240573028
 
-                    
-                    client.channels.cache.get(MAP_NAME_CH).setName('│Map: '+mapName)
-                    client.channels.cache.get(MAP_DETAILS_CH).setName('│'+gameModes+', '+layers+' | ('+numplayers+'/100)')
+
+                    client.channels.cache.get(MAP_NAME_CH).setName('│Map: ' + mapName)
+                    client.channels.cache.get(MAP_DETAILS_CH).setName('│' + gameModes + ', ' + layers + ' | (' + numplayers + '/100)')
 
 
 

@@ -25,22 +25,22 @@ module.exports = {
         await interaction.member.guild.channels.cache.get('1021942980950634597').threads.create({
             name: `🔵 ${interaction.user.username}'s Application`,
             message: {
-                content: `<@&${process.env.ADMIN_ID}>`, 
+                content: `<@&${process.env.ADMIN_ID}>`,
                 embeds: [embed]
             },
             appliedTags: ['1021973497645387816']
         })
-        .then(threadChannel => {
-            threadChannel.members.add(interaction.user.id);
-            interaction.reply({
-                content: `Success! Please check <#${threadChannel.id}>!`,
-                ephemeral: true
-            })
-            const embed = new EmbedBuilder()
-                .setColor("#0074ba")
-                .setTitle(`🔒🔵 ${interaction.user.username} Admin Application`)
-                .setThumbnail(interaction.user.avatarURL())
-                .setDescription(`
+            .then(threadChannel => {
+                threadChannel.members.add(interaction.user.id);
+                interaction.reply({
+                    content: `Success! Please check <#${threadChannel.id}>!`,
+                    ephemeral: true
+                })
+                const embed = new EmbedBuilder()
+                    .setColor("#0074ba")
+                    .setTitle(`🔒🔵 ${interaction.user.username} Admin Application`)
+                    .setThumbnail(interaction.user.avatarURL())
+                    .setDescription(`
                     **Public Thread:**
                     <#${threadChannel.id}>\n
                     **Hash ID: **
@@ -54,14 +54,14 @@ module.exports = {
                     **How active: **
                     ${interaction.fields.getTextInputValue('active')}\n
                 `)
-            interaction.member.guild.channels.cache.get('1022285742799589416').threads.create({
-                name: `🔒🔵 ${interaction.user.username}'s Application`,
-                message: {
-                    content: `<@&${process.env.ADMIN_ID}>`, 
-                    embeds: [embed]
-                },
-                appliedTags: ['1022300221981593662']
-            })
-        });
+                interaction.member.guild.channels.cache.get('1022285742799589416').threads.create({
+                    name: `🔒🔵 ${interaction.user.username}'s Application`,
+                    message: {
+                        content: `<@&${process.env.ADMIN_ID}>`,
+                        embeds: [embed]
+                    },
+                    appliedTags: ['1022300221981593662']
+                })
+            });
     }
 }

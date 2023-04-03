@@ -24,12 +24,12 @@ module.exports = (client) => {
 
         (async () => {
             try {
-                console.log('\x1b[42m','==================================== \n            BOT RESTARTED!            \n ====================================','\x1b[0m');
+                console.log('\x1b[42m', '==================================== \n            BOT RESTARTED!            \n ====================================', '\x1b[0m');
                 console.log('Started refreshing application (/) commands.')
                 await rest.put(
                     Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
-                        body: client.commandArray
-                    },
+                    body: client.commandArray
+                },
                 );
 
                 console.log('Successfully reloaded application (/) commands.');

@@ -4,12 +4,12 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("info")
         .setDescription("Returns info based on input")
-        .addSubcommand(subcommand => 
+        .addSubcommand(subcommand =>
             subcommand
                 .setName("user")
                 .setDescription("Gets information of a user memtioned")
                 .addUserOption(option => option.setName("target").setDescription("The user mentioned")))
-        .addSubcommand(subcommand => 
+        .addSubcommand(subcommand =>
             subcommand
                 .setName("server")
                 .setDescription("Info about the server")),

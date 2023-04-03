@@ -7,11 +7,11 @@ module.exports = {
         .setDescription("Unban a player from the PR server")
         .addStringOption(subcommand => subcommand
             .setName("hashid")
-			.setDescription('Hash-ID of the player')
+            .setDescription('Hash-ID of the player')
             .setRequired(true))
         .addStringOption(subcommand => subcommand
             .setName("reason")
-			.setDescription('Reason of the unban')
+            .setDescription('Reason of the unban')
             .setRequired(true)),
     async execute(interaction) {
         const hashId = interaction.options.getString('hashid')
