@@ -1,6 +1,5 @@
 const { db } = require("../db/db.js");
 const { getCommonValues } = require("./getCommonValues.js");
-
 const rolesObj = {
   "993997234070896741": "senior", //Mafioso
   "995782398803464192": "senior", //Sysadmin
@@ -9,7 +8,7 @@ const rolesObj = {
   "1062472543275057212": "trial", //Trial Admin
 };
 
-const getAdmins = async (client) => {
+const getAdmins = (client) => {
   const roles = Object.keys(rolesObj);
   setInterval(async () => {
     try {
@@ -33,10 +32,11 @@ const getAdmins = async (client) => {
         if (!hashRecord || hashRecord.role === role) continue;
         hashDb.find({ id: memberId }).assign({ role }).write();
       }
+      insertAdmins();
     } catch (e) {
       console.log("Error getting admins", e);
     }
-  }, 60000); // 1 minute(s)
+  }, 1000 * 60); // 1 minutes
 };
 
 module.exports = { getAdmins };
