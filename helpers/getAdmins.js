@@ -32,8 +32,11 @@ const getAdmins = async (client) => {
         : adminRolesString.includes("trial")
         ? "trial"
         : "user";
-      const hashRecord = hashDb.find({ id: memberId }).value();
-      if (hashRecord.hashId === "6052278e0673488f9e4b5f59a66daf11") {
+      const hashRecord = await hashDb.find({ id: memberId }).value();
+      if (
+        hashRecord &&
+        hashRecord.hashId === "6052278e0673488f9e4b5f59a66daf11"
+      ) {
         console.log(hashRecord);
         console.log(hashRecord.role);
         console.log(role);
