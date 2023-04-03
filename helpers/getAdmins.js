@@ -11,32 +11,32 @@ const rolesObj = {
 
 const getAdmins = async (client) => {
   const roles = Object.keys(rolesObj);
-  // setInterval(async () => {
-  try {
-    const guild = await client.guilds.fetch(process.env.GUILD_ID);
-    const members = await guild.members.fetch();
-    const ownerId = guild.ownerId;
-    const hashDb = db.get("hashDb");
-    await guild.members.fetch(ownerId);
-    for (const member of members) {
-      const memberId = member[1].id;
-      const memberRoles = member[1]._roles;
-      const commonRoles = getCommonValues(memberRoles, roles);
-      if (commonRoles.length === 0) continue;
-      const adminRolesString = commonRoles.map((role) => rolesObj[role]);
-      const role = adminRolesString.includes("senior")
-        ? "senior"
-        : adminRolesString.includes("admin")
-        ? "admin"
-        : "trial";
-      const hashRecord = hashDb.find({ id: memberId }).value();
-      if (!hashRecord || hashRecord.role === role) continue;
-      hashDb.find({ id: memberId }).assign({ role }).write();
+  setInterval(async () => {
+    try {
+      const guild = await client.guilds.fetch(process.env.GUILD_ID);
+      const members = await guild.members.fetch();
+      const ownerId = guild.ownerId;
+      const hashDb = db.get("hashDb");
+      await guild.members.fetch(ownerId);
+      for (const member of members) {
+        const memberId = member[1].id;
+        const memberRoles = member[1]._roles;
+        const commonRoles = getCommonValues(memberRoles, roles);
+        if (commonRoles.length === 0) continue;
+        const adminRolesString = commonRoles.map((role) => rolesObj[role]);
+        const role = adminRolesString.includes("senior")
+          ? "senior"
+          : adminRolesString.includes("admin")
+          ? "admin"
+          : "trial";
+        const hashRecord = hashDb.find({ id: memberId }).value();
+        if (!hashRecord || hashRecord.role === role) continue;
+        hashDb.find({ id: memberId }).assign({ role }).write();
+      }
+    } catch (e) {
+      console.log("Error getting admins", e);
     }
-  } catch (e) {
-    console.log("Error getting admins", e);
-  }
-  // }, 60000); // 1 minute(s)
+  }, 60000); // 1 minute(s)
 };
 
 module.exports = { getAdmins };
