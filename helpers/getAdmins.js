@@ -18,6 +18,7 @@ const getAdmins = (client) => {
     const hashDb = db.get("hashDb");
     await guild.members.fetch(ownerId);
     for (const member of members) {
+      const memberId = member.id;
       const commonRoles = getCommonValues(member._roles, roles);
       if (commonRoles.length === 0) continue;
       const adminRolesString = commonRoles.map((role) => rolesObj[role]);
@@ -26,12 +27,11 @@ const getAdmins = (client) => {
         : adminRolesString.includes("admin")
         ? "admin"
         : "trial";
-      const hashRecord = hashDb.find((record) => record.id === member.id);
+      const hashRecord = hashDb.find({ id: memberId }).value();
       if (!hashRecord || hashRecord.role === role) continue;
-      hashRecord.role = role;
+      hashDb.find({ id: memberId }).assign({ role }).write();
     }
-    db.write();
-  }, 5 * 60 * 1000); // 5 minutes
+  }, 60); // 1 minute(s)
 };
 
 module.exports = { getAdmins };

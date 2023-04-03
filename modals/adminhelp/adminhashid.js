@@ -8,12 +8,13 @@ module.exports = {
   async execute(interaction) {
     const hashDb = db.get("hashDb");
     const user = interaction.user;
+    const userId = user.id;
     const hashId = interaction.fields.getTextInputValue("hashId");
     const ingameName = interaction.fields.getTextInputValue("ingameName");
-    // const clanTag = interaction.fields.getTextInputValue("clanTag");
+    const clanTag = interaction.fields.getTextInputValue("clanTag");
     // const timeZone = interaction.fields.getTextInputValue("timeZone");
-    const hashIdExists = hashDb.find((hash) => hash.hashId === hashId);
-    const userExists = hashDb.find((hash) => hash.id === user.id);
+    const hashIdExists = hashDb.find({ hashId: hashId }).value();
+    const userExists = hashDb.find({ id: userId }).value();
     if (hashIdExists) {
       interaction.reply({
         content: `Hash-ID \`${hashId}\` already exists.`,
@@ -21,29 +22,32 @@ module.exports = {
       });
     } else if (userExists) {
       hashDb.remove({ id: user.id }).write();
-      hashDb.push({
-        id: user.id,
-        hashId,
-        ingameName,
-        clanTag,
-      });
+      hashDb
+        .push({
+          id: userId,
+          hashId,
+          ingameName,
+          clanTag,
+        })
+        .write();
       interaction.reply({
         content: `Your Hash-ID has been updated to \`${hashId}\`. It might take up to 5 minutes for the changes to take effect.`,
         ephemeral: true,
       });
     } else {
-      hashDb.push({
-        id: user.id,
-        hashId,
-        ingameName,
-        clanTag,
-      });
+      hashDb
+        .push({
+          id: userId,
+          hashId,
+          ingameName,
+          clanTag,
+        })
+        .write();
       interaction.reply({
         content: `Success! Your Hash-ID has been set to \`${hashId}\`. It might take up to 5 minutes for the changes to take effect.`,
         ephemeral: true,
       });
     }
-    return db.write();
     // const embed = new EmbedBuilder()
     //   .setColor("#008be0")
     //   .setTitle(`🔹 ${interaction.user.username} Hash-ID`)
