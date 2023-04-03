@@ -2,15 +2,16 @@ const fs = require("fs");
 const { db } = require("../db/db.js");
 const path = require("path");
 
+const pathToRealityAdmin =
+  "C:/Users/Administrator/Desktop/Mafia/mods/pr/python/game/realityconfig_admin.py";
+const pathToDb = path.join(__dirname, "db");
+
 const insertAdmins = () => {
   try {
-    const pathToRealityAdmin =
-      "C:/Users/Administrator/Desktop/Mafia/mods/pr/python/game/realityconfig_admin.py";
     fs.copyFileSync(
       pathToRealityAdmin,
       path.join(pathToDb, "realityconfig_admin.py")
     );
-    const pathToDb = path.join(__dirname, "db");
     const realityconfigFile = fs.readFileSync(
       path.join(pathToDb, "realityconfig_admin.py"),
       "utf8"
@@ -33,8 +34,8 @@ const insertAdmins = () => {
           ? "1"
           : adminRole === "trial"
           ? "2"
-          : "3";
-      if (adminRoleNumber === "3") {
+          : null;
+      if (!adminRoleNumber) {
         console.log(`Error with ${adminHashNoSpace}!`);
         continue;
       }
