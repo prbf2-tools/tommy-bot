@@ -1,4 +1,4 @@
-import { db } from "../../db/db.js";
+const { db } = require("../../db/db.js");
 // const { EmbedBuilder } = require("discord.js");
 
 module.exports = {

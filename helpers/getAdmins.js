@@ -1,6 +1,5 @@
-import { db } from "../db/db.js";
-import { client } from "./client/client.js";
-import { getCommonValues } from "./getCommonValues.js";
+const { db } = require("../db/db.js");
+const { getCommonValues } = require("./getCommonValues.js");
 
 const rolesObj = {
   "993997234070896741": "senior", //Mafioso
@@ -10,7 +9,7 @@ const rolesObj = {
   "1062472543275057212": "trial", //Trial Admin
 };
 
-export const getAdmins = () => {
+const getAdmins = (client) => {
   const roles = Object.keys(rolesObj);
   setInterval(async () => {
     const guild = await client.guilds.fetch(process.env.GUILD_ID);
@@ -34,3 +33,5 @@ export const getAdmins = () => {
     db.write();
   }, 5 * 60 * 1000); // 5 minutes
 };
+
+module.exports = { getAdmins };

@@ -1,5 +1,5 @@
-import { client } from "./client/client.js";
 require("dotenv").config();
+const client = require("./helpers/client/client.js");
 const fs = require("fs");
 const { Collection } = require("discord.js");
 

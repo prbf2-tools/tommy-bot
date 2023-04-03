@@ -1,7 +1,7 @@
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { Low } from "lowdb";
-import { JSONFile } from "lowdb/node";
+const { join, dirname } = require("node:path");
+const { fileURLToPath } = require("node:url");
+const { Low } = require("lowdb");
+const { JSONFile } = require("lowdb/node");
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const file = join(__dirname, "db.json");
@@ -12,4 +12,4 @@ await db.read();
 db.data ||= { admins: [], hashDb: [] };
 await db.write();
 
-export { db };
+module.exports = { db };
