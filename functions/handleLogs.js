@@ -1,8 +1,8 @@
-import fs from 'fs';
-import Tail from 'always-tail';
-import { handleBan } from './logs/ban';
-import { handleAdminCommand } from './logs/admin';
-import { handleJoin } from './logs/join';
+import fs from "fs";
+import Tail from "always-tail";
+import { handleBan } from "./logs/ban";
+import { handleAdminCommand } from "./logs/admin";
+import { handleJoin } from "./logs/join";
 
 export default (client) => {
     client.handleLogs = async () => {/*
@@ -14,9 +14,9 @@ export default (client) => {
   ███       ███  ███   ███  ███       ███ ███ ███    ██ ██       ███          ███     ███   ███    ██   ███    ███
  ███         ███ ██████     ███       ███ ███ ███      ███       ██████████     █████        ██████       ██████  
     */
-        var filenameBans = 'logs/banlist_info.log';
+        var filenameBans = "logs/banlist_info.log";
         if (!fs.existsSync(filenameBans)) fs.writeFileSync(filenameBans, "");
-        tailBans = new Tail(filenameBans, '\n');
+        let tailBans = new Tail(filenameBans, "\n");
 
         tailBans.on("line", function(dataBans) {
             handleBan(dataBans, client);
@@ -25,9 +25,9 @@ export default (client) => {
 
 
 
-        var filenameAdmin = 'logs/ra_adminlog.txt';
+        var filenameAdmin = "logs/ra_adminlog.txt";
         if (!fs.existsSync(filenameAdmin)) fs.writeFileSync(filenameAdmin, "");
-        tailAdmins = new Tail(filenameAdmin, '\n');
+        let tailAdmins = new Tail(filenameAdmin, "\n");
 
         tailAdmins.on("line", function(dataAdmin) {
             handleAdminCommand(dataAdmin, client);
@@ -40,19 +40,19 @@ export default (client) => {
      ██   ███    ███    ███   ███ ███    ██ ██       ███          ███    ███    ███    ██   ███    ███
       █████        ██████     ███ ███      ███       ██████████     █████        ██████       ██████  */
 
-        var filenameJoin = 'logs/joinlog.log';
+        var filenameJoin = "logs/joinlog.log";
         if (!fs.existsSync(filenameJoin)) fs.writeFileSync(filenameJoin, "");
-        tailJoin = new Tail(filenameJoin, '\n');
+        let tailJoin = new Tail(filenameJoin, "\n");
 
         tailJoin.on("line", function(dataJoin) {
-            handleJoin(dataJoin, client)
+            handleJoin(dataJoin, client);
         });
 
         tailAdmins.on("error", function(error) {
-            console.log('ERROR: ', error);
+            console.log("ERROR: ", error);
         });
         tailJoin.on("error", function(error) {
-            console.log('ERROR: ', error);
+            console.log("ERROR: ", error);
         });
 
         tailAdmins.watch();

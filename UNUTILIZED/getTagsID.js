@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,10 +12,10 @@ module.exports = {
         ),
     async execute(interaction) {
         const forumID = interaction.options.getString("ForumID");
-        console.log(interaction.member.guild.channels.cache.get(forumID).availableTags)
+        console.log(interaction.member.guild.channels.cache.get(forumID).availableTags);
         interaction.reply({
             content: `\`\`\`json ${interaction.member.guild.channels.cache.get(forumID).availableTags}\`\`\``,
             ephemeral: true
         });
     },
-}
+};

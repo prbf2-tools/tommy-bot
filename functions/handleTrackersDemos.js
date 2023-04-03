@@ -1,9 +1,11 @@
-require("dotenv").config();
-import chokidar from 'chokidar';
-import pather from 'path';
-import fs from 'fs';
-import Tail from 'always-tail';
-import locals from '../localization.json';
+import * as dotenv from "dotenv";
+dotenv.config();
+
+import chokidar from "chokidar";
+import pather from "path";
+import fs from "fs";
+import Tail from "always-tail";
+import locals from "../localization.json";
 
 import {
     EmbedBuilder,
@@ -11,70 +13,70 @@ import {
     ButtonBuilder,
     ButtonStyle,
     AttachmentBuilder,
-} from 'discord.js';
+} from "discord.js";
 
-const BF2DEMO_URL = 'https://www.prmafia.online/br/demos/';
-const PRDEMO_URL = 'https://www.prmafia.online/br/trackers/';
-const TRACKER_VIEWER_URL = 'https://www.prmafia.online/br/realitytracker_master/index.html?demo=../trackers/';
+const BF2DEMO_URL = "https://www.prmafia.online/br/demos/";
+const PRDEMO_URL = "https://www.prmafia.online/br/trackers/";
+const TRACKER_VIEWER_URL = "https://www.prmafia.online/br/realitytracker_master/index.html?demo=../trackers/";
 
 export default (client) => {
     client.handleTrackersDemos = async () => {
-        var ticketsLog = 'logs/tickets.log';
+        var ticketsLog = "logs/tickets.log";
         if (!fs.existsSync(ticketsLog)) fs.writeFileSync(ticketsLog, "");
-        var tailTickets = new Tail(ticketsLog, '\n');
+        var tailTickets = new Tail(ticketsLog, "\n");
 
-        Team1Tickets = "E"
-        Team2Tickets = "E"
+        Team1Tickets = "E";
+        Team2Tickets = "E";
 
         tailTickets.on("line", function(dataTickets) {
-            var dataTicketsSplit = dataTickets.split(' ')
-            Team1Tickets = dataTicketsSplit[7].replace(',', '')
-            Team2Tickets = dataTicketsSplit[4].replace(',', '')
-            console.log(Team2Tickets + " - " + Team1Tickets)
-        })
+            var dataTicketsSplit = dataTickets.split(" ");
+            Team1Tickets = dataTicketsSplit[7].replace(",", "");
+            Team2Tickets = dataTicketsSplit[4].replace(",", "");
+            console.log(Team2Tickets + " - " + Team1Tickets);
+        });
 
-        var ggWinnerLog = 'logs/gungame_winner.txt';
+        var ggWinnerLog = "logs/gungame_winner.txt";
         if (!fs.existsSync(ggWinnerLog)) fs.writeFileSync(ggWinnerLog, "");
-        var tailggWinner = new Tail(ggWinnerLog, '\n');
-        GGWinner = 'None'
+        var tailggWinner = new Tail(ggWinnerLog, "\n");
+        GGWinner = "None";
         tailggWinner.on("line", function(dataggWinner) {
-            console.log(dataggWinner)
-            GGWinner = dataggWinner
-        })
+            console.log(dataggWinner);
+            GGWinner = dataggWinner;
+        });
 
 
 
 
         //chatlogPath watcherChat
-        var watcherChat = chokidar.watch('logs/chatlogs', {
+        var watcherChat = chokidar.watch("logs/chatlogs", {
             ignored: [
-                ']/^\./',
-                'demos/index.php'
+                "]/^\./",
+                "demos/index.php"
             ],
             persistent: true
         });
-        var chatlogPath = 'none'
-        watcherChat.on('add', path2 => {
-            chatlogPath = pather.basename(path2, '.txt');
+        var chatlogPath = "none";
+        watcherChat.on("add", path2 => {
+            chatlogPath = pather.basename(path2, ".txt");
             console.log(`File ${chatlogPath}.txt has been cached`);
-        })
+        });
 
         //demoPath watcherDemo
-        var watcherDemo = chokidar.watch('logs/demos', {
+        var watcherDemo = chokidar.watch("logs/demos", {
             ignored: [
-                ']/^\./',
-                'demos/index.php'
+                "]/^\./",
+                "demos/index.php"
             ],
             persistent: true
         });
-        var demoPath = 'none'
-        watcherDemo.on('add', path3 => {
-            demoPath = pather.basename(path3, '.bf2demo');
+        var demoPath = "none";
+        watcherDemo.on("add", path3 => {
+            demoPath = pather.basename(path3, ".bf2demo");
             console.log(`File ${demoPath}.bf2demo has been cached`);
-        })
+        });
 
-        var watcher = chokidar.watch('logs/json', {
-            ignored: '/^\./',
+        var watcher = chokidar.watch("logs/json", {
+            ignored: "/^\./",
             persistent: true
         });
 
@@ -84,31 +86,31 @@ export default (client) => {
             });
         }
 
-        watcher.on('add', async path => {
+        watcher.on("add", async path => {
             console.log(`File ${path} has been added`);
             await sleep(10000);
-            const prjson = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const prjson = JSON.parse(fs.readFileSync(path, "utf8"));
 
 
-            var fileName1 = pather.basename(path, '.json');
+            var fileName1 = pather.basename(path, ".json");
 
             /*fs.rename('logs/demos'+demoPath+'.bf2demo', 'logs/demos'+fileName1+'.bf2demo', () => {
                 console.log("\nFile Renamed!\n");
             });*/
 
-            prjson.demoFile = demoPath
-            prjson.ggwinner = GGWinner
-            prjson.truet1t = Team1Tickets
-            prjson.truet2t = Team2Tickets
+            prjson.demoFile = demoPath;
+            prjson.ggwinner = GGWinner;
+            prjson.truet1t = Team1Tickets;
+            prjson.truet2t = Team2Tickets;
 
-            fs.writeFile('logs/json_formated/' + fileName1 + '.json', JSON.stringify(prjson, null, 4), err => {
-                if (err) throw err
+            fs.writeFile("logs/json_formated/" + fileName1 + ".json", JSON.stringify(prjson, null, 4), err => {
+                if (err) throw err;
                 console.log("New data added");
-            })
+            });
 
-            await createRoundImage(prjson, fileName1)
+            await createRoundImage(prjson, fileName1);
 
-            console.log('\x1b[36m', 'WAITING?', '\x1b[0m')
+            console.log("\x1b[36m", "WAITING?", "\x1b[0m");
             await sleep(5000);
 
             // var trackerFile = 'tracker/' + fileName1 + '.PRdemo';
@@ -116,48 +118,48 @@ export default (client) => {
             var roundEmbed = new EmbedBuilder()
                 .setColor(locals.gameModes[prjson.MapMode].color)
                 .setTitle(locals.mapNames[prjson.MapName].name)
-                .setDescription('**_' + locals.gameModes[prjson.MapMode].name + ', ' + locals.layers[prjson.MapLayer].name + '_**\n\nStarted: <t:' + prjson.StartTime + ':R> | <t:' + prjson.StartTime + ':F>\nEnded: <t:' + prjson.EndTime + ':R> | <t:' + prjson.EndTime + ':F>')
-                .setImage('attachment://' + fileName1 + '.png')
-                .setTimestamp(prjson.EndTime * 1000)
-            const file = new AttachmentBuilder('logs/images/' + fileName1 + '.png');
+                .setDescription("**_" + locals.gameModes[prjson.MapMode].name + ", " + locals.layers[prjson.MapLayer].name + "_**\n\nStarted: <t:" + prjson.StartTime + ":R> | <t:" + prjson.StartTime + ":F>\nEnded: <t:" + prjson.EndTime + ":R> | <t:" + prjson.EndTime + ":F>")
+                .setImage("attachment://" + fileName1 + ".png")
+                .setTimestamp(prjson.EndTime * 1000);
+            const file = new AttachmentBuilder("logs/images/" + fileName1 + ".png");
             //const filecl = new AttachmentBuilder('logs/chatlogs/'+chatlogPath+'.txt');
             var row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setLabel('Download Battle Recorder')
+                        .setLabel("Download Battle Recorder")
                         .setStyle(ButtonStyle.Link)
-                        .setURL(BF2DEMO_URL + demoPath + '.bf2demo'),
+                        .setURL(BF2DEMO_URL + demoPath + ".bf2demo"),
                     new ButtonBuilder()
-                        .setLabel('Download Tracker')
+                        .setLabel("Download Tracker")
                         .setStyle(ButtonStyle.Link)
-                        .setURL(PRDEMO_URL + fileName1 + '.PRdemo'),
+                        .setURL(PRDEMO_URL + fileName1 + ".PRdemo"),
                     new ButtonBuilder()
-                        .setLabel('View Tracker')
+                        .setLabel("View Tracker")
                         .setStyle(ButtonStyle.Link)
-                        .setURL(TRACKER_VIEWER_URL + fileName1 + '.PRdemo')
+                        .setURL(TRACKER_VIEWER_URL + fileName1 + ".PRdemo")
                 );
-            const ftp = require("basic-ftp")
-            example()
+            const ftp = require("basic-ftp");
+            example();
             async function example() {
-                const clientFTP = new ftp.Client()
-                clientFTP.ftp.verbose = true
+                const clientFTP = new ftp.Client();
+                clientFTP.ftp.verbose = true;
                 try {
                     await clientFTP.access({
                         host: process.env.FTP_HOST,
                         user: process.env.FTP_USER,
                         password: process.env.FTP_PASS
-                    })
-                    await clientFTP.uploadFrom('logs/json_formated/' + fileName1 + '.json', 'br/json_formated/' + fileName1 + '.json')
-                    await clientFTP.uploadFrom('logs/trackers/' + fileName1 + '.PRdemo', 'br/trackers/' + fileName1 + '.PRdemo')
-                    await clientFTP.uploadFrom('logs/demos/' + demoPath + '.bf2demo', 'br/demos/' + demoPath + '.bf2demo')
-                    clientFTP.close()
+                    });
+                    await clientFTP.uploadFrom("logs/json_formated/" + fileName1 + ".json", "br/json_formated/" + fileName1 + ".json");
+                    await clientFTP.uploadFrom("logs/trackers/" + fileName1 + ".PRdemo", "br/trackers/" + fileName1 + ".PRdemo");
+                    await clientFTP.uploadFrom("logs/demos/" + demoPath + ".bf2demo", "br/demos/" + demoPath + ".bf2demo");
+                    clientFTP.close();
                 }
                 catch (err) {
-                    console.log(err)
+                    console.log(err);
                 }
-                clientFTP.close()
-                console.log('\x1b[33m', 'Ready for next round!', '\x1b[0m')
-                await client.channels.cache.get('995387003409539073').send({ embeds: [roundEmbed], components: [row], files: [file] })
+                clientFTP.close();
+                console.log("\x1b[33m", "Ready for next round!", "\x1b[0m");
+                await client.channels.cache.get("995387003409539073").send({ embeds: [roundEmbed], components: [row], files: [file] });
 
                 /*await client.channels.cache.get('1033130739505565716').threads.create({
                     name: `__**${locals.mapNames[prjson.MapName].name}**__ -  ${locals.gameModes[prjson.MapMode].name}, ${locals.layers[prjson.MapLayer].name}`,
@@ -169,7 +171,7 @@ export default (client) => {
                     },
                     appliedTags: [locals.gameModes[prjson.MapMode].tagPriv, locals.layers[prjson.MapLayer].tagPriv]
                 })*/
-                fs.unlinkSync(path)
+                fs.unlinkSync(path);
                 /*var oldPathJson = 'logs/json/'+fileName1+'.json'
                 var newPathJson = 'logs/json_formated/'+fileName1+'.json'
 
@@ -179,100 +181,100 @@ export default (client) => {
                 })*/
                 //await client.channels.cache.get('995387003409539073').send({ embeds: [roundEmbed],components: [row], files: [file] })
             }
-        })
-    }
+        });
+    };
 };
 
 async function createRoundImage(prjson, fileName1) {
-    const { createCanvas, loadImage } = require('canvas')
+    const { createCanvas, loadImage } = require("canvas");
 
-    const width = 400
-    const height = 120
+    const width = 400;
+    const height = 120;
 
-    var canvas = createCanvas(width, height)
-    var context = canvas.getContext('2d')
-    console.log(prjson.MapName)
+    var canvas = createCanvas(width, height);
+    var context = canvas.getContext("2d");
+    console.log(prjson.MapName);
     await loadImage(locals.mapNames[prjson.MapName].imageUrl).then(async image => {
-        context.drawImage(image, 0, 0, width, height)
+        context.drawImage(image, 0, 0, width, height);
 
-        loadImage('logs/images/Flags/template.png').then(async image2 => {
-            context.drawImage(image2, 0, 0, width, height)
+        loadImage("logs/images/Flags/template.png").then(async image2 => {
+            context.drawImage(image2, 0, 0, width, height);
 
-            context.textAlign = 'center'
-            context.font = 'bold 18pt Sans'
-            context.fillStyle = '#fff'
-            context.textBaseline = 'top'
-            context.fillText(locals.mapNames[prjson.MapName].name, 200, 15)
+            context.textAlign = "center";
+            context.font = "bold 18pt Sans";
+            context.fillStyle = "#fff";
+            context.textBaseline = "top";
+            context.fillText(locals.mapNames[prjson.MapName].name, 200, 15);
 
-            context.textAlign = 'center'
-            context.font = 'bold italic 12pt Sans'
-            context.fillStyle = '#fff'
-            context.textBaseline = 'top'
-            context.fillText(locals.gameModes[prjson.MapMode].name + ', ' + locals.layers[prjson.MapLayer].name, 200, 44)
+            context.textAlign = "center";
+            context.font = "bold italic 12pt Sans";
+            context.fillStyle = "#fff";
+            context.textBaseline = "top";
+            context.fillText(locals.gameModes[prjson.MapMode].name + ", " + locals.layers[prjson.MapLayer].name, 200, 44);
 
-            if (prjson.MapMode == 'gpm_gungame') {
+            if (prjson.MapMode == "gpm_gungame") {
 
                 fs.readFile("logs/gungame_winner.txt", "utf8", (err, data) => {
-                    console.log('\x1b[36m', data, '\x1b[0m');
-                    GGWinner = data
+                    console.log("\x1b[36m", data, "\x1b[0m");
+                    GGWinner = data;
                 });
-                console.log('Trying to read winner')
+                console.log("Trying to read winner");
                 await sleep(3000);
 
-                context.textAlign = 'center'
-                context.font = 'bold 10pt Sans'
-                context.fillStyle = '#fff'
-                context.textBaseline = 'top'
-                context.fillText('Winner:', 200, 61)
+                context.textAlign = "center";
+                context.font = "bold 10pt Sans";
+                context.fillStyle = "#fff";
+                context.textBaseline = "top";
+                context.fillText("Winner:", 200, 61);
 
-                context.textAlign = 'center'
-                context.font = 'bold 16pt Sans'
-                context.fillStyle = '#fff'
-                context.textBaseline = 'top'
-                context.fillText(GGWinner, 200, 75)
+                context.textAlign = "center";
+                context.font = "bold 16pt Sans";
+                context.fillStyle = "#fff";
+                context.textBaseline = "top";
+                context.fillText(GGWinner, 200, 75);
 
-                var buffer = canvas.toBuffer('image/png')
-                fs.writeFileSync('logs/images/' + fileName1 + '.png', buffer)
-                console.log('\x1b[36m', 'IMAGE DONE GG', '\x1b[0m')
+                var buffer = canvas.toBuffer("image/png");
+                fs.writeFileSync("logs/images/" + fileName1 + ".png", buffer);
+                console.log("\x1b[36m", "IMAGE DONE GG", "\x1b[0m");
 
             } else {
 
-                context.textAlign = 'center'
-                context.font = 'bold 25pt Sans'
-                context.fillStyle = '#fff'
-                context.textBaseline = 'top'
-                context.fillText(prjson.truet1t, 161, 62)
+                context.textAlign = "center";
+                context.font = "bold 25pt Sans";
+                context.fillStyle = "#fff";
+                context.textBaseline = "top";
+                context.fillText(prjson.truet1t, 161, 62);
 
-                context.textAlign = 'center'
-                context.font = 'bold 25pt Sans'
-                context.fillStyle = '#fff'
-                context.textBaseline = 'top'
-                context.fillText(prjson.truet2t, 239, 62)
+                context.textAlign = "center";
+                context.font = "bold 25pt Sans";
+                context.fillStyle = "#fff";
+                context.textBaseline = "top";
+                context.fillText(prjson.truet2t, 239, 62);
 
-                loadImage('logs/images/Flags/' + prjson.Team1Name + '.png').then(imageTeam1 => {
-                    context.drawImage(imageTeam1, 280, 70, 50, 28)
+                loadImage("logs/images/Flags/" + prjson.Team1Name + ".png").then(imageTeam1 => {
+                    context.drawImage(imageTeam1, 280, 70, 50, 28);
 
-                    loadImage('logs/images/Flags/' + prjson.Team2Name + '.png').then(imageTeam2 => {
-                        context.drawImage(imageTeam2, 71, 70, 50, 28)
+                    loadImage("logs/images/Flags/" + prjson.Team2Name + ".png").then(imageTeam2 => {
+                        context.drawImage(imageTeam2, 71, 70, 50, 28);
 
-                        if (prjson.MapMode == 'gpm_insurgency') {
+                        if (prjson.MapMode == "gpm_insurgency") {
 
-                            loadImage('logs/images/Flags/Cache.png').then(imageCache => {
-                                context.drawImage(imageCache, 249, 68, 32, 32)
+                            loadImage("logs/images/Flags/Cache.png").then(imageCache => {
+                                context.drawImage(imageCache, 249, 68, 32, 32);
 
-                                var buffer = canvas.toBuffer('image/png')
-                                fs.writeFileSync('logs/images/' + fileName1 + '.png', buffer)
-                                console.log('\x1b[36m', 'IMAGE DONE CACHE', '\x1b[0m')
-                            })
+                                var buffer = canvas.toBuffer("image/png");
+                                fs.writeFileSync("logs/images/" + fileName1 + ".png", buffer);
+                                console.log("\x1b[36m", "IMAGE DONE CACHE", "\x1b[0m");
+                            });
                         } else {
 
-                            var buffer = canvas.toBuffer('image/png')
-                            fs.writeFileSync('logs/images/' + fileName1 + '.png', buffer)
-                            console.log('\x1b[36m', 'IMAGE DONE STD', '\x1b[0m')
+                            var buffer = canvas.toBuffer("image/png");
+                            fs.writeFileSync("logs/images/" + fileName1 + ".png", buffer);
+                            console.log("\x1b[36m", "IMAGE DONE STD", "\x1b[0m");
                         }
-                    })
-                })
+                    });
+                });
             }
-        })
-    })
+        });
+    });
 }

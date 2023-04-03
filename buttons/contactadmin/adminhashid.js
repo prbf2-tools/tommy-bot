@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
+import { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 
 export default {
     data: {
@@ -6,8 +6,8 @@ export default {
     },
     async execute(interaction) {
         const modal = new ModalBuilder()
-            .setCustomId('adminhashid')
-            .setTitle('🔷 Admin Hash-ID form');
+            .setCustomId("adminhashid")
+            .setTitle("🔷 Admin Hash-ID form");
 
         const hashId = new TextInputBuilder()
             .setCustomId("hashId")

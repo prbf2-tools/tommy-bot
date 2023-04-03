@@ -1,6 +1,6 @@
 require("dotenv").config();
-import fs from 'fs';
-import { Client, GatewayIntentBits, Collection } from 'discord.js';
+import fs from "fs";
+import { Client, GatewayIntentBits, Collection } from "discord.js";
 
 const client = new Client({
     intents: [
@@ -23,8 +23,8 @@ const commandFolders = fs.readdirSync("./commands");
     for (file of functions) {
         require(`./functions/${file}`)(client);
     }
-    client.handleEvents(eventFiles, "./events")
-    client.handleCommands(commandFolders, "./commands")
+    client.handleEvents(eventFiles, "./events");
+    client.handleCommands(commandFolders, "./commands");
     client.handleButtons();
     client.handleModals();
     client.handleLogs();

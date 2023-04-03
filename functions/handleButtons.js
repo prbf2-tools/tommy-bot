@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from "fs";
 
 export default (client) => {
     client.handleButtons = async () => {
@@ -10,5 +10,5 @@ export default (client) => {
                 client.buttons.set(button.data.name, button);
             }
         }
-    }
+    };
 };

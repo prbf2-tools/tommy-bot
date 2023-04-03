@@ -1,19 +1,19 @@
-require("dotenv").config();
+import * as dotenv from 'dotenv'
+dotenv.config()
 
-//Discord
+import crypto from 'crypto'
+import net from 'net';
 
 // networking
-var net = require('net');
 let netClient = new net.Socket();
 
 // hash sums
-var crypto = require('crypto')
 var passwordhash = crypto.createHash('sha1')
 var saltedpass = crypto.createHash('sha1')
 var challengedigest = crypto.createHash('sha1')
 
 //Generate a client Challenge key.
-var rand = require('csprng');
+import rand from 'csprng';
 var theCCK = rand(160, 36);
 
 var fs = require('fs');

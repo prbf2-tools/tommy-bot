@@ -28,6 +28,7 @@
   "author": "Max_",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^8.37.0",
     "nodemon": "^2.0.19"
   }
 }

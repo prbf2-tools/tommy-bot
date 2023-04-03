@@ -8,5 +8,5 @@ export default (client) => {
                 client.on(event.name, (...args) => event.execute(...args, client));
             }
         }
-    }
+    };
 };
