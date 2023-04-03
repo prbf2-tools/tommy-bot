@@ -16,24 +16,21 @@ export const getAdmins = () => {
     const guild = await client.guilds.fetch(process.env.GUILD_ID);
     const members = guild.members.cache;
     const ownerId = guild.ownerId;
+    const hashDb = db.data.hashDb;
     await guild.members.fetch(ownerId);
-    const admins = members.map((member) => {
+    for (const member of members) {
       const commonRoles = getCommonValues(member._roles, roles);
-      if (commonRoles.length === 0) return;
+      if (commonRoles.length === 0) continue;
       const adminRolesString = commonRoles.map((role) => rolesObj[role]);
       const role = adminRolesString.includes("senior")
         ? "senior"
         : adminRolesString.includes("admin")
         ? "admin"
         : "trial";
-      return {
-        id: member.id,
-        name: member.user.username,
-        role: role,
-      };
-    });
-    const filteredAdmins = admins.filter((admin) => admin !== undefined);
-    db.data.admins = filteredAdmins;
+      const hashRecord = hashDb.find((record) => record.id === member.id);
+      if (!hashRecord || hashRecord.role === role) continue;
+      hashRecord.role = role;
+    }
     db.write();
   }, 5 * 60 * 1000); // 5 minutes
 };
