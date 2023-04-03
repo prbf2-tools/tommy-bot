@@ -79,9 +79,6 @@ module.exports = (client) => {
             });
         }
 
-        const { prependListener } = require('process')
-        const { POINT_CONVERSION_COMPRESSED } = require('constants')
-        const { createCanvas, loadImage } = require('canvas')
         watcher.on('add', async path => {
             console.log(`File ${path} has been added`);
             await sleep(10000);
@@ -104,102 +101,13 @@ module.exports = (client) => {
                 console.log("New data added");
             })
 
-
-            const width = 400
-            const height = 120
-
-            var canvas = createCanvas(width, height)
-            var context = canvas.getContext('2d')
-            console.log(prjson.MapName)
-            await loadImage(locals.mapNames[prjson.MapName].imageUrl).then(async image => {
-                context.drawImage(image, 0, 0, width, height)
-
-                loadImage('logs/images/Flags/template.png').then(async image2 => {
-                    context.drawImage(image2, 0, 0, width, height)
-
-                    context.textAlign = 'center'
-                    context.font = 'bold 18pt Sans'
-                    context.fillStyle = '#fff'
-                    context.textBaseline = 'top'
-                    context.fillText(locals.mapNames[prjson.MapName].name, 200, 15)
-
-                    context.textAlign = 'center'
-                    context.font = 'bold italic 12pt Sans'
-                    context.fillStyle = '#fff'
-                    context.textBaseline = 'top'
-                    context.fillText(locals.gameModes[prjson.MapMode].name + ', ' + locals.layers[prjson.MapLayer].name, 200, 44)
-
-                    if (prjson.MapMode == 'gpm_gungame') {
-
-                        fs.readFile("logs/gungame_winner.txt", "utf8", (err, data) => {
-                            console.log('\x1b[36m', data, '\x1b[0m');
-                            GGWinner = data
-                        });
-                        console.log('Trying to read winner')
-                        await sleep(3000);
-
-                        context.textAlign = 'center'
-                        context.font = 'bold 10pt Sans'
-                        context.fillStyle = '#fff'
-                        context.textBaseline = 'top'
-                        context.fillText('Winner:', 200, 61)
-
-                        context.textAlign = 'center'
-                        context.font = 'bold 16pt Sans'
-                        context.fillStyle = '#fff'
-                        context.textBaseline = 'top'
-                        context.fillText(GGWinner, 200, 75)
-
-                        var buffer = canvas.toBuffer('image/png')
-                        fs.writeFileSync('logs/images/' + fileName1 + '.png', buffer)
-                        console.log('\x1b[36m', 'IMAGE DONE GG', '\x1b[0m')
-
-                    } else {
-
-                        context.textAlign = 'center'
-                        context.font = 'bold 25pt Sans'
-                        context.fillStyle = '#fff'
-                        context.textBaseline = 'top'
-                        context.fillText(Team1Tickets, 161, 62)
-
-                        context.textAlign = 'center'
-                        context.font = 'bold 25pt Sans'
-                        context.fillStyle = '#fff'
-                        context.textBaseline = 'top'
-                        context.fillText(Team2Tickets, 239, 62)
-
-                        loadImage('logs/images/Flags/' + prjson.Team1Name + '.png').then(imageTeam1 => {
-                            context.drawImage(imageTeam1, 280, 70, 50, 28)
-
-                            loadImage('logs/images/Flags/' + prjson.Team2Name + '.png').then(imageTeam2 => {
-                                context.drawImage(imageTeam2, 71, 70, 50, 28)
-
-                                if (prjson.MapMode == 'gpm_insurgency') {
-
-                                    loadImage('logs/images/Flags/Cache.png').then(imageCache => {
-                                        context.drawImage(imageCache, 249, 68, 32, 32)
-
-                                        var buffer = canvas.toBuffer('image/png')
-                                        fs.writeFileSync('logs/images/' + fileName1 + '.png', buffer)
-                                        console.log('\x1b[36m', 'IMAGE DONE CACHE', '\x1b[0m')
-                                    })
-                                } else {
-
-                                    var buffer = canvas.toBuffer('image/png')
-                                    fs.writeFileSync('logs/images/' + fileName1 + '.png', buffer)
-                                    console.log('\x1b[36m', 'IMAGE DONE STD', '\x1b[0m')
-                                }
-                            })
-                        })
-                    }
-                })
-            })
+            await createRoundImage(prjson, fileName1)
 
             console.log('\x1b[36m', 'WAITING?', '\x1b[0m')
             await sleep(5000);
 
-            var trackerFile = 'tracker/' + fileName1 + '.PRdemo';
-            var trackerPath = 'https://yossizap.github.io/realitytracker/index.html?demo=https://fcv-pr.com/' + trackerFile;
+            // var trackerFile = 'tracker/' + fileName1 + '.PRdemo';
+            // var trackerPath = 'https://yossizap.github.io/realitytracker/index.html?demo=https://fcv-pr.com/' + trackerFile;
             var roundEmbed = new EmbedBuilder()
                 .setColor(locals.gameModes[prjson.MapMode].color)
                 .setTitle(locals.mapNames[prjson.MapName].name)
@@ -268,4 +176,98 @@ module.exports = (client) => {
             }
         })
     }
+}
+
+async function createRoundImage(prjson, fileName1) {
+    const { createCanvas, loadImage } = require('canvas')
+
+    const width = 400
+    const height = 120
+
+    var canvas = createCanvas(width, height)
+    var context = canvas.getContext('2d')
+    console.log(prjson.MapName)
+    await loadImage(locals.mapNames[prjson.MapName].imageUrl).then(async image => {
+        context.drawImage(image, 0, 0, width, height)
+
+        loadImage('logs/images/Flags/template.png').then(async image2 => {
+            context.drawImage(image2, 0, 0, width, height)
+
+            context.textAlign = 'center'
+            context.font = 'bold 18pt Sans'
+            context.fillStyle = '#fff'
+            context.textBaseline = 'top'
+            context.fillText(locals.mapNames[prjson.MapName].name, 200, 15)
+
+            context.textAlign = 'center'
+            context.font = 'bold italic 12pt Sans'
+            context.fillStyle = '#fff'
+            context.textBaseline = 'top'
+            context.fillText(locals.gameModes[prjson.MapMode].name + ', ' + locals.layers[prjson.MapLayer].name, 200, 44)
+
+            if (prjson.MapMode == 'gpm_gungame') {
+
+                fs.readFile("logs/gungame_winner.txt", "utf8", (err, data) => {
+                    console.log('\x1b[36m', data, '\x1b[0m');
+                    GGWinner = data
+                });
+                console.log('Trying to read winner')
+                await sleep(3000);
+
+                context.textAlign = 'center'
+                context.font = 'bold 10pt Sans'
+                context.fillStyle = '#fff'
+                context.textBaseline = 'top'
+                context.fillText('Winner:', 200, 61)
+
+                context.textAlign = 'center'
+                context.font = 'bold 16pt Sans'
+                context.fillStyle = '#fff'
+                context.textBaseline = 'top'
+                context.fillText(GGWinner, 200, 75)
+
+                var buffer = canvas.toBuffer('image/png')
+                fs.writeFileSync('logs/images/' + fileName1 + '.png', buffer)
+                console.log('\x1b[36m', 'IMAGE DONE GG', '\x1b[0m')
+
+            } else {
+
+                context.textAlign = 'center'
+                context.font = 'bold 25pt Sans'
+                context.fillStyle = '#fff'
+                context.textBaseline = 'top'
+                context.fillText(prjson.truet1t, 161, 62)
+
+                context.textAlign = 'center'
+                context.font = 'bold 25pt Sans'
+                context.fillStyle = '#fff'
+                context.textBaseline = 'top'
+                context.fillText(prjson.truet2t, 239, 62)
+
+                loadImage('logs/images/Flags/' + prjson.Team1Name + '.png').then(imageTeam1 => {
+                    context.drawImage(imageTeam1, 280, 70, 50, 28)
+
+                    loadImage('logs/images/Flags/' + prjson.Team2Name + '.png').then(imageTeam2 => {
+                        context.drawImage(imageTeam2, 71, 70, 50, 28)
+
+                        if (prjson.MapMode == 'gpm_insurgency') {
+
+                            loadImage('logs/images/Flags/Cache.png').then(imageCache => {
+                                context.drawImage(imageCache, 249, 68, 32, 32)
+
+                                var buffer = canvas.toBuffer('image/png')
+                                fs.writeFileSync('logs/images/' + fileName1 + '.png', buffer)
+                                console.log('\x1b[36m', 'IMAGE DONE CACHE', '\x1b[0m')
+                            })
+                        } else {
+
+                            var buffer = canvas.toBuffer('image/png')
+                            fs.writeFileSync('logs/images/' + fileName1 + '.png', buffer)
+                            console.log('\x1b[36m', 'IMAGE DONE STD', '\x1b[0m')
+                        }
+                    })
+                })
+            }
+        })
+    })
 }
