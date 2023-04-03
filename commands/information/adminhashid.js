@@ -1,6 +1,13 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, SlashCommandBuilder, ButtonStyle, AttachmentBuilder } = require('discord.js');
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    SlashCommandBuilder,
+    ButtonStyle,
+    AttachmentBuilder,
+} from 'discord.js';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("adminhashid")
         .setDescription("Prompt buttons for admins to enter their hash corectly...."),
@@ -26,4 +33,4 @@ module.exports = {
             files: [file]
         });
     },
-}
+};

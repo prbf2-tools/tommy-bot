@@ -1,6 +1,6 @@
-const fs = require("fs");
+import fs from 'fs';
 
-module.exports = (client) => {
+export default (client) => {
     client.handleButtons = async () => {
         const buttonFolders = fs.readdirSync("./buttons");
         for (const folder of buttonFolders) {
@@ -11,4 +11,4 @@ module.exports = (client) => {
             }
         }
     }
-}
+};

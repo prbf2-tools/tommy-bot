@@ -1,7 +1,7 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const PRISM = require('../../functions/handlePRISM.js')
+import { SlashCommandBuilder } from '@discordjs/builders';
+import PRISM from '../../functions/handlePRISM.js';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("prprism")
         .setDescription("Execute a command from PRISM")
@@ -16,4 +16,4 @@ module.exports = {
             ephemeral: true
         });
     },
-}
+};

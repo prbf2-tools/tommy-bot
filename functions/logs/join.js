@@ -1,4 +1,4 @@
-const geoip = require('geoip-lite');
+import geoip from 'geoip-lite';
 
 const LOG_JOIN_CH = '995521059119960144';
 

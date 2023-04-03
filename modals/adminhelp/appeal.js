@@ -1,7 +1,7 @@
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
 require("dotenv").config();
 
-module.exports = {
+export default {
     data: {
         name: "appeal",
     },
@@ -56,4 +56,4 @@ module.exports = {
                 })
             });
     }
-}
+};

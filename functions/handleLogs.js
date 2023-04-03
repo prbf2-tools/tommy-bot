@@ -1,12 +1,10 @@
-const fs = require("fs");
+import fs from 'fs';
+import Tail from 'always-tail';
+import { handleBan } from './logs/ban';
+import { handleAdminCommand } from './logs/admin';
+import { handleJoin } from './logs/join';
 
-const Tail = require('always-tail');
-
-const { handleBan } = require('./logs/ban');
-const { handleAdminCommand } = require('./logs/admin');
-const { handleJoin } = require('./logs/join');
-
-module.exports = (client) => {
+export default (client) => {
     client.handleLogs = async () => {/*
        ██        ██████     ███       ███ ███ ████     ███       ███            █████         █████       ██████  
       ██ ██      ███   ███  ██ ███   ████ ███ ██ ███   ███       ███          ███    ███    ██    ███   ███    ███
@@ -61,4 +59,4 @@ module.exports = (client) => {
         tailJoin.watch();
 
     };
-}
+};

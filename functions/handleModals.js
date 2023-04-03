@@ -1,6 +1,6 @@
-const fs = require("fs");
+import fs from 'fs';
 
-module.exports = (client) => {
+export default (client) => {
     client.handleModals = async () => {
         const modalFolders = fs.readdirSync("./modals");
         for (const folder of modalFolders) {
@@ -11,4 +11,4 @@ module.exports = (client) => {
             }
         }
     }
-}
+};

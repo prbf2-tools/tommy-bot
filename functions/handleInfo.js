@@ -1,9 +1,9 @@
 require("dotenv").config();
-var request = require('request');
+import request from 'request';
 
 //Discord
 
-const locals = require('../localization.json');
+import locals from '../localization.json';
 
 const MAP_NAME_CH = '1031262929275863060';
 const MAP_DETAILS_CH = '1031263100420235366';
@@ -11,7 +11,7 @@ const MAP_DETAILS_CH = '1031263100420235366';
 const RMOD_SV_INFO_URL = 'https://servers.realitymod.com/api/ServerInfo';
 const SERVER_ID = 'e36e256110bcb081fdf8aace80b6f40db983b5ad';
 
-module.exports = (client) => {
+export default (client) => {
     client.handleInfo = async () => {
         setInterval(function() {
             request(RMOD_SV_INFO_URL, function(error, response, body) {
@@ -44,4 +44,4 @@ module.exports = (client) => {
             })
         }, 310000)
     }
-}
+};

@@ -1,12 +1,12 @@
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
-const fs = require("fs");
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v9';
+import fs from 'fs';
 
 const CLIENT_ID = '994028593837527120';
 const GUILD_ID = '993921259219980338';
 
 
-module.exports = (client) => {
+export default (client) => {
     client.handleCommands = async (commandFolders, path) => {
         client.commandArray = []
         for (folder of commandFolders) {

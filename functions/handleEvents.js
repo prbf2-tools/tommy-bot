@@ -1,4 +1,4 @@
-module.exports = (client) => {
+export default (client) => {
     client.handleEvents = async (eventFiles, path) => {
         for (const file of eventFiles) {
             const event = require(`../events/${file}`);
@@ -9,4 +9,4 @@ module.exports = (client) => {
             }
         }
     }
-}
+};

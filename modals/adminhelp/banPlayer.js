@@ -1,8 +1,8 @@
-const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
+import { MessageEmbed, MessageButton, MessageActionRow } from 'discord.js';
 require("dotenv").config();
 
 
-module.exports = {
+export default {
     data: {
         name: "banPlayer",
     },
@@ -11,4 +11,4 @@ module.exports = {
         client.writePrism('apiadmin', `addKeyToBanList ${interaction.fields.getTextInputValue('hashId')} ${interaction.fields.getSelectMenuValue('duration')}`)
 
     }
-}
+};

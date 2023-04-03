@@ -1,6 +1,13 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, SlashCommandBuilder, ButtonStyle, AttachmentBuilder } = require('discord.js');
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    SlashCommandBuilder,
+    ButtonStyle,
+    AttachmentBuilder,
+} from 'discord.js';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("contactadmin")
         .setDescription("Prompt buttons for Ban Appeals, Admin Application and Reports"),
@@ -37,4 +44,4 @@ module.exports = {
             files: [file]
         });
     },
-}
+};

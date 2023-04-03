@@ -1,6 +1,6 @@
-const { EmbedBuilder } = require('discord.js');
+import { EmbedBuilder } from 'discord.js';
 
-module.exports = {
+export default {
     data: {
         name: "adminhashid",
     },
@@ -22,4 +22,4 @@ module.exports = {
             ephemeral: true,
         })
     }
-}
+};

@@ -1,18 +1,23 @@
 require("dotenv").config();
-var chokidar = require('chokidar');
-var pather = require("path");
-const fs = require("fs");
-var Tail = require('always-tail');
+import chokidar from 'chokidar';
+import pather from 'path';
+import fs from 'fs';
+import Tail from 'always-tail';
+import locals from '../localization.json';
 
-const locals = require('../localization.json');
-
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } = require('discord.js');
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    AttachmentBuilder,
+} from 'discord.js';
 
 const BF2DEMO_URL = 'https://www.prmafia.online/br/demos/';
 const PRDEMO_URL = 'https://www.prmafia.online/br/trackers/';
 const TRACKER_VIEWER_URL = 'https://www.prmafia.online/br/realitytracker_master/index.html?demo=../trackers/';
 
-module.exports = (client) => {
+export default (client) => {
     client.handleTrackersDemos = async () => {
         var ticketsLog = 'logs/tickets.log';
         if (!fs.existsSync(ticketsLog)) fs.writeFileSync(ticketsLog, "");
@@ -176,7 +181,7 @@ module.exports = (client) => {
             }
         })
     }
-}
+};
 
 async function createRoundImage(prjson, fileName1) {
     const { createCanvas, loadImage } = require('canvas')

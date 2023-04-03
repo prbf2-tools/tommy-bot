@@ -1,6 +1,6 @@
-const { MessageActionRow, ModalBuilder, TextInputComponent, MessageSelectMenu } = require('discord.js');
+import { MessageActionRow, ModalBuilder, TextInputComponent, MessageSelectMenu } from 'discord.js';
 
-module.exports = {
+export default {
     data: {
         name: "banPlayer",
     },
@@ -55,4 +55,4 @@ module.exports = {
 
         interaction.showModal(modal);
     }
-}
+};
