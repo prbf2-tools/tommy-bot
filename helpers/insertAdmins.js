@@ -36,10 +36,7 @@ const insertAdmins = () => {
           : adminRole === "trial"
           ? "2"
           : null;
-      if (!adminRoleNumber) {
-        console.log(`Error with ${adminHashNoSpace}!`);
-        continue;
-      }
+      if (!adminRoleNumber) continue;
       str += `    "${adminHashNoSpace}":  ${adminRoleNumber},  #${adminName}\n`;
     }
     str += "}";
@@ -47,15 +44,11 @@ const insertAdmins = () => {
       objectToReplace,
       `adm_adminHashes = ${str}`
     );
-    if (realityconfigFile === realityconfigFileUpdated) {
-      console.log("Admins already inserted!");
-      return;
-    }
+    if (realityconfigFile === realityconfigFileUpdated) return;
     fs.writeFileSync(pathToRealityAdmin, realityconfigFileUpdated);
     setTimeout(() => {
       PRISM.writePrism("say", `!init`);
     }, 2000);
-    console.log("Admins inserted!");
   } catch (err) {
     console.log(`Error Inserting Admins: ${err}`);
   }
