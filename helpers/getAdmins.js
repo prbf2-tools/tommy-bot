@@ -24,9 +24,8 @@ const getAdmins = (client) => {
         const memberRoles = member[1]._roles;
         const hashRecord = await hashDb.find({ id: memberId }).value();
         const commonRoles = getCommonValues(memberRoles, roles);
-        if (commonRoles.length === 0 && !hashRecord) {
-          continue;
-        } else if (commonRoles.length === 0 && hashRecord) {
+        if (commonRoles.length === 0 && !hashRecord) continue;
+        else if (commonRoles.length === 0 && hashRecord) {
           hashDb.remove({ id: memberId }).write();
           continue;
         }
