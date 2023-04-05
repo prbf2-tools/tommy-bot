@@ -1,31 +1,31 @@
-require("dotenv").config();
+import dotenv from 'dotenv'
+dotenv.config()
 
-//Discord
+import net from 'net'
+import crypto from 'crypto'
+import fs from 'fs'
 
-// networking
-var net = require('net');
+import rand from 'csprng'
+
 let netClient = new net.Socket();
 
 // hash sums
-var crypto = require('crypto')
 var passwordhash = crypto.createHash('sha1')
 var saltedpass = crypto.createHash('sha1')
 var challengedigest = crypto.createHash('sha1')
 
 //Generate a client Challenge key.
-var rand = require('csprng');
 var theCCK = rand(160, 36);
 
-var fs = require('fs');
 //const { data } = require("../commands/moderation/prban");
 
 //Prism Step1
 
 
-module.exports = (client) => {
+export default (client) => {
     client.handlePRISM = async () => {
-        const hexString = '\1login1\2'+'1\3'+process.env.PRISM_USRNAME+'\3'+theCCK+'\4\0';
-        const netConnect = () => {netClient.connect(process.env.PRISM_PORT, process.env.PRISM_IP)}
+        const hexString = '\x01login1\x02' + '1\x03' + process.env.PRISM_USRNAME + '\x03' + theCCK + '\x04\x00';
+        const netConnect = () => { netClient.connect(process.env.PRISM_PORT, process.env.PRISM_IP) }
         try {
             netClient.once('connect', () => {
                 console.log("Connected to PRISM API");
@@ -36,42 +36,41 @@ module.exports = (client) => {
                 console.log(e);
                 console.log('Waiting for 10 seconds before trying again')
                 netClient.destroy()
-                setTimeout(netConnect,10000)
+                setTimeout(netConnect, 10000)
             });
             netClient.on("close", () => {
                 console.log("The PRISM connection was closed")
                 netClient.destroy()
-                setTimeout(netConnect,10000)
+                setTimeout(netConnect, 10000)
             })
             netClient.on("end", () => {
                 console.log("The PRISM connection was ended")
                 netClient.destroy()
-                setTimeout(netConnect,10000)
+                setTimeout(netConnect, 10000)
             })
             netConnect()
-        } catch(error) {
+        } catch (error) {
             console.error(error);
         }
         function messageHandler(messages) {
             const data = messages.toString('utf-8')
             //console.log(data)      // <--------------------------------------------------------------- DEBUG HERE <---------------------------------------------------------------------
-            subject = data.split('\1')[1].split('\2')[0]
-            fields = data.split('\1')[1].split('\2')[1].split('\4')[0].split('\3')
+            subject = data.split('\x01')[1].split('\x02')[0]
+            fields = data.split('\x01')[1].split('\x02')[1].split('\x04')[0].split('\x03')
             //dataSplit = data.split('\n')
             //console.log(fields)
             //console.log('Subject: '+subject)
             //Prism Step2
             if (subject == 'login1') {
                 passwordhash.update(process.env.PRISM_USRPW)
-                saltedpass.update(fields[0] + "\1" + passwordhash.digest('hex'))
-                challengedigest.update(process.env.PRISM_USRNAME + "\3" + theCCK + "\3" + fields[1] + "\3" + saltedpass.digest('hex'))
-                var login2 = '\1login2\2' + challengedigest.digest('hex') + '\4\0'
-                netClient.write(login2)
+                saltedpass.update(fields[0] + '\x01' + passwordhash.digest('hex'))
+                challengedigest.update(process.env.PRISM_USRNAME + "\x03" + theCCK + "\x03" + fields[1] + "\x03" + saltedpass.digest('hex'))
+                writeToClient(netClient, "login2", challengedigest.digest('hex'))
             }
             // Success subject
             else if (subject == 'APIAdminResult') {
                 var prismRes = 'Bad'
-                if (data == 'APIAdminResult'){
+                if (data == 'APIAdminResult') {
                     prismRes = 'Good'
                     console.log(data)
                 }
@@ -98,7 +97,7 @@ module.exports = (client) => {
                         const SquadNum = dataLenght[2].split(' ')[1]
 
                         if (playerRaw != '') {
-                            Player = playerRaw+' \` **|** \` '
+                            Player = playerRaw + ' \` **|** \` '
                         }
 
 
@@ -134,7 +133,7 @@ module.exports = (client) => {
                                 var formatedFields = `<t:${time}:d> <t:${time}:T> **|** ⬜🔴🟢 \` OpFor ${SquadNum} \` **|** \` ${Player}${contentString}\``
                             }
                         } else {
-                            var formatedFields = "`"+dataLenght+"`"
+                            var formatedFields = "`" + dataLenght + "`"
                         }
 
 
@@ -143,45 +142,45 @@ module.exports = (client) => {
 
 
 
-                        
-                        var tkString = fields[fields.length-1].split(' ')
+
+                        var tkString = fields[fields.length - 1].split(' ')
 
                         client.channels.cache.get('1022258448508928031').send(formatedFields);
                         //client.channels.cache.get('1022258448508928031').send("`"+fields+"`");
                         if (tkString[5] == 'm]') {
-                            var tkString = fields[fields.length-1].split(' ')
+                            var tkString = fields[fields.length - 1].split(' ')
                             //console.log(fields[fields.length-1].split(' '))
-                            adminLogPost  = {
+                            adminLogPost = {
                                 color: 0Xa7367b,
                                 title: 'TEAMKILL',
-                                description: '**Performed by: **`'+tkString[0]+' '+tkString[1]+'`'
-                                +'\n**On player: **`'+tkString[6]+' '+tkString[7].replace("\n",'')+'`'
-                                +'\n**With: **`'+tkString[2].slice(1)+'` : `'+tkString[4]+'m`',
+                                description: '**Performed by: **`' + tkString[0] + ' ' + tkString[1] + '`'
+                                    + '\n**On player: **`' + tkString[6] + ' ' + tkString[7].replace("\n", '') + '`'
+                                    + '\n**With: **`' + tkString[2].slice(1) + '` : `' + tkString[4] + 'm`',
                                 timestamp: new Date(),
                                 footer: {
                                     text: 'IN-GAME'
                                 }
                             }
-                            client.channels.cache.get('1033130972264276018').send({ content: '`'+fields[fields.length-1].split(' ')+'`', embeds: [adminLogPost]});
+                            client.channels.cache.get('1033130972264276018').send({ content: '`' + fields[fields.length - 1].split(' ') + '`', embeds: [adminLogPost] });
 
 
 
 
 
-                        } 
-                        else if (dataLenght[dataLenght.length-1].includes('is victorious!') == true) {
-                            var ggWinner = dataLenght[dataLenght.length-1].split(' ')
-                            console.log('GUNGAME WINNER::::'+ggWinner[1].slice(0, -2))
-                            fs.writeFile('logs/gungame_winner.txt', ggWinner[1].slice(0, -2), function (err) {
+                        }
+                        else if (dataLenght[dataLenght.length - 1].includes('is victorious!') == true) {
+                            var ggWinner = dataLenght[dataLenght.length - 1].split(' ')
+                            console.log('GUNGAME WINNER::::' + ggWinner[1].slice(0, -2))
+                            fs.writeFile('logs/gungame_winner.txt', ggWinner[1].slice(0, -2), function(err) {
                                 if (err) {
-                                // append failed
+                                    // append failed
                                 } else {
-                                // done
+                                    // done
                                 }
                             })
                             //gungame_winner.txt
                         } else if (contentString.includes('!cookie') == true) {
-                            netClient.write('\1say\2!w '+Player.split(' ')[1]+' NOM! You have ate a cookie!\4\0')
+                            writeToClient(netClient, "say", "!w " + Player.split(' ')[1] + " NOM! You have ate a cookie!")
                         }
                     }
                 })
@@ -189,9 +188,9 @@ module.exports = (client) => {
         }
         var msg_buffer = "";
         netClient.on("data", function(rawData) {
-            msg_buffer +=  rawData.toString('utf-8')
-            while (msg_buffer.includes("\4\0")) {
-                const length = msg_buffer.indexOf("\4\0");
+            msg_buffer += rawData.toString('utf-8')
+            while (msg_buffer.includes("\x04\x00")) {
+                const length = msg_buffer.indexOf("\x04\x00");
                 const msg = msg_buffer.substr(0, length);
                 msg_buffer = msg_buffer.substr(length + 2);
                 messageHandler(msg);
@@ -199,15 +198,19 @@ module.exports = (client) => {
         })
         // useful, subject can be 'say' with an args to be an in-game commands that will be executed. No way to catch the responce yet.
         module.exports.writePrism = (subject, args) => {
-            netClient.write('\1'+subject+'\2'+args+'\4\0')
+            writeToClient(netClient, subject, args)
         }
         module.exports.writePrism2 = (subject, args) => {
-            netClient.write('\1'+subject+'\2'+args+'\4\0')
+            writeToClient(netClient, subject, args)
         }
         //No clue why this exist?
         module.exports.writePrismSD = (subject) => {
-            netClient.write('\1'+subject+'\2\4\0')
-            console.log('\1'+subject+'\2\4\0')
+            writeToClient(netClient, subject, "")
+            console.log('\x01' + subject + '\x02\x04\x00')
         }
     }
+}
+
+function writeToClient(client, subject, args) {
+    client.write('\x01' + subject + '\x02' + args + '\x04\x00')
 }

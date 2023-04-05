@@ -1,7 +1,7 @@
-const { db } = require("../../db/db.js");
+import db from '../../db/db'
 // const { EmbedBuilder } = require("discord.js");
 
-module.exports = {
+export default {
   data: {
     name: "adminhashid",
   },

@@ -1,6 +1,6 @@
-const { ActionRowBuilder, ModalBuilder , TextInputBuilder, TextInputStyle } = require('discord.js');
+import { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } from 'discord.js';
 
-module.exports = {
+export default {
     data: {
         name: "report",
     },
@@ -44,4 +44,4 @@ module.exports = {
         
         interaction.showModal(modal);
     }
-}
+};

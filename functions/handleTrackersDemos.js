@@ -1,19 +1,25 @@
-var chokidar = require("chokidar");
-var pather = require("path");
-const fs = require("fs");
-var Tail = require("always-tail");
+import dotenv from 'dotenv'
+dotenv.config()
 
-const locals = require("../localization.json");
+import fs from 'fs';
+import pather from 'path';
 
-const {
+import chokidar from 'chokidar';
+import Tail from 'always-tail';
+import { createCanvas, loadImage } from 'canvas'
+import ftp from "basic-ftp"
+
+import locals from '../localization.json' assert { type: "json"};
+
+import {
   EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
   AttachmentBuilder,
-} = require("discord.js");
+} from 'discord.js';
 
-module.exports = (client) => {
+export default (client) => {
   client.handleTrackersDemos = async () => {
     var ticketsLog = "logs/tickets.log";
     if (!fs.existsSync(ticketsLog)) fs.writeFileSync(ticketsLog, "");
@@ -22,7 +28,7 @@ module.exports = (client) => {
     Team1Tickets = "E";
     Team2Tickets = "E";
 
-    tailTickets.on("line", function (dataTickets) {
+    tailTickets.on("line", function(dataTickets) {
       var dataTicketsSplit = dataTickets.split(" ");
       Team1Tickets = dataTicketsSplit[7].replace(",", "");
       Team2Tickets = dataTicketsSplit[4].replace(",", "");
@@ -33,7 +39,7 @@ module.exports = (client) => {
     if (!fs.existsSync(ggWinnerLog)) fs.writeFileSync(ggWinnerLog, "");
     var tailggWinner = new Tail(ggWinnerLog, "\n");
     GGWinner = "None";
-    tailggWinner.on("line", function (dataggWinner) {
+    tailggWinner.on("line", function(dataggWinner) {
       console.log(dataggWinner);
       GGWinner = dataggWinner;
     });
@@ -71,9 +77,6 @@ module.exports = (client) => {
       });
     }
 
-    const { prependListener } = require("process");
-    const { POINT_CONVERSION_COMPRESSED } = require("constants");
-    const { createCanvas, loadImage } = require("canvas");
     watcher.on("add", async (path) => {
       console.log(`File ${path} has been added`);
       await sleep(10000);
@@ -82,15 +85,15 @@ module.exports = (client) => {
       var fileName1 = pather.basename(path, ".json");
 
       /*fs.rename('logs/demos'+demoPath+'.bf2demo', 'logs/demos'+fileName1+'.bf2demo', () => {
-				console.log("\nFile Renamed!\n");
-			});*/
+        console.log("\nFile Renamed!\n");
+      });*/
 
       var demoPathFormat = fileName1.replace("tracker", "demo");
 
       fs.rename(
         "logs/demos/" + demoPath + ".bf2demo",
         "logs/demos/" + demoPathFormat + ".bf2demo",
-        function (err) {
+        function(err) {
           if (err) console.log("ERROR: " + err);
         }
       );
@@ -134,8 +137,8 @@ module.exports = (client) => {
             context.textBaseline = "top";
             context.fillText(
               locals.gameModes[prjson.MapMode].name +
-                ", " +
-                locals.layers[prjson.MapLayer].name,
+              ", " +
+              locals.layers[prjson.MapLayer].name,
               200,
               44
             );
@@ -233,22 +236,22 @@ module.exports = (client) => {
         .setTitle(locals.mapNames[prjson.MapName].name)
         .setDescription(
           "**_" +
-            locals.gameModes[prjson.MapMode].name +
-            ", " +
-            locals.layers[prjson.MapLayer].name +
-            "_**\n\nDuration: " +
-            Math.round(durationTime) +
-            " minutes\nStarted: <t:" +
-            prjson.StartTime +
-            ":R> | <t:" +
-            prjson.StartTime +
-            ":F>\nEnded: <t:" +
-            prjson.EndTime +
-            ":R> | <t:" +
-            prjson.EndTime +
-            ":F>\n\n> **__TEMPORARY__**\n> *Demos are available under request only due to website issues.*\n> *To request a Demo, use the ticket system as an incident report and add the demo file name written bellow.*\n> *To view the tracker file that is joint above this message, download it then use it [here](https://yossizap.github.io/realitytracker/index.html).*\n > *__Demo File Name:__ `" +
-            demoPath +
-            ".bf2demo`*"
+          locals.gameModes[prjson.MapMode].name +
+          ", " +
+          locals.layers[prjson.MapLayer].name +
+          "_**\n\nDuration: " +
+          Math.round(durationTime) +
+          " minutes\nStarted: <t:" +
+          prjson.StartTime +
+          ":R> | <t:" +
+          prjson.StartTime +
+          ":F>\nEnded: <t:" +
+          prjson.EndTime +
+          ":R> | <t:" +
+          prjson.EndTime +
+          ":F>\n\n> **__TEMPORARY__**\n> *Demos are available under request only due to website issues.*\n> *To request a Demo, use the ticket system as an incident report and add the demo file name written bellow.*\n> *To view the tracker file that is joint above this message, download it then use it [here](https://yossizap.github.io/realitytracker/index.html).*\n > *__Demo File Name:__ `" +
+          demoPath +
+          ".bf2demo`*"
         )
         .setImage("attachment://" + fileName1 + ".png")
         .setTimestamp(prjson.EndTime * 1000);
@@ -275,11 +278,10 @@ module.exports = (client) => {
           .setStyle(ButtonStyle.Link)
           .setURL(
             "https://www.prmafia.online/br/realitytracker_master/index.html?demo=../trackers/" +
-              fileName1 +
-              ".PRdemo"
+            fileName1 +
+            ".PRdemo"
           )
       );
-      const ftp = require("basic-ftp");
       example();
       async function example() {
         const clientFTP = new ftp.Client();
@@ -317,23 +319,23 @@ module.exports = (client) => {
           });
 
         /*await client.channels.cache.get('1033130739505565716').threads.create({
-					name: `__**${locals.mapNames[prjson.MapName].name}**__ -  ${locals.gameModes[prjson.MapMode].name}, ${locals.layers[prjson.MapLayer].name}`,
-					message: {
-						content: `<t:${prjson.StartTime}:d> <t:${prjson.StartTime}:T> **-** <t:${prjson.EndTime}:d> <t:${prjson.EndTime}:T> **│** ${locals.factions[prjson.Team2Name]} \` ${Team1Tickets} \` **-** ${locals.factions[prjson.Team1Name]} \` ${Team2Tickets} \``, 
-						embeds: [roundEmbed],
-						components: [row], 
-						files: [file, filecl] 
-					},
-					appliedTags: [locals.gameModes[prjson.MapMode].tagPriv, locals.layers[prjson.MapLayer].tagPriv]
-				})*/
+          name: `__**${locals.mapNames[prjson.MapName].name}**__ -  ${locals.gameModes[prjson.MapMode].name}, ${locals.layers[prjson.MapLayer].name}`,
+          message: {
+            content: `<t:${prjson.StartTime}:d> <t:${prjson.StartTime}:T> **-** <t:${prjson.EndTime}:d> <t:${prjson.EndTime}:T> **│** ${locals.factions[prjson.Team2Name]} \` ${Team1Tickets} \` **-** ${locals.factions[prjson.Team1Name]} \` ${Team2Tickets} \``, 
+            embeds: [roundEmbed],
+            components: [row], 
+            files: [file, filecl] 
+          },
+          appliedTags: [locals.gameModes[prjson.MapMode].tagPriv, locals.layers[prjson.MapLayer].tagPriv]
+        })*/
         fs.unlinkSync(path);
         /*var oldPathJson = 'logs/json/'+fileName1+'.json'
-				var newPathJson = 'logs/json_formated/'+fileName1+'.json'
+        var newPathJson = 'logs/json_formated/'+fileName1+'.json'
 
-				fs.rename(oldPathJson, newPathJson, function (err) {
-					if (err) throw err
-					console.log('Successfully moved json!')
-				})*/
+        fs.rename(oldPathJson, newPathJson, function (err) {
+          if (err) throw err
+          console.log('Successfully moved json!')
+        })*/
         //await client.channels.cache.get('995387003409539073').send({ embeds: [roundEmbed],components: [row], files: [file] })
       }
     });

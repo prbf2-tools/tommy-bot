@@ -1,7 +1,9 @@
-const { EmbedBuilder } = require('discord.js');
-require("dotenv").config();
+import dotenv from 'dotenv'
+dotenv.config()
 
-module.exports = {
+import { EmbedBuilder } from 'discord.js';
+
+export default {
     data: {
         name: "report",
     },
@@ -21,13 +23,13 @@ module.exports = {
                 ${interaction.fields.getTextInputValue('what')}\n
             `)
         await interaction.member.guild.channels.cache.get('1021942980950634597').threads.create({
-                name: `🔴 ${interaction.user.username}'s Report`,
-                message: {
-                    content: `<@&${process.env.ADMIN_ID}>`, 
-                    embeds: [embed]
-                },
-                appliedTags: ['1021973747546210305']
-            })
+            name: `🔴 ${interaction.user.username}'s Report`,
+            message: {
+                content: `<@&${process.env.ADMIN_ID}>`,
+                embeds: [embed]
+            },
+            appliedTags: ['1021973747546210305']
+        })
             .then(threadChannel => {
                 threadChannel.members.add(interaction.user.id);
                 interaction.reply({
@@ -53,11 +55,11 @@ module.exports = {
                 interaction.member.guild.channels.cache.get('1022285742799589416').threads.create({
                     name: `🔒🔴 ${interaction.user.username}'s Report`,
                     message: {
-                        content: `<@&${process.env.ADMIN_ID}>`, 
+                        content: `<@&${process.env.ADMIN_ID}>`,
                         embeds: [embed]
                     },
                     appliedTags: ['1022300442023186462']
                 })
             });
     }
-}
+};

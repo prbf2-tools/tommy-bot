@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     name: "interactionCreate",
     async execute(interaction, client) {
         if (interaction.isCommand()) { //======== COMMANDS ===========
@@ -49,4 +49,4 @@ module.exports = {
             }
         }
     }
-}
+};

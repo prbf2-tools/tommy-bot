@@ -1,4 +1,4 @@
-const getCommonValues = (arr1, arr2) => {
+export const getCommonValues = (arr1, arr2) => {
   const commonValues = [];
   arr1.forEach((item) => {
     if (arr2.includes(item)) {
@@ -7,5 +7,3 @@ const getCommonValues = (arr1, arr2) => {
   });
   return commonValues;
 };
-
-module.exports = { getCommonValues };
