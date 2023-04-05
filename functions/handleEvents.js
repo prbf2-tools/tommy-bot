@@ -1,5 +1,5 @@
 export default (client) => {
-    client.handleEvents = async (eventFiles, path) => {
+    client.handleEvents = async (eventFiles) => {
         for (const file of eventFiles) {
             const event = await import(`../events/${file}`);
             if (event.once) {
@@ -8,5 +8,5 @@ export default (client) => {
                 client.on(event.name, (...args) => event.execute(...args, client));
             }
         }
-    }
+    };
 };

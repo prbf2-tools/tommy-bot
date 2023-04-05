@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from "fs";
 
 export default (client) => {
     client.handleModals = async () => {
@@ -10,5 +10,5 @@ export default (client) => {
                 client.modals.set(modal.data.name, modal);
             }
         }
-    }
+    };
 };
