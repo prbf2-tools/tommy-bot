@@ -4,7 +4,7 @@ import {
     ButtonBuilder,
     SlashCommandBuilder,
     ButtonStyle,
-} from 'discord.js';
+} from "discord.js"
 
 export default {
     data: new SlashCommandBuilder()
@@ -12,32 +12,32 @@ export default {
         .setDescription("Prompt buttons for Ban Appeals, Admin Application and Reports"),
     async execute(interaction) {
         const embed = new EmbedBuilder()
-            .setColor('#0074ba')
-            .setTitle('🔷 Admin Remote Commands')
+            .setColor("#0074ba")
+            .setTitle("🔷 Admin Remote Commands")
             .setDescription(`
-                **\`WIP\`**`);
+                **\`WIP\`**`)
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
-                    .setCustomId('searchPlayer')
-                    .setLabel('Search Player')
+                    .setCustomId("searchPlayer")
+                    .setLabel("Search Player")
                     .setStyle(ButtonStyle.Primary),
                 new ButtonBuilder()
-                    .setCustomId('banPlayer')
-                    .setLabel('Ban Player')
+                    .setCustomId("banPlayer")
+                    .setLabel("Ban Player")
                     .setStyle(ButtonStyle.Danger),
                 new ButtonBuilder()
-                    .setCustomId('unbanPlayer')
-                    .setLabel('Unban Player')
+                    .setCustomId("unbanPlayer")
+                    .setLabel("Unban Player")
                     .setStyle(ButtonStyle.Success),
                 new ButtonBuilder()
-                    .setCustomId('remoteCommands')
-                    .setLabel('Remote Commands')
+                    .setCustomId("remoteCommands")
+                    .setLabel("Remote Commands")
                     .setStyle(ButtonStyle.Secondary)
-            );
+            )
         await interaction.reply({
             embeds: [embed],
             components: [row]
-        });
+        })
     },
-};
+}

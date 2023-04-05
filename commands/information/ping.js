@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 export default {
     data: new SlashCommandBuilder()
@@ -8,6 +8,6 @@ export default {
         await interaction.reply({
             content: "Pong!",
             ephemeral: true
-        });
+        })
     },
-};
+}

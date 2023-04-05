@@ -1,8 +1,8 @@
-import dotenv from 'dotenv'
+import dotenv from "dotenv"
 dotenv.config()
 
-import request from 'request';
-import locals from '../localization.json' assert { type: "json"};
+import request from "request"
+import locals from "../localization.json" assert { type: "json"}
 
 //Discord
 
@@ -10,12 +10,12 @@ import locals from '../localization.json' assert { type: "json"};
 export default (client) => {
     client.handleInfo = async () => {
         setInterval(function() {
-            request('https://servers.realitymod.com/api/ServerInfo', function(error, response, body) {
+            request("https://servers.realitymod.com/api/ServerInfo", function(error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var info = JSON.parse(body)
                     let mafiaInfo = info.servers.find((info2) => {
                         try {
-                            return info2.serverId.includes('e36e256110bcb081fdf8aace80b6f40db983b5ad')
+                            return info2.serverId.includes("e36e256110bcb081fdf8aace80b6f40db983b5ad")
                         } catch {
                             return false
                         }
@@ -30,8 +30,8 @@ export default (client) => {
                     //client.channels.cache.get(' TO CHANGE').setName(gameModes+', '+layers)   //used to be 1031263231240573028
 
 
-                    client.channels.cache.get('1031262929275863060').setName('│Map: ' + mapName)
-                    client.channels.cache.get('1031263100420235366').setName('│' + gameModes + ', ' + layers + ' | (' + numplayers + '/100)')
+                    client.channels.cache.get("1031262929275863060").setName("│Map: " + mapName)
+                    client.channels.cache.get("1031263100420235366").setName("│" + gameModes + ", " + layers + " | (" + numplayers + "/100)")
 
 
 
@@ -40,4 +40,4 @@ export default (client) => {
             })
         }, 310000)
     }
-};
+}
