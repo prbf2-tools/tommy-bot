@@ -1,6 +1,6 @@
-const { db } = require("../db/db.js");
-const { getCommonValues } = require("./getCommonValues.js");
-const { insertAdmins } = require("./insertAdmins.js");
+import db from '../db/db.js';
+import { getCommonValues } from './getCommonValues.js';
+import { insertAdmins } from './insertAdmins.js';
 
 const rolesObj = {
   "993997234070896741": "senior", //Mafioso
@@ -10,7 +10,7 @@ const rolesObj = {
   "1062472543275057212": "trial", //Trial Admin
 };
 
-const getAdmins = (client) => {
+export const getAdmins = (client) => {
   const roles = Object.keys(rolesObj);
   setInterval(async () => {
     try {
@@ -33,10 +33,10 @@ const getAdmins = (client) => {
         const role = adminRolesString.includes("senior")
           ? "senior"
           : adminRolesString.includes("admin")
-          ? "admin"
-          : adminRolesString.includes("trial")
-          ? "trial"
-          : "user";
+            ? "admin"
+            : adminRolesString.includes("trial")
+              ? "trial"
+              : "user";
         if (!hashRecord || hashRecord.role === role) continue;
         hashDb.find({ id: memberId }).assign({ role }).write();
       }
@@ -47,4 +47,3 @@ const getAdmins = (client) => {
   }, 1000 * 60 * 5); // 5 minutes
 };
 
-module.exports = { getAdmins };

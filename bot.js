@@ -1,13 +1,10 @@
-require("dotenv").config();
-const fs = require("fs");
-const {
-  Client,
-  GatewayIntentBits,
-  Partials,
-  Collection,
-  Events,
-} = require("discord.js");
-const { getAdmins } = require("./helpers/getAdmins.js");
+import dotenv from 'dotenv'
+dotenv.config()
+
+import fs from 'fs';
+import { Client, GatewayIntentBits, Events, Collection } from 'discord.js';
+
+import { getAdmins } from './helpers/getAdmins.js'
 
 const client = new Client({
   intents: [
@@ -34,8 +31,9 @@ client.once(Events.ClientReady, (c) => {
   const commandFolders = fs.readdirSync("./commands");
 
   (async () => {
-    for (file of functions) {
-      require(`./functions/${file}`)(client);
+    for (const file of functions) {
+      const module = await import(`./functions/${file}`);
+      module.default(client)
     }
     client.handleEvents(eventFiles, "./events");
     client.handleCommands(commandFolders, "./commands");

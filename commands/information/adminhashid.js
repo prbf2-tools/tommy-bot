@@ -1,13 +1,13 @@
-const {
+import {
   EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   SlashCommandBuilder,
   ButtonStyle,
   AttachmentBuilder,
-} = require("discord.js");
+} from "discord.js";
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName("adminhashid")
     .setDescription(
