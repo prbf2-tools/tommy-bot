@@ -190,18 +190,19 @@ export default (client) => {
             }
         })
         // useful, subject can be 'say' with an args to be an in-game commands that will be executed. No way to catch the responce yet.
-        module.exports.writePrism = (subject, args) => {
-            writeToClient(netClient, subject, args)
-        }
-        module.exports.writePrism2 = (subject, args) => {
-            writeToClient(netClient, subject, args)
-        }
-        //No clue why this exist?
-        module.exports.writePrismSD = (subject) => {
-            writeToClient(netClient, subject, "")
-            console.log("\x01" + subject + "\x02\x04\x00")
-        }
     }
+}
+export const writePrism = (subject, args) => {
+    writeToClient(netClient, subject, args)
+}
+
+export const writePrism2 = (subject, args) => {
+    writeToClient(netClient, subject, args)
+}
+
+export const writePrismSD = (subject) => {
+    writeToClient(netClient, subject, "")
+    console.log("\x01" + subject + "\x02\x04\x00")
 }
 
 function writeToClient(client, subject, args) {
