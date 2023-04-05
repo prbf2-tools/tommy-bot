@@ -1,7 +1,7 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js")
-const PRISM = require('../../functions/handlePRISM.js')
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import PRISM from '../../functions/handlePRISM.js';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("prunban")
         .setDescription("Unban a player from the PR server")
@@ -30,4 +30,4 @@ module.exports = {
         await interaction.member.guild.channels.cache.get('995387208947204257').send({ embeds: [embedReply] });
         await interaction.member.guild.channels.cache.get('995520998554218557').send({ embeds: [embedReply] });
     },
-}
+};

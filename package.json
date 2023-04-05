@@ -28,6 +28,7 @@
     "none"
   ],
   "author": "Max_",
+  "type": "module",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^2.0.19"

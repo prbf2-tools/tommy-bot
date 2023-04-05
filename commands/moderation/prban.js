@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder } = require("discord.js")
-const PRISM = require('../../functions/handlePRISM.js')
+import { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder } from 'discord.js';
+import PRISM from '../../functions/handlePRISM.js';
 
 
 
@@ -9,7 +9,7 @@ function sleep(ms) {
     });
 }
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("prban")
         .setDescription("Ban a player from the PR server")
@@ -94,4 +94,4 @@ module.exports = {
             await interaction.member.guild.channels.cache.get('995520998554218557').send({ embeds: [embedReply], files: [file] });
         }
     },
-}
+};

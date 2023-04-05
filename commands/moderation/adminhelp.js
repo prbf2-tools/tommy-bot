@@ -1,6 +1,12 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, SlashCommandBuilder, ButtonStyle } = require('discord.js');
+import {
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    SlashCommandBuilder,
+    ButtonStyle,
+} from 'discord.js';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("adminhelp")
         .setDescription("Prompt buttons for Ban Appeals, Admin Application and Reports"),
@@ -34,4 +40,4 @@ module.exports = {
             components: [row]
         });
     },
-}
+};

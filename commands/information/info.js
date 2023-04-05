@@ -1,6 +1,6 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+import { SlashCommandBuilder } from '@discordjs/builders';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("info")
         .setDescription("Returns info based on input")
@@ -27,4 +27,4 @@ module.exports = {
             await interaction.reply("No sub command was used");
         }
     },
-}
+};

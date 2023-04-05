@@ -1,7 +1,9 @@
-const { EmbedBuilder } = require('discord.js');
-require("dotenv").config();
+import dotenv from 'dotenv'
+dotenv.config()
 
-module.exports = {
+import { EmbedBuilder } from 'discord.js';
+
+export default {
     data: {
         name: "appeal",
     },
@@ -21,22 +23,22 @@ module.exports = {
         await interaction.member.guild.channels.cache.get('1021942980950634597').threads.create({
             name: `🟢 ${interaction.user.username}'s Appeal`,
             message: {
-                content: `<@&${process.env.ADMIN_ID}>`, 
+                content: `<@&${process.env.ADMIN_ID}>`,
                 embeds: [embed]
             },
             appliedTags: ['1021973561918902333']
         })
-        .then(threadChannel => {
-            threadChannel.members.add(interaction.user.id);
-            interaction.reply({
-                content: `Success! Please check <#${threadChannel.id}>!`,
-                ephemeral: true
-            })
-            const embed = new EmbedBuilder()
-                .setColor("#7faf5d")
-                .setTitle(`🔒🟢 ${interaction.user.username} Ban Appeal`)
-                .setThumbnail(interaction.user.avatarURL())
-                .setDescription(`
+            .then(threadChannel => {
+                threadChannel.members.add(interaction.user.id);
+                interaction.reply({
+                    content: `Success! Please check <#${threadChannel.id}>!`,
+                    ephemeral: true
+                })
+                const embed = new EmbedBuilder()
+                    .setColor("#7faf5d")
+                    .setTitle(`🔒🟢 ${interaction.user.username} Ban Appeal`)
+                    .setThumbnail(interaction.user.avatarURL())
+                    .setDescription(`
                     **Public Thread:**
                     <#${threadChannel.id}>\n
                     **Hash ID: **
@@ -46,14 +48,14 @@ module.exports = {
                     **The bannable offence: **
                     ${interaction.fields.getTextInputValue('why')}\n
                 `)
-            interaction.member.guild.channels.cache.get('1022285742799589416').threads.create({
-                name: `🔒🟢 ${interaction.user.username}'s Appeal`,
-                message: {
-                    content: `<@&${process.env.ADMIN_ID}>`, 
-                    embeds: [embed]
-                },
-                appliedTags: ['1022300302659039272']
-            })
-        });
+                interaction.member.guild.channels.cache.get('1022285742799589416').threads.create({
+                    name: `🔒🟢 ${interaction.user.username}'s Appeal`,
+                    message: {
+                        content: `<@&${process.env.ADMIN_ID}>`,
+                        embeds: [embed]
+                    },
+                    appliedTags: ['1022300302659039272']
+                })
+            });
     }
-}
+};
