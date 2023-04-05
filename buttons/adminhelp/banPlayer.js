@@ -1,4 +1,4 @@
-import { MessageActionRow, ModalBuilder, TextInputComponent, MessageSelectMenu } from "discord.js"
+import { ActionRowBuilder, ModalBuilder, TextInputComponent, StringSelectMenuBuilder } from "discord.js"
 
 export default {
     data: {
@@ -17,7 +17,7 @@ export default {
             .setMaxLength(26)
             .setMinLength(26)
             .setStyle("SHORT")
-        const duration = new MessageSelectMenu()
+        const duration = new StringSelectMenuBuilder()
             .setCustomId("duration")
             .setPlaceholder("Duration?")
             .addOptions(
@@ -46,9 +46,9 @@ export default {
             .setRequired(true)
             .setStyle("PARAGRAPH")
 
-        const firstActionRow = new MessageActionRow().addComponents(hashId)
-        const secondActionRow = new MessageActionRow().addComponents(duration)
-        const thirdActionRow = new MessageActionRow().addComponents(reason)
+        const firstActionRow = new ActionRowBuilder().addComponents(hashId)
+        const secondActionRow = new ActionRowBuilder().addComponents(duration)
+        const thirdActionRow = new ActionRowBuilder().addComponents(reason)
 
         modal.addComponents(firstActionRow, secondActionRow, thirdActionRow)
 
