@@ -13,7 +13,7 @@ export default (client) => {
             const commandFiles = fs.readdirSync(`${path}/${folder}`).filter(file => file.endsWith(".js"))
 
             for (const file of commandFiles) {
-                const command = await import(`../commands/${folder}/${file}`)
+                const { default: command } = await import(`../commands/${folder}/${file}`)
                 client.commands.set(command.data.name, command)
                 client.commandArray.push(command.data.toJSON())
             }
@@ -27,7 +27,8 @@ export default (client) => {
                 console.log("\x1b[42m", "==================================== \n            BOT RESTARTED!            \n ====================================", "\x1b[0m")
                 console.log("Started refreshing application (/) commands.")
                 await rest.put(
-                    Routes.applicationGuildCommands(clientId, guildId), {
+                    Routes.applicationGuildCommands(clientId, guildId),
+                    {
                         body: client.commandArray
                     },
                 )
