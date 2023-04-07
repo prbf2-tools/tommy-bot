@@ -6,6 +6,7 @@ import crypto from "crypto";
 import fs from "fs";
 
 import rand from "csprng";
+import { registerChannel } from "../helpers/channels.js";
 
 let netClient = new net.Socket();
 
@@ -21,6 +22,10 @@ var theCCK = rand(160, 36);
 
 //Prism Step1
 
+// "1022258448508928031"
+const prismLogCh = registerChannel("PRISM_LOG");
+// "1033130972264276018"
+const tkLogCh = registerChannel("TK_LOG");
 
 export default (client) => {
     client.handlePRISM = async () => {
@@ -138,7 +143,7 @@ export default (client) => {
 
                         var tkString = fields[fields.length - 1].split(" ");
 
-                        client.channels.cache.get("1022258448508928031").send(formatedFields);
+                        client.channels.cache.get(prismLogCh()).send(formatedFields);
                         //client.channels.cache.get('1022258448508928031').send("`"+fields+"`");
                         if (tkString[5] == "m]") {
                             tkString = fields[fields.length - 1].split(" ");
@@ -154,7 +159,7 @@ export default (client) => {
                                     text: "IN-GAME"
                                 }
                             };
-                            client.channels.cache.get("1033130972264276018").send({ content: "`" + fields[fields.length - 1].split(" ") + "`", embeds: [adminLogPost] });
+                            client.channels.cache.get(tkLogCh()).send({ content: "`" + fields[fields.length - 1].split(" ") + "`", embeds: [adminLogPost] });
 
 
 

@@ -2,6 +2,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { EmbedBuilder } from "discord.js";
+import { registerChannel } from "../../helpers/channels.js";
+
+// "1021942980950634597"
+const publicReportCh = registerChannel("PUBLIC_REPORT");
+// "1022285742799589416"
+const privateReportCh = registerChannel("PRIVATE_REPORT");
 
 export default {
     data: {
@@ -22,7 +28,7 @@ export default {
                 **What happened: **
                 ${interaction.fields.getTextInputValue("what")}\n
             `);
-        await interaction.member.guild.channels.cache.get("1021942980950634597").threads.create({
+        await interaction.member.guild.channels.cache.get(publicReportCh()).threads.create({
             name: `🔴 ${interaction.user.username}'s Report`,
             message: {
                 content: `<@&${process.env.ADMIN_ID}>`,
@@ -52,7 +58,7 @@ export default {
                         **What happened: **
                         ${interaction.fields.getTextInputValue("what")}\n
                     `);
-                interaction.member.guild.channels.cache.get("1022285742799589416").threads.create({
+                interaction.member.guild.channels.cache.get(privateReportCh()).threads.create({
                     name: `🔒🔴 ${interaction.user.username}'s Report`,
                     message: {
                         content: `<@&${process.env.ADMIN_ID}>`,

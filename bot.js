@@ -5,6 +5,7 @@ import fs from "fs";
 import { Client, GatewayIntentBits, Events, Collection } from "discord.js";
 
 import { getAdmins } from "./helpers/getAdmins.js";
+import { createChannels } from "./helpers/channels.js";
 
 const client = new Client({
     intents: [
@@ -44,5 +45,6 @@ client.once(Events.ClientReady, () => {
         client.handleInfo();
         client.handleTrackersDemos();
         getAdmins(client);
+        createChannels();
     })();
 });
