@@ -18,6 +18,10 @@ import {
     ButtonStyle,
     AttachmentBuilder,
 } from "discord.js";
+import { registerChannel } from "../helpers/channels.js";
+
+// "995387003409539073"
+const roundInfoCh = registerChannel("ROUND_INFO");
 
 export default (client) => {
     client.handleTrackersDemos = async () => {
@@ -311,7 +315,7 @@ export default (client) => {
                 clientFTP.close();
                 console.log("\x1b[36m", "Ready for next round!", "\x1b[0m");
                 await client.channels.cache
-                    .get("995387003409539073")
+                    .get(roundInfoCh())
                     .send({
                         embeds: [roundEmbed],
                         components: [row],

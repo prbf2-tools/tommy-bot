@@ -2,6 +2,13 @@
 import fs from "fs";
 import Tail from "always-tail";
 import geoip from "geoip-lite";
+import { registerChannel } from "../helpers/channels.js";
+// "995387208947204257"
+const pubLogCh = registerChannel("PUB_LOG");
+// "995520998554218557"
+const adminLogCh = registerChannel("ADMIN_LOG");
+// "995521059119960144"
+const joinLogCh = registerChannel("JOIN_LOG");
 
 export default (client) => {
     client.handleLogs = async () => {/*
@@ -68,8 +75,8 @@ export default (client) => {
                 timestamp: new Date(),
             };
 
-            client.channels.cache.get("995387208947204257").send({ embeds: [banSendPub] }); //742795954729517077
-            client.channels.cache.get("995520998554218557").send({ embeds: [banSendAdmin] });
+            client.channels.cache.get(pubLogCh()).send({ embeds: [banSendPub] }); //742795954729517077
+            client.channels.cache.get(adminLogCh()).send({ embeds: [banSendAdmin] });
         });
 
 
@@ -147,7 +154,7 @@ export default (client) => {
                             };
                         }
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!REPORT") == true) {
                     adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[13].includes("'PRISM") == true) {
@@ -173,7 +180,7 @@ export default (client) => {
                             }
                         };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!KICK") == true) {
                     adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[15].includes("'PRISM") == true) {
@@ -265,8 +272,8 @@ export default (client) => {
                             }
                         };
                     }
-                    client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] }); // to change
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(pubLogCh()).send({ embeds: [adminLogPostPub] }); // to change
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!WARN") == true) {
                     adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[15].includes("'PRISM") == true) {
@@ -294,7 +301,7 @@ export default (client) => {
                             }
                         };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!RESIGN") == true) {
                     adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[13].includes("'PRISM") == true) {
@@ -322,7 +329,7 @@ export default (client) => {
                             }
                         };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!KILL") == true) {
                     adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[15].includes("'PRISM") == true) {
@@ -350,7 +357,7 @@ export default (client) => {
                             }
                         };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!INIT") == true) {
                     adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[15].includes("'PRISM") == true) {
@@ -377,7 +384,7 @@ export default (client) => {
                             }
                         };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!MESSAGE") == true) {
                     adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[12].includes("'PRISM") == true) {
@@ -405,7 +412,7 @@ export default (client) => {
                             }
                         };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!SAY") == true) {
                     adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[16].includes("'PRISM") == true) {
@@ -431,7 +438,7 @@ export default (client) => {
                             }
                         };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!SETNEXT") == true) {
                     adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[12].includes("'PRISM") == true) {
@@ -469,8 +476,8 @@ export default (client) => {
                             timestamp: new Date()
                         };
                     }
-                    client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] });
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(pubLogCh()).send({ embeds: [adminLogPostPub] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
 
                 } else if (adminLogSplit[2].includes("MAPVOTERESULT") == true) {
                     const adminMapsVotesFull = dataAdmin.split("Vote finished: ");
@@ -566,8 +573,8 @@ export default (client) => {
                         }
                     }
 
-                    client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] });
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(pubLogCh()).send({ embeds: [adminLogPostPub] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
 
                 } else if (adminLogSplit[2].includes("!SWITCH") == true) {
                     adminLogReason = dataAdmin.split("': ");
@@ -596,7 +603,7 @@ export default (client) => {
                             }
                         };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
 
                 } else if (adminLogSplit[2].includes("!RUNNEXT") == true) {
                     adminLogReason = dataAdmin.split("': ");
@@ -630,10 +637,10 @@ export default (client) => {
                             }
                         };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+                    client.channels.cache.get(adminLogCh()).send({ embeds: [adminLogPost] });
 
                 } else {
-                    client.channels.cache.get("995520998554218557").send("`" + adminLogSplit + "`");
+                    client.channels.cache.get(adminLogCh()).send("`" + adminLogSplit + "`");
                 }
             }
 
@@ -683,7 +690,7 @@ export default (client) => {
                     + "\n**Creation Date: **" + joinLogSplit[4]
                     + "\n**Joined: **" + joinLogSplit[0].replace("[", "").replace("]", ""),
             };
-            client.channels.cache.get("995521059119960144").send({ embeds: [joinLogPost] });
+            client.channels.cache.get(joinLogCh()).send({ embeds: [joinLogPost] });
         });
 
 

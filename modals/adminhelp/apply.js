@@ -2,6 +2,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { EmbedBuilder } from "discord.js";
+import { registerChannel } from "../../helpers/channels.js";
+
+// "1021942980950634597"
+const publicApplicationCh = registerChannel("PUBLIC_APPLICATION");
+// "1022285742799589416"
+const privateApplicationCh = registerChannel("PRIVATE_APPLICATION");
 
 export default {
     data: {
@@ -24,7 +30,7 @@ export default {
                 **How active: **
                 ${interaction.fields.getTextInputValue("active")}\n
             `);
-        await interaction.member.guild.channels.cache.get("1021942980950634597").threads.create({
+        await interaction.member.guild.channels.cache.get(publicApplicationCh()).threads.create({
             name: `🔵 ${interaction.user.username}'s Application`,
             message: {
                 content: `<@&${process.env.ADMIN_ID}>`,
@@ -56,7 +62,7 @@ export default {
                     **How active: **
                     ${interaction.fields.getTextInputValue("active")}\n
                 `);
-                interaction.member.guild.channels.cache.get("1022285742799589416").threads.create({
+                interaction.member.guild.channels.cache.get(privateApplicationCh()).threads.create({
                     name: `🔒🔵 ${interaction.user.username}'s Application`,
                     message: {
                         content: `<@&${process.env.ADMIN_ID}>`,

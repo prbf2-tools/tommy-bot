@@ -2,6 +2,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { EmbedBuilder } from "discord.js";
+import { registerChannel } from "../../helpers/channels.js";
+
+// "1021942980950634597"
+const publicAppealCh = registerChannel("PUBLIC_APPEAL");
+// "1022285742799589416"
+const privateAppealCh = registerChannel("PRIVATE_APPEAL");
 
 export default {
     data: {
@@ -20,7 +26,7 @@ export default {
                 **What did he do: **
                 ${interaction.fields.getTextInputValue("why")}\n
             `);
-        await interaction.member.guild.channels.cache.get("1021942980950634597").threads.create({
+        await interaction.member.guild.channels.cache.get(publicAppealCh()).threads.create({
             name: `🟢 ${interaction.user.username}'s Appeal`,
             message: {
                 content: `<@&${process.env.ADMIN_ID}>`,
@@ -48,7 +54,7 @@ export default {
                     **The bannable offence: **
                     ${interaction.fields.getTextInputValue("why")}\n
                 `);
-                interaction.member.guild.channels.cache.get("1022285742799589416").threads.create({
+                interaction.member.guild.channels.cache.get(privateAppealCh()).threads.create({
                     name: `🔒🟢 ${interaction.user.username}'s Appeal`,
                     message: {
                         content: `<@&${process.env.ADMIN_ID}>`,

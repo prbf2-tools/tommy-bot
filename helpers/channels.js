@@ -35,7 +35,7 @@ export async function createChannels(client) {
   try {
     const guild = await client.guilds.fetch(process.env.GUILD_ID)
     const channels = await guild.channels.fetch()
-    const category = channels.find((c) => c.name === payload.name && c.type === payload.type)
+    let category = channels.find((c) => c.name === payload.name && c.type === payload.type)
     if (category === undefined) {
       category = await guild.channels.create({
         name: "Tommy's Category",
@@ -50,7 +50,7 @@ export async function createChannels(client) {
           parent: category.id,
           type: ChannelType.GuildText,
         })
-        setChannel(key, newChannel.id)
+        setChannel(channel.key, newChannel.id)
       }
     })
   } catch (e) {

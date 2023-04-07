@@ -3,9 +3,12 @@ dotenv.config();
 
 import request from "request";
 import locals from "../localization.json" assert { type: "json"};
+import { registerChannel } from "../helpers/channels.js";
 
-//Discord
-
+// "1031262929275863060"
+const svMapCh = registerChannel("SERVER_MAP");
+// "1031263100420235366"
+const svDetailsCh = registerChannel("SERVER_DETAILS");
 
 export default (client) => {
     client.handleInfo = async () => {
@@ -31,8 +34,8 @@ export default (client) => {
                         //client.channels.cache.get(' TO CHANGE').setName(gameModes+', '+layers)   //used to be 1031263231240573028
 
 
-                        client.channels.cache.get("1031262929275863060").setName("│Map: " + mapName);
-                        client.channels.cache.get("1031263100420235366").setName("│" + gameModes + ", " + layers + " | (" + numplayers + "/100)");
+                        client.channels.cache.get(svMapCh()).setName("│Map: " + mapName);
+                        client.channels.cache.get(svDetailsCh()).setName("│" + gameModes + ", " + layers + " | (" + numplayers + "/100)");
 
 
 
