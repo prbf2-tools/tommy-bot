@@ -1,9 +1,9 @@
 export const getCommonValues = (arr1, arr2) => {
-    const commonValues = []
+    const commonValues = [];
     arr1.forEach((item) => {
         if (arr2.includes(item)) {
-            commonValues.push(item)
+            commonValues.push(item);
         }
-    })
-    return commonValues
-}
+    });
+    return commonValues;
+};

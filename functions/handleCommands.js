@@ -1,21 +1,21 @@
-import { REST } from "@discordjs/rest"
-import { Routes } from "discord-api-types/v9"
-import fs from "fs"
+import { REST } from "@discordjs/rest";
+import { Routes } from "discord-api-types/v9";
+import fs from "fs";
 
-const clientId = process.env.CLIENT_ID
-const guildId = process.env.GUILD_ID
+const clientId = process.env.CLIENT_ID;
+const guildId = process.env.GUILD_ID;
 
 
 export default (client) => {
     client.handleCommands = async (commandFolders, path) => {
-        client.commandArray = []
+        client.commandArray = [];
         for (const folder of commandFolders) {
-            const commandFiles = fs.readdirSync(`${path}/${folder}`).filter(file => file.endsWith(".js"))
+            const commandFiles = fs.readdirSync(`${path}/${folder}`).filter(file => file.endsWith(".js"));
 
             for (const file of commandFiles) {
-                const { default: command } = await import(`../commands/${folder}/${file}`)
-                client.commands.set(command.data.name, command)
-                client.commandArray.push(command.data.toJSON())
+                const { default: command } = await import(`../commands/${folder}/${file}`);
+                client.commands.set(command.data.name, command);
+                client.commandArray.push(command.data.toJSON());
             }
         }
         const rest = new REST({
@@ -24,19 +24,19 @@ export default (client) => {
 
         (async () => {
             try {
-                console.log("\x1b[42m", "==================================== \n            BOT RESTARTED!            \n ====================================", "\x1b[0m")
-                console.log("Started refreshing application (/) commands.")
+                console.log("\x1b[42m", "==================================== \n            BOT RESTARTED!            \n ====================================", "\x1b[0m");
+                console.log("Started refreshing application (/) commands.");
                 await rest.put(
                     Routes.applicationGuildCommands(clientId, guildId),
                     {
                         body: client.commandArray
                     },
-                )
+                );
 
-                console.log("Successfully reloaded application (/) commands.")
+                console.log("Successfully reloaded application (/) commands.");
             } catch (error) {
-                console.error(error)
+                console.error(error);
             }
-        })()
-    }
-}
+        })();
+    };
+};

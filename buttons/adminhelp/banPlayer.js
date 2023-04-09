@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ModalBuilder, TextInputComponent, StringSelectMenuBuilder } from "discord.js"
+import { ActionRowBuilder, ModalBuilder, TextInputComponent, StringSelectMenuBuilder } from "discord.js";
 
 export default {
     data: {
@@ -7,7 +7,7 @@ export default {
     async execute(interaction) {
         const modal = new ModalBuilder()
             .setCustomId("banPlayer")
-            .setTitle("🔴 banPlayer")
+            .setTitle("🔴 banPlayer");
 
         const hashId = new TextInputComponent()
             .setCustomId("hashId")
@@ -16,7 +16,7 @@ export default {
             .setRequired(true)
             .setMaxLength(26)
             .setMinLength(26)
-            .setStyle("SHORT")
+            .setStyle("SHORT");
         const duration = new StringSelectMenuBuilder()
             .setCustomId("duration")
             .setPlaceholder("Duration?")
@@ -38,21 +38,21 @@ export default {
                 { label: "3 Months", value: "7889400" },
                 { label: "6 Months", value: "15778800" },
                 { label: "1 Year", value: "189345600" },
-                { label: "Permanent", value: "perm" })
+                { label: "Permanent", value: "perm" });
         const reason = new TextInputComponent()
             .setCustomId("reason")
             .setLabel("What was reason for bannable offence?")
             .setPlaceholder("Explaination")
             .setRequired(true)
-            .setStyle("PARAGRAPH")
+            .setStyle("PARAGRAPH");
 
-        const firstActionRow = new ActionRowBuilder().addComponents(hashId)
-        const secondActionRow = new ActionRowBuilder().addComponents(duration)
-        const thirdActionRow = new ActionRowBuilder().addComponents(reason)
+        const firstActionRow = new ActionRowBuilder().addComponents(hashId);
+        const secondActionRow = new ActionRowBuilder().addComponents(duration);
+        const thirdActionRow = new ActionRowBuilder().addComponents(reason);
 
-        modal.addComponents(firstActionRow, secondActionRow, thirdActionRow)
+        modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
 
 
-        interaction.showModal(modal)
+        interaction.showModal(modal);
     }
-}
+};

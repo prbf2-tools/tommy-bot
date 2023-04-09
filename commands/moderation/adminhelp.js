@@ -4,7 +4,7 @@ import {
     ButtonBuilder,
     SlashCommandBuilder,
     ButtonStyle,
-} from "discord.js"
+} from "discord.js";
 
 export default {
     data: new SlashCommandBuilder()
@@ -15,7 +15,7 @@ export default {
             .setColor("#0074ba")
             .setTitle("🔷 Admin Remote Commands")
             .setDescription(`
-                **\`WIP\`**`)
+                **\`WIP\`**`);
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
@@ -34,10 +34,10 @@ export default {
                     .setCustomId("remoteCommands")
                     .setLabel("Remote Commands")
                     .setStyle(ButtonStyle.Secondary)
-            )
+            );
         await interaction.reply({
             embeds: [embed],
             components: [row]
-        })
+        });
     },
-}
+};

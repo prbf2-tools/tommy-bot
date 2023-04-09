@@ -1,7 +1,7 @@
 
-import fs from "fs"
-import Tail from "always-tail"
-import geoip from "geoip-lite"
+import fs from "fs";
+import Tail from "always-tail";
+import geoip from "geoip-lite";
 
 export default (client) => {
     client.handleLogs = async () => {/*
@@ -13,28 +13,28 @@ export default (client) => {
   ███       ███  ███   ███  ███       ███ ███ ███    ██ ██       ███          ███     ███   ███    ██   ███    ███
  ███         ███ ██████     ███       ███ ███ ███      ███       ██████████     █████        ██████       ██████  
     */
-        var filenameBans = "logs/banlist_info.log"
-        if (!fs.existsSync(filenameBans)) fs.writeFileSync(filenameBans, "")
-        const tailBans = new Tail(filenameBans, "\n")
+        var filenameBans = "logs/banlist_info.log";
+        if (!fs.existsSync(filenameBans)) fs.writeFileSync(filenameBans, "");
+        const tailBans = new Tail(filenameBans, "\n");
 
         tailBans.on("line", function(dataBans) {
-            var banLogSplit = dataBans.split(" ")
-            console.log(banLogSplit)
-            var banAdmin = banLogSplit[banLogSplit.length - 2]
-            var banName = banLogSplit[3] + " " + banLogSplit[4]
-            var banHash = banLogSplit[2]
-            var banIP = banLogSplit[5]
-            let banDuration = ""
+            var banLogSplit = dataBans.split(" ");
+            console.log(banLogSplit);
+            var banAdmin = banLogSplit[banLogSplit.length - 2];
+            var banName = banLogSplit[3] + " " + banLogSplit[4];
+            var banHash = banLogSplit[2];
+            var banIP = banLogSplit[5];
+            let banDuration = "";
             if (banLogSplit[banLogSplit.length - 1] === "(perm)\r") {
-                banDuration = "Permanently"
+                banDuration = "Permanently";
             } else if (banLogSplit[banLogSplit.length - 1] === "(round)\r") {
-                banDuration = "Current Round"
+                banDuration = "Current Round";
             } else {
-                var banTimeRaw = banLogSplit[banLogSplit.length - 1].replace("(", "").replace(")", "")
-                var banTimeHour = Number(banTimeRaw) / 3600
-                banDuration = banTimeHour + " Hours"
+                var banTimeRaw = banLogSplit[banLogSplit.length - 1].replace("(", "").replace(")", "");
+                var banTimeHour = Number(banTimeRaw) / 3600;
+                banDuration = banTimeHour + " Hours";
             }
-            var banReason = banLogSplit.splice(6, banLogSplit.length).join(" ").split("banned by")[0]
+            var banReason = banLogSplit.splice(6, banLogSplit.length).join(" ").split("banned by")[0];
 
             const banSendPub = {
                 color: 0x991b0d,
@@ -45,16 +45,16 @@ export default (client) => {
                     text: banAdmin + " In-Game"
                 },
                 timestamp: new Date(),
-            }
-            var geoready = "INVALID"
-            banIP = banLogSplit[5]
-            var geo2 = geoip.lookup(banIP)
+            };
+            var geoready = "INVALID";
+            banIP = banLogSplit[5];
+            var geo2 = geoip.lookup(banIP);
             if (geo2 === null) {
-                geoready = "white"
+                geoready = "white";
             } else {
-                geoready = geo2.country.toLowerCase()
+                geoready = geo2.country.toLowerCase();
             }
-            var banIPSafe = banIP.split(".")
+            var banIPSafe = banIP.split(".");
 
             const banSendAdmin = {
                 color: 0x991b0d,
@@ -66,36 +66,36 @@ export default (client) => {
                     + "\n**Hash-ID:** `" + banHash
                     + "`\n**IP:** `" + banIPSafe[0] + "." + banIPSafe[1] + ".***.***` :flag_" + geoready + ":",
                 timestamp: new Date(),
-            }
+            };
 
-            client.channels.cache.get("995387208947204257").send({ embeds: [banSendPub] }) //742795954729517077
-            client.channels.cache.get("995520998554218557").send({ embeds: [banSendAdmin] })
-        })
-
-
+            client.channels.cache.get("995387208947204257").send({ embeds: [banSendPub] }); //742795954729517077
+            client.channels.cache.get("995520998554218557").send({ embeds: [banSendAdmin] });
+        });
 
 
-        var filenameAdmin = "logs/ra_adminlog.txt"
-        if (!fs.existsSync(filenameAdmin)) fs.writeFileSync(filenameAdmin, "")
-        const tailAdmins = new Tail(filenameAdmin, "\n")
+
+
+        var filenameAdmin = "logs/ra_adminlog.txt";
+        if (!fs.existsSync(filenameAdmin)) fs.writeFileSync(filenameAdmin, "");
+        const tailAdmins = new Tail(filenameAdmin, "\n");
 
         tailAdmins.on("line", function(dataAdmin) {
-            const adminLogSplit = dataAdmin.split(" ")
+            const adminLogSplit = dataAdmin.split(" ");
             const skip = [
                 "SESSIONERR",
                 "!HASH",
                 "!TEMPBAN",
                 "!BAN",
                 "!MAPVOTE",
-            ]
+            ];
 
             if (!skip.find((s) => adminLogSplit[2].includes(s))) {
-                let adminLogReason = ""
-                let adminLogPost = {}
-                let adminLogPostPub = {}
+                let adminLogReason = "";
+                let adminLogPost = {};
+                let adminLogPostPub = {};
                 //console.log(adminLogSplit)
                 if (adminLogSplit[2].includes("!REPORTP") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[12].includes("'PRISM") == true) {
                         if (adminLogSplit[15] === "on") {
                             adminLogPost = {
@@ -108,7 +108,7 @@ export default (client) => {
                                 footer: {
                                     text: "PRISM"
                                 }
-                            }
+                            };
                         } else {
                             adminLogPost = {
                                 color: 0X89a110,
@@ -119,7 +119,7 @@ export default (client) => {
                                 footer: {
                                     text: "PRISM"
                                 }
-                            }
+                            };
                         }
                     } else {
                         if (adminLogSplit[14] === "on") {
@@ -133,7 +133,7 @@ export default (client) => {
                                 footer: {
                                     text: "IN-GAME"
                                 }
-                            }
+                            };
                         } else {
                             adminLogPost = {
                                 color: 0X89a110,
@@ -144,12 +144,12 @@ export default (client) => {
                                 footer: {
                                     text: "IN-GAME"
                                 }
-                            }
+                            };
                         }
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!REPORT") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[13].includes("'PRISM") == true) {
                         adminLogPost = {
                             color: 0X89a110,
@@ -160,7 +160,7 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                     } else {
                         adminLogPost = {
                             color: 0X89a110,
@@ -171,11 +171,11 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!KICK") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[15].includes("'PRISM") == true) {
                         adminLogPost = {
                             color: 0XEB7434,
@@ -187,7 +187,7 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                         adminLogPostPub = {
                             color: 0XEB7434,
                             title: "Kicked",
@@ -198,7 +198,7 @@ export default (client) => {
                             footer: {
                                 text: "You can rejoin after getting kicked."
                             }
-                        }
+                        };
                     } else if (adminLogSplit[15].includes("'SERVER'") == true) {
                         if (adminLogReason[1].includes("Account related to banned key:") == true) {
                             adminLogPost = {
@@ -211,7 +211,7 @@ export default (client) => {
                                 footer: {
                                     text: "THIS MESSAGE DOES NOT EXIST! IF PLAYER ASK WHY THEY GET KICKED, JUST PING MAX AND TELL HIM THAT I'LL LOOK INTO IT!"
                                 }
-                            }
+                            };
                             adminLogPostPub = {
                                 color: 0XEB7434,
                                 title: "Kicked",
@@ -219,7 +219,7 @@ export default (client) => {
                                     + "`\n**On user: **`" + adminLogSplit[17].replace("'", "") + " " + adminLogSplit[18].replace("':", "")
                                     + "`\n**Reason: **`ERROR`",
                                 timestamp: new Date(),
-                            }
+                            };
                         } else {
                             adminLogPost = {
                                 color: 0XEB7434,
@@ -228,7 +228,7 @@ export default (client) => {
                                     + "`\n**On user: **`" + adminLogSplit[17].replace("'", "") + " " + adminLogSplit[18].replace("':", "")
                                     + "`\n**Reason: **" + adminLogReason[1],
                                 timestamp: new Date(),
-                            }
+                            };
                             adminLogPostPub = {
                                 color: 0XEB7434,
                                 title: "Kicked",
@@ -239,7 +239,7 @@ export default (client) => {
                                 footer: {
                                     text: "You can rejoin after getting kicked."
                                 }
-                            }
+                            };
                         }
                     } else {
                         adminLogPost = {
@@ -252,7 +252,7 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                         adminLogPostPub = {
                             color: 0XEB7434,
                             title: "Kicked",
@@ -263,12 +263,12 @@ export default (client) => {
                             footer: {
                                 text: "You can rejoin after getting kicked."
                             }
-                        }
+                        };
                     }
-                    client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] }) // to change
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] }); // to change
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!WARN") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[15].includes("'PRISM") == true) {
                         adminLogPost = {
                             color: 0XEBCD34,
@@ -280,7 +280,7 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                     } else {
                         adminLogPost = {
                             color: 0XEBCD34,
@@ -292,11 +292,11 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!RESIGN") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[13].includes("'PRISM") == true) {
                         adminLogPost = {
                             color: 0Xbba170,
@@ -308,7 +308,7 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                     } else {
                         adminLogPost = {
                             color: 0Xbba170,
@@ -320,11 +320,11 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!KILL") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[15].includes("'PRISM") == true) {
                         adminLogPost = {
                             color: 0Xff8bcb,
@@ -336,7 +336,7 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                     } else {
                         adminLogPost = {
                             color: 0Xff8bcb,
@@ -348,11 +348,11 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!INIT") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[15].includes("'PRISM") == true) {
                         //console.log(client.channels.cache.get('1033130739505565716').availableTags)
                         adminLogPost = {
@@ -364,7 +364,7 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                     } else {
                         adminLogPost = {
                             color: 0X3f213f,
@@ -375,11 +375,11 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!MESSAGE") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[12].includes("'PRISM") == true) {
                         adminLogPost = {
                             color: 0X2c37ca,
@@ -391,7 +391,7 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                     } else {
                         adminLogPost = {
                             color: 0X2c37ca,
@@ -403,11 +403,11 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!SAY") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[16].includes("'PRISM") == true) {
                         adminLogPost = {
                             color: 0X34EB6B,
@@ -418,7 +418,7 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                     } else {
                         adminLogPost = {
                             color: 0X34EB6B,
@@ -429,11 +429,11 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
                 } else if (adminLogSplit[2].includes("!SETNEXT") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[12].includes("'PRISM") == true) {
                         adminLogPost = {
                             color: 0X10a17d,
@@ -444,13 +444,13 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                         adminLogPostPub = {
                             color: 0X10a17d,
                             title: "Next Map Set",
                             description: adminLogReason[1],
                             timestamp: new Date()
-                        }
+                        };
                     } else {
                         adminLogPost = {
                             color: 0X10a17d,
@@ -461,23 +461,23 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                         adminLogPostPub = {
                             color: 0X10a17d,
                             title: "Next Map Set",
                             description: adminLogReason[1],
                             timestamp: new Date()
-                        }
+                        };
                     }
-                    client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] })
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] });
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
 
                 } else if (adminLogSplit[2].includes("MAPVOTERESULT") == true) {
-                    const adminMapsVotesFull = dataAdmin.split("Vote finished: ")
-                    const adminMapsVotesEach = adminMapsVotesFull[1].split(" | ")
+                    const adminMapsVotesFull = dataAdmin.split("Vote finished: ");
+                    const adminMapsVotesEach = adminMapsVotesFull[1].split(" | ");
                     if (adminMapsVotesEach.length === 2) {
-                        const adminMapsVotesEachElem1 = adminMapsVotesEach[0].split(": ")
-                        const adminMapsVotesEachElem2 = adminMapsVotesEach[1].split(": ")
+                        const adminMapsVotesEachElem1 = adminMapsVotesEach[0].split(": ");
+                        const adminMapsVotesEachElem2 = adminMapsVotesEach[1].split(": ");
                         if (adminLogSplit[7].includes("'PRISM") == true) {
                             adminLogPost = {
                                 color: 0X5c32a8,
@@ -489,14 +489,14 @@ export default (client) => {
                                 footer: {
                                     text: "PRISM"
                                 }
-                            }
+                            };
                             adminLogPostPub = {
                                 color: 0X5c32a8,
                                 title: "Map Vote Results",
                                 description: "**" + adminMapsVotesEachElem1[0] + ": **`" + adminMapsVotesEachElem1[1]
                                     + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1] + "`",
                                 timestamp: new Date()
-                            }
+                            };
                         } else {
                             adminLogPost = {
                                 color: 0X5c32a8,
@@ -508,19 +508,19 @@ export default (client) => {
                                 footer: {
                                     text: "IN-GAME"
                                 }
-                            }
+                            };
                             adminLogPostPub = {
                                 color: 0X5c32a8,
                                 title: "Map Vote Results",
                                 description: "**" + adminMapsVotesEachElem1[0] + ": **`" + adminMapsVotesEachElem1[1]
                                     + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1] + "`",
                                 timestamp: new Date()
-                            }
+                            };
                         }
                     } else {
-                        const adminMapsVotesEachElem1 = adminMapsVotesEach[0].split(": ")
-                        const adminMapsVotesEachElem2 = adminMapsVotesEach[1].split(": ")
-                        const adminMapsVotesEachElem3 = adminMapsVotesEach[2].split(": ")
+                        const adminMapsVotesEachElem1 = adminMapsVotesEach[0].split(": ");
+                        const adminMapsVotesEachElem2 = adminMapsVotesEach[1].split(": ");
+                        const adminMapsVotesEachElem3 = adminMapsVotesEach[2].split(": ");
                         if (adminLogSplit[7].includes("'PRISM") == true) {
                             adminLogPost = {
                                 color: 0X5c32a8,
@@ -533,7 +533,7 @@ export default (client) => {
                                 footer: {
                                     text: "PRISM"
                                 }
-                            }
+                            };
                             adminLogPostPub = {
                                 color: 0X5c32a8,
                                 title: "Map Vote Results",
@@ -541,7 +541,7 @@ export default (client) => {
                                     + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1]
                                     + "`\n**" + adminMapsVotesEachElem3[0] + ": **`" + adminMapsVotesEachElem3[1] + "`",
                                 timestamp: new Date(),
-                            }
+                            };
                         } else {
                             adminLogPost = {
                                 color: 0X5c32a8,
@@ -554,7 +554,7 @@ export default (client) => {
                                 footer: {
                                     text: "IN-GAME"
                                 }
-                            }
+                            };
                             adminLogPostPub = {
                                 color: 0X5c32a8,
                                 title: "Map Vote Results",
@@ -562,15 +562,15 @@ export default (client) => {
                                     + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1]
                                     + "`\n**" + adminMapsVotesEachElem3[0] + ": **`" + adminMapsVotesEachElem3[1] + "`",
                                 timestamp: new Date()
-                            }
+                            };
                         }
                     }
 
-                    client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] })
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] });
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
 
                 } else if (adminLogSplit[2].includes("!SWITCH") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
                     if (adminLogSplit[13].includes("'PRISM") == true) {
                         adminLogPost = {
                             color: 0X3292a8,
@@ -582,7 +582,7 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                     } else {
                         adminLogPost = {
                             color: 0X3292a8,
@@ -594,12 +594,12 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
 
                 } else if (adminLogSplit[2].includes("!RUNNEXT") == true) {
-                    adminLogReason = dataAdmin.split("': ")
+                    adminLogReason = dataAdmin.split("': ");
 
                     fs.writeFile("logs/gungame_winner.txt", "Admin \"!runnext\"", function(err) {
                         if (err) {
@@ -607,7 +607,7 @@ export default (client) => {
                         } else {
                             // done
                         }
-                    })
+                    });
 
                     if (adminLogSplit[12].includes("'PRISM") == true) {
                         adminLogPost = {
@@ -618,7 +618,7 @@ export default (client) => {
                             footer: {
                                 text: "PRISM"
                             }
-                        }
+                        };
                     } else {
                         adminLogPost = {
                             color: 0X085441,
@@ -628,16 +628,16 @@ export default (client) => {
                             footer: {
                                 text: "IN-GAME"
                             }
-                        }
+                        };
                     }
-                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] })
+                    client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
 
                 } else {
-                    client.channels.cache.get("995520998554218557").send("`" + adminLogSplit + "`")
+                    client.channels.cache.get("995520998554218557").send("`" + adminLogSplit + "`");
                 }
             }
 
-        })
+        });
         /*███      ██████     ███ ████     ███       ███            █████         █████       ██████  
           ███    ███    ███   ███ ██ ███   ███       ███          ███    ███    ██    ███   ███    ███
           ███  ███        ███ ███ ███ ███  ███       ███        ███        ███ ██            ███      
@@ -646,29 +646,29 @@ export default (client) => {
      ██   ███    ███    ███   ███ ███    ██ ██       ███          ███    ███    ███    ██   ███    ███
       █████        ██████     ███ ███      ███       ██████████     █████        ██████       ██████  */
 
-        var filenameJoin = "logs/joinlog.log"
-        if (!fs.existsSync(filenameJoin)) fs.writeFileSync(filenameJoin, "")
-        const tailJoin = new Tail(filenameJoin, "\n")
+        var filenameJoin = "logs/joinlog.log";
+        if (!fs.existsSync(filenameJoin)) fs.writeFileSync(filenameJoin, "");
+        const tailJoin = new Tail(filenameJoin, "\n");
 
         tailJoin.on("line", function(dataJoin) {
-            let joinLoglines = dataJoin.trim().split("\n")
-            var joinLogFormat = joinLoglines[joinLoglines.length - 1].toString("utf-8")
-            var joinLogSplit = joinLogFormat.split("\t")
-            var accType = "Standard"
+            let joinLoglines = dataJoin.trim().split("\n");
+            var joinLogFormat = joinLoglines[joinLoglines.length - 1].toString("utf-8");
+            var joinLogSplit = joinLogFormat.split("\t");
+            var accType = "Standard";
             if (joinLogSplit[6] == "(LEGACY)") {
-                accType = "Legacy"
+                accType = "Legacy";
             } else if (joinLogSplit[6] == "(VAC BANNED)") {
-                accType = "VAC Banned"
+                accType = "VAC Banned";
             } else if (joinLogSplit[6] == "(LEGACY)(VAC BANNED)") {
-                accType = "Legacy and VAC Banned"
+                accType = "Legacy and VAC Banned";
             }
-            var geoready = "INVALID"
-            var ip = joinLogSplit[5]
-            var geo = geoip.lookup(ip)
+            var geoready = "INVALID";
+            var ip = joinLogSplit[5];
+            var geo = geoip.lookup(ip);
             if (geo === null) {
-                geoready = "white"
+                geoready = "white";
             } else {
-                geoready = geo.country.toLowerCase()
+                geoready = geo.country.toLowerCase();
             }
 
 
@@ -682,9 +682,9 @@ export default (client) => {
                     + "\n**Account Type: **" + accType
                     + "\n**Creation Date: **" + joinLogSplit[4]
                     + "\n**Joined: **" + joinLogSplit[0].replace("[", "").replace("]", ""),
-            }
-            client.channels.cache.get("995521059119960144").send({ embeds: [joinLogPost] })
-        })
+            };
+            client.channels.cache.get("995521059119960144").send({ embeds: [joinLogPost] });
+        });
 
 
 
@@ -708,14 +708,14 @@ export default (client) => {
 
 
         tailAdmins.on("error", function(error) {
-            console.log("ERROR: ", error)
-        })
+            console.log("ERROR: ", error);
+        });
         tailJoin.on("error", function(error) {
-            console.log("ERROR: ", error)
-        })
+            console.log("ERROR: ", error);
+        });
 
-        tailAdmins.watch()
-        tailJoin.watch()
+        tailAdmins.watch();
+        tailJoin.watch();
 
-    }
-}
+    };
+};

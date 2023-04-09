@@ -1,7 +1,7 @@
-import dotenv from "dotenv"
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 
-import { EmbedBuilder } from "discord.js"
+import { EmbedBuilder } from "discord.js";
 
 export default {
     data: {
@@ -21,7 +21,7 @@ export default {
                 ${interaction.fields.getTextInputValue("dateTime")}\n
                 **What happened: **
                 ${interaction.fields.getTextInputValue("what")}\n
-            `)
+            `);
         await interaction.member.guild.channels.cache.get("1021942980950634597").threads.create({
             name: `🔴 ${interaction.user.username}'s Report`,
             message: {
@@ -31,11 +31,11 @@ export default {
             appliedTags: ["1021973747546210305"]
         })
             .then(threadChannel => {
-                threadChannel.members.add(interaction.user.id)
+                threadChannel.members.add(interaction.user.id);
                 interaction.reply({
                     content: `Success! Please check <#${threadChannel.id}>!`,
                     ephemeral: true
-                })
+                });
                 const embed = new EmbedBuilder()
                     .setColor("#d03147")
                     .setTitle(`🔒🔴 ${interaction.user.username} Report Incident`)
@@ -51,7 +51,7 @@ export default {
                         ${interaction.fields.getTextInputValue("dateTime")}\n
                         **What happened: **
                         ${interaction.fields.getTextInputValue("what")}\n
-                    `)
+                    `);
                 interaction.member.guild.channels.cache.get("1022285742799589416").threads.create({
                     name: `🔒🔴 ${interaction.user.username}'s Report`,
                     message: {
@@ -59,7 +59,7 @@ export default {
                         embeds: [embed]
                     },
                     appliedTags: ["1022300442023186462"]
-                })
-            })
+                });
+            });
     }
-}
+};
