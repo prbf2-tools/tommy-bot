@@ -2,8 +2,8 @@ import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v9"
 import fs from "fs"
 
-const clientId = "994028593837527120"
-const guildId = "993921259219980338"
+const clientId = process.env.CLIENT_ID
+const guildId = process.env.GUILD_ID
 
 
 export default (client) => {
