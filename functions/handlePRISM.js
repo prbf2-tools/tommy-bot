@@ -10,9 +10,6 @@ import rand from "csprng";
 const netClient = new net.Socket();
 
 // hash sums
-const passwordhash = crypto.createHash("sha1");
-const saltedpass = crypto.createHash("sha1");
-const challengedigest = crypto.createHash("sha1");
 
 //Generate a client Challenge key.
 const theCCK = rand(160, 36);
@@ -24,12 +21,11 @@ const MSG_END = "\x04\x00";
 
 export default (client) => {
     client.handlePRISM = async () => {
-        const hexString = "\x01login1\x02" + "1\x03" + process.env.PRISM_USRNAME + "\x03" + theCCK + "\x04\x00";
         const netConnect = () => { netClient.connect(process.env.PRISM_PORT, process.env.PRISM_IP); };
         try {
             netClient.once("connect", () => {
                 console.log("Connected to PRISM API");
-                netClient.write(hexString);
+                login1()
             });
             netClient.on("error", (e) => {
                 console.log("The PRISM connection was lost");
@@ -78,6 +74,21 @@ export const writePrismSD = (subject) => {
     console.log("\x01" + subject + "\x02\x04\x00");
 };
 
+const login1 = () => {
+    writeToClient("login1", "1" + MSG_FIELD + process.env.PRISM_USRNAME + MSG_FIELD + theCCK);
+}
+
+const login2 = (passHash, serverChallenge) => {
+    const passwordhash = crypto.createHash("sha1");
+    const saltedpass = crypto.createHash("sha1");
+    const challengedigest = crypto.createHash("sha1");
+
+    passwordhash.update(process.env.PRISM_USRPW);
+    saltedpass.update(passHash + MSG_START + passwordhash.digest("hex"));
+    challengedigest.update(process.env.PRISM_USRNAME + MSG_FIELD + theCCK + MSG_FIELD + serverChallenge + MSG_FIELD + saltedpass.digest("hex"));
+    writeToClient("login2", challengedigest.digest("hex"));
+}
+
 function writeToClient(subject, args) {
     netClient.write(MSG_START + subject + MSG_SUBJECT + args + MSG_END);
 }
@@ -92,10 +103,7 @@ function messageHandler(client, messages) {
     //console.log('Subject: '+subject)
     //Prism Step2
     if (subject == "login1") {
-        passwordhash.update(process.env.PRISM_USRPW);
-        saltedpass.update(fields[0] + "\x01" + passwordhash.digest("hex"));
-        challengedigest.update(process.env.PRISM_USRNAME + "\x03" + theCCK + "\x03" + fields[1] + "\x03" + saltedpass.digest("hex"));
-        writeToClient(netClient, "login2", challengedigest.digest("hex"));
+        login2(fields[0], fields[1])
     }
     // Success subject
     else if (subject == "APIAdminResult") {
