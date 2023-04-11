@@ -17,6 +17,10 @@ const challengedigest = crypto.createHash("sha1");
 //Generate a client Challenge key.
 const theCCK = rand(160, 36);
 
+const MSG_START = "\x01";
+const MSG_SUBJECT = "\x02";
+const MSG_FIELD = "\x03";
+const MSG_END = "\x04\x00";
 
 export default (client) => {
     client.handlePRISM = async () => {
@@ -51,8 +55,8 @@ export default (client) => {
         var msg_buffer = "";
         netClient.on("data", function(rawData) {
             msg_buffer += rawData.toString("utf-8");
-            while (msg_buffer.includes("\x04\x00")) {
-                const length = msg_buffer.indexOf("\x04\x00");
+            while (msg_buffer.includes(MSG_END)) {
+                const length = msg_buffer.indexOf(MSG_END);
                 const msg = msg_buffer.substr(0, length);
                 msg_buffer = msg_buffer.substr(length + 2);
                 messageHandler(client, msg);
@@ -62,20 +66,20 @@ export default (client) => {
     };
 };
 export const writePrism = (subject, args) => {
-    writeToClient(netClient, subject, args);
+    writeToClient(subject, args);
 };
 
 export const writePrism2 = (subject, args) => {
-    writeToClient(netClient, subject, args);
+    writeToClient(subject, args);
 };
 
 export const writePrismSD = (subject) => {
-    writeToClient(netClient, subject, "");
+    writeToClient(subject, "");
     console.log("\x01" + subject + "\x02\x04\x00");
 };
 
-function writeToClient(client, subject, args) {
-    client.write("\x01" + subject + "\x02" + args + "\x04\x00");
+function writeToClient(subject, args) {
+    netClient.write(MSG_START + subject + MSG_SUBJECT + args + MSG_END);
 }
 
 function messageHandler(client, messages) {
@@ -199,7 +203,7 @@ function messageHandler(client, messages) {
                     });
                     //gungame_winner.txt
                 } else if (contentString.includes("!cookie") == true) {
-                    writeToClient(netClient, "say", "!w " + Player.split(" ")[1] + " NOM! You have ate a cookie!");
+                    writeToClient("say", "!w " + Player.split(" ")[1] + " NOM! You have ate a cookie!");
                 }
             }
         });
