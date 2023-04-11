@@ -7,19 +7,15 @@ import fs from "fs";
 
 import rand from "csprng";
 
-let netClient = new net.Socket();
+const netClient = new net.Socket();
 
 // hash sums
-var passwordhash = crypto.createHash("sha1");
-var saltedpass = crypto.createHash("sha1");
-var challengedigest = crypto.createHash("sha1");
+const passwordhash = crypto.createHash("sha1");
+const saltedpass = crypto.createHash("sha1");
+const challengedigest = crypto.createHash("sha1");
 
 //Generate a client Challenge key.
-var theCCK = rand(160, 36);
-
-//const { data } = require("../commands/moderation/prban");
-
-//Prism Step1
+const theCCK = rand(160, 36);
 
 
 export default (client) => {
