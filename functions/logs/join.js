@@ -1,6 +1,7 @@
 import fs from "fs";
 import Tail from "always-tail";
 import geoip from "geoip-lite";
+import { EmbedBuilder } from "discord.js";
 
 export const watchJoin = (client) => {
     const filenameJoin = "logs/joinlog.log";
@@ -38,16 +39,18 @@ const process = (client) => {
             geoready = geo2.country.toLowerCase();
         }
 
-        const joinLogPost = {
-            color: 0X6500B3,
-            title: joinLogSplit[3],
-            description: "**Hash-ID: **`" + joinLogSplit[1]
+        const joinLogPost = new EmbedBuilder()
+            .setColor(0X6500B3)
+            .setTitle(joinLogSplit[3])
+            .setDescription(
+                "**Hash-ID: **`" + joinLogSplit[1]
                 + "`\n**IP: **`" + joinLogSplit[5] + "` :flag_" + geoready
                 + ":\n**Account Level: **" + joinLogSplit[2]
                 + "\n**Account Type: **" + accType
                 + "\n**Creation Date: **" + joinLogSplit[4]
-                + "\n**Joined: **" + joinLogSplit[0].replace("[", "").replace("]", ""),
-        };
+                + "\n**Joined: **" + joinLogSplit[0].replace("[", "").replace("]", "")
+            );
+
         client.channels.cache.get("995521059119960144").send({ embeds: [joinLogPost] });
     };
 };
