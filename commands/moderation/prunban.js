@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
-import PRISM from "../../functions/handlePRISM.js";
+import { ServerCommands } from "../../functions/handlePRISM.js";
 
 export default {
     data: new SlashCommandBuilder()
@@ -18,7 +18,7 @@ export default {
         const reason = interaction.options.getString("reason");
         const perfUsr = interaction.user.username;
 
-        PRISM.writePrism("say", `!unbanid ${hashId}`);
+        ServerCommands.unbanid(hashId);
 
         const embedReply = new EmbedBuilder()
             .setColor(0x36a040)

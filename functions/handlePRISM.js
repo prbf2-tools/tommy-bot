@@ -65,14 +65,24 @@ export const writePrism = (subject, args) => {
     writeToClient(subject, args);
 };
 
-export const writePrism2 = (subject, args) => {
-    writeToClient(subject, args);
-};
+export const writeSayToPrism = (args) => {
+    writePrism("say", args)
+}
 
-export const writePrismSD = (subject) => {
-    writeToClient(subject, "");
-    console.log("\x01" + subject + "\x02\x04\x00");
-};
+export const ServerCommands = {
+    init: () => {
+        writeSayToPrism("!init")
+    },
+    unbanid: (hashID) => {
+        writeSayToPrism(`!unbanid ${hashID}`);
+    },
+    banid: (hashID, reason) => {
+        writeSayToPrism(`!banid ${hashID} ${reason}`);
+    },
+    timebanid: (hashID, duration, reason) => {
+        writeSayToPrism(`!timebanid ${hashID} ${duration} ${reason}`);
+    }
+}
 
 const login1 = () => {
     writeToClient("login1", "1" + MSG_FIELD + process.env.PRISM_USRNAME + MSG_FIELD + theCCK);
@@ -89,11 +99,11 @@ const login2 = (passHash, serverChallenge) => {
     writeToClient("login2", challengedigest.digest("hex"));
 }
 
-function writeToClient(subject, args) {
+const writeToClient = (subject, args) => {
     netClient.write(MSG_START + subject + MSG_SUBJECT + args + MSG_END);
 }
 
-function messageHandler(client, messages) {
+const messageHandler = (client, messages) => {
     const data = messages.toString("utf-8");
     //console.log(data)      // <--------------------------------------------------------------- DEBUG HERE <---------------------------------------------------------------------
     const subject = data.split("\x01")[1].split("\x02")[0];
