@@ -146,38 +146,40 @@ const messageHandler = (client, messages) => {
                     Player = playerRaw + " ` **|** ` ";
                 }
 
-
+                const formater = (icons, str) => {
+                    return `<t:${time}:d> <t:${time}:T> **|** ${icons} \` ${str} \` **|** \` ${Player}${contentString}\``;
+                }
 
                 let formatedFields = "";
                 if (type.includes("Game")) {
                     if (type.includes("(OpFor)")) {
-                        formatedFields = `<t:${time}:d> <t:${time}:T> **|** 🔳🔴 \` Game OpFor\` **|** \` ${Player}${contentString}\``;
+                        formatedFields = formater("🔳🔴", "Game OpFor");
                     } else if (type.includes("(BluFor)")) {
-                        formatedFields = `<t:${time}:d> <t:${time}:T> **|** 🔳🔵 \` Game BluFor\` **|** \` ${Player}${contentString}\``;
+                        formatedFields = formater("🔳🔵", "Game BluFor");
                     } else {
-                        formatedFields = `<t:${time}:d> <t:${time}:T> **|** 🔳 \` Game \` **|** \` ${Player}${contentString}\``;
+                        formatedFields = formater("🔳", "Game");
                     }
                 } else if (type == "Admin Alert") {
-                    formatedFields = `<t:${time}:d> <t:${time}:T> **|** 🟥 \` Admin Alert \` **|** \` ${Player}${contentString}\``;
+                    formatedFields = formater("🟥", "Admin Alert");
                 } else if (type == "Response") {
-                    formatedFields = `<t:${time}:d> <t:${time}:T> **|** 🟨 \` Response \` **|** \` ${Player}${contentString}\``;
+                    formatedFields = formater("🟨", "Response");
                 } else if (type == "Global ") {
-                    formatedFields = `<t:${time}:d> <t:${time}:T> **|** ⬜ \` Global \` **|** \` ${Player}${contentString}\``;
+                    formatedFields = formater("⬜", "Global");
                 } else if (type.includes("BluFor") == true) {
                     if (type == "BluFor") {
-                        formatedFields = `<t:${time}:d> <t:${time}:T> **|** ⬜🔵 \` BluFor \` **|** \` ${Player}${contentString}\``;
+                        formatedFields = formater("⬜🔵", "BluFor");
                     } else if (SquadNum == "*") {
-                        formatedFields = `<t:${time}:d> <t:${time}:T> **|** ⬜🔵 \` BluFor ${SquadNum} \` **|** \` ${Player}${contentString}\``;
+                        formatedFields = formater("⬜🔵", `BluFor ${SquadNum}`);
                     } else {
-                        formatedFields = `<t:${time}:d> <t:${time}:T> **|** ⬜🔵🟢 \` BluFor ${SquadNum} \` **|** \` ${Player}${contentString}\``;
+                        formatedFields = formater("⬜🔵🟢", `BluFor ${SquadNum}`);
                     }
                 } else if (type.includes("OpFor")) {
                     if (type == "OpFor") {
-                        formatedFields = `<t:${time}:d> <t:${time}:T> **|** ⬜🔴 \` OpFor \` **|** \` ${Player}${contentString}\``;
+                        formatedFields = formater("⬜🔴", "OpFor");
                     } else if (SquadNum == "*") {
-                        formatedFields = `<t:${time}:d> <t:${time}:T> **|** ⬜🔴 \` OpFor ${SquadNum} \` **|** \` ${Player}${contentString}\``;
+                        formatedFields = formater("⬜🔴", `OpFor ${SquadNum}`);
                     } else {
-                        formatedFields = `<t:${time}:d> <t:${time}:T> **|** ⬜🔴🟢 \` OpFor ${SquadNum} \` **|** \` ${Player}${contentString}\``;
+                        formatedFields = formater("⬜🔴🟢", `OpFor ${SquadNum}`);
                     }
                 } else {
                     formatedFields = "`" + dataLenght + "`";
