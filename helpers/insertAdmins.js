@@ -3,12 +3,12 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import db from "../db/db.js";
-import PRISM from "../functions/handlePRISM.js";
+import { ServerCommands } from "../functions/handlePRISM.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const pathToRealityAdmin =
-  "C:/Users/Administrator/Desktop/Mafia/mods/pr/python/game/realityconfig_admin.py";
+    "C:/Users/Administrator/Desktop/Mafia/mods/pr/python/game/realityconfig_admin.py";
 const pathToDb = path.join(__dirname, "..", "db");
 
 export const insertAdmins = () => {
@@ -33,13 +33,13 @@ export const insertAdmins = () => {
             const adminName = filterRoleless[i].ingameName;
             const adminRole = filterRoleless[i].role;
             const adminRoleNumber =
-        adminRole === "senior"
-            ? "0"
-            : adminRole === "admin"
-                ? "1"
-                : adminRole === "trial"
-                    ? "2"
-                    : null;
+                adminRole === "senior"
+                    ? "0"
+                    : adminRole === "admin"
+                        ? "1"
+                        : adminRole === "trial"
+                            ? "2"
+                            : null;
             if (!adminRoleNumber) continue;
             str += `    "${adminHashNoSpace}":  ${adminRoleNumber},  #${adminName}\n`;
         }
@@ -51,7 +51,7 @@ export const insertAdmins = () => {
         if (realityconfigFile === realityconfigFileUpdated) return;
         fs.writeFileSync(pathToRealityAdmin, realityconfigFileUpdated);
         setTimeout(() => {
-            PRISM.writePrism("say", "!init");
+            ServerCommands.init();
         }, 2000);
     } catch (err) {
         console.log(`Error Inserting Admins: ${err}`);

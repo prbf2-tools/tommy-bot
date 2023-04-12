@@ -1,13 +1,15 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import { writePrism } from "../../functions/handlePRISM.js";
+
 export default {
     data: {
         name: "banPlayer",
     },
-    async execute(interaction, client) {
+    async execute(interaction) {
         console.log(interaction.fields.components[1]);
-        client.writePrism("apiadmin", `addKeyToBanList ${interaction.fields.getTextInputValue("hashId")} ${interaction.fields.getSelectMenuValue("duration")}`);
+        writePrism("apiadmin", `addKeyToBanList ${interaction.fields.getTextInputValue("hashId")} ${interaction.fields.getSelectMenuValue("duration")}`);
 
     }
 };

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder } from "discord.js";
-import PRISM from "../../functions/handlePRISM.js";
+import { ServerCommands } from "../../functions/handlePRISM.js";
 
 
 
@@ -55,18 +55,19 @@ export default {
         const attachment = interaction.options.getAttachment("attachment");
         const perfUsr = interaction.user.username;
 
-        PRISM.writePrism2("say", `!unbanid ${hashId}`);
+        ServerCommands.unbanid(hashId);
         await sleep(1000);
         let duration = "";
+        const longReason = `${reason} | On: ${prName} - By Discord: ${perfUsr}`;
         if (durFormat === "perm") {
-            PRISM.writePrism2("say", `!banid ${hashId} ${durFormat} ${reason} | On: ${prName} - By Discord: ${perfUsr}`);
             duration = "Permanent";
+            ServerCommands.banid(hashId, longReason);
         } else if (durFormat === "round") {
-            PRISM.writePrism2("say", `!timebanid ${hashId} ${durFormat} ${reason} | On: ${prName} - By Discord: ${perfUsr}`);
             duration = "Remaining of the round";
+            ServerCommands.timebanid(hashId, durFormat, longReason);
         } else {
-            PRISM.writePrism2("say", `!timebanid ${hashId} ${durValue}${durFormat} ${reason} | On: ${prName} - By Discord: ${perfUsr}`);
             duration = durValue + durFormat;
+            ServerCommands.timebanid(hashId, duration, longReason);
         }
         await sleep(500);
 
