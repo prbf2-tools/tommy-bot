@@ -6,6 +6,7 @@ import crypto from "crypto";
 import fs from "fs";
 
 import rand from "csprng";
+import { EmbedBuilder } from "discord.js";
 
 const netClient = new net.Socket();
 
@@ -193,23 +194,19 @@ const messageHandler = (client, messages) => {
                 if (tkString[5] == "m]") {
                     tkString = fields[fields.length - 1].split(" ");
                     //console.log(fields[fields.length-1].split(' '))
-                    const adminLogPost = {
-                        color: 0Xa7367b,
-                        title: "TEAMKILL",
-                        description: "**Performed by: **`" + tkString[0] + " " + tkString[1] + "`"
+                    const adminLogPost = new EmbedBuilder()
+                        .setColor(0Xa7367b)
+                        .setTitle("TEAMKILL")
+                        .setDescription(
+                            "**Performed by: **`" + tkString[0] + " " + tkString[1] + "`"
                             + "\n**On player: **`" + tkString[6] + " " + tkString[7].replace("\n", "") + "`"
                             + "\n**With: **`" + tkString[2].slice(1) + "` : `" + tkString[4] + "m`",
-                        timestamp: new Date(),
-                        footer: {
+                        )
+                        .setTimestamp()
+                        .setFooter({
                             text: "IN-GAME"
-                        }
-                    };
+                        })
                     client.channels.cache.get("1033130972264276018").send({ content: "`" + fields[fields.length - 1].split(" ") + "`", embeds: [adminLogPost] });
-
-
-
-
-
                 }
                 else if (dataLenght[dataLenght.length - 1].includes("is victorious!") == true) {
                     var ggWinner = dataLenght[dataLenght.length - 1].split(" ");
