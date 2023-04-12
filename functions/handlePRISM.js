@@ -26,7 +26,7 @@ export default (client) => {
         try {
             netClient.once("connect", () => {
                 console.log("Connected to PRISM API");
-                login1()
+                login1();
             });
             netClient.on("error", (e) => {
                 console.log("The PRISM connection was lost");
@@ -67,12 +67,12 @@ export const writePrism = (subject, args) => {
 };
 
 export const writeSayToPrism = (args) => {
-    writePrism("say", args)
-}
+    writePrism("say", args);
+};
 
 export const ServerCommands = {
     init: () => {
-        writeSayToPrism("!init")
+        writeSayToPrism("!init");
     },
     unbanid: (hashID) => {
         writeSayToPrism(`!unbanid ${hashID}`);
@@ -83,11 +83,11 @@ export const ServerCommands = {
     timebanid: (hashID, duration, reason) => {
         writeSayToPrism(`!timebanid ${hashID} ${duration} ${reason}`);
     }
-}
+};
 
 const login1 = () => {
     writeToClient("login1", "1" + MSG_FIELD + process.env.PRISM_USRNAME + MSG_FIELD + theCCK);
-}
+};
 
 const login2 = (passHash, serverChallenge) => {
     const passwordhash = crypto.createHash("sha1");
@@ -98,11 +98,11 @@ const login2 = (passHash, serverChallenge) => {
     saltedpass.update(passHash + MSG_START + passwordhash.digest("hex"));
     challengedigest.update(process.env.PRISM_USRNAME + MSG_FIELD + theCCK + MSG_FIELD + serverChallenge + MSG_FIELD + saltedpass.digest("hex"));
     writeToClient("login2", challengedigest.digest("hex"));
-}
+};
 
 const writeToClient = (subject, args) => {
     netClient.write(MSG_START + subject + MSG_SUBJECT + args + MSG_END);
-}
+};
 
 const messageHandler = (client, messages) => {
     const data = messages.toString("utf-8");
@@ -114,7 +114,7 @@ const messageHandler = (client, messages) => {
     //console.log('Subject: '+subject)
     //Prism Step2
     if (subject == "login1") {
-        login2(fields[0], fields[1])
+        login2(fields[0], fields[1]);
     }
     // Success subject
     else if (subject == "APIAdminResult") {
@@ -149,7 +149,7 @@ const messageHandler = (client, messages) => {
 
                 const formater = (icons, str) => {
                     return `<t:${time}:d> <t:${time}:T> **|** ${icons} \` ${str} \` **|** \` ${Player}${contentString}\``;
-                }
+                };
 
                 let formatedFields = "";
                 if (type.includes("Game")) {
@@ -205,7 +205,7 @@ const messageHandler = (client, messages) => {
                         .setTimestamp()
                         .setFooter({
                             text: "IN-GAME"
-                        })
+                        });
                     client.channels.cache.get("1033130972264276018").send({ content: "`" + fields[fields.length - 1].split(" ") + "`", embeds: [adminLogPost] });
                 }
                 else if (dataLenght[dataLenght.length - 1].includes("is victorious!") == true) {
@@ -225,4 +225,4 @@ const messageHandler = (client, messages) => {
             }
         });
     }
-}
+};
