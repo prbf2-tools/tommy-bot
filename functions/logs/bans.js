@@ -1,6 +1,7 @@
 import fs from "fs";
 import Tail from "always-tail";
 import geoip from "geoip-lite";
+import { EmbedBuilder } from "discord.js";
 
 export const watchBanlist = (client) => {
     var filenameBans = "logs/banlist_info.log";
@@ -37,16 +38,17 @@ const process = (client) => {
         }
         var banReason = banLogSplit.splice(6, banLogSplit.length).join(" ").split("banned by")[0];
 
-        const banSendPub = {
-            color: 0x991b0d,
-            title: "Banned player: " + banName,
-            description: "\n**Reason:** " + banReason
+        const banSendPub = new EmbedBuilder()
+            .setColor(0x991b0d)
+            .setTitle("Banned player: " + banName)
+            .setDescription(
+                "\n**Reason:** " + banReason
                 + "\n**Duration:** " + banDuration,
-            footer: {
+            )
+            .setFooter({
                 text: banAdmin + " In-Game"
-            },
-            timestamp: new Date(),
-        };
+            })
+            .setTimestamp();
         var geoready = "INVALID";
         banIP = banLogSplit[5];
         var geo2 = geoip.lookup(banIP);
@@ -57,17 +59,19 @@ const process = (client) => {
         }
         var banIPSafe = banIP.split(".");
 
-        const banSendAdmin = {
-            color: 0x991b0d,
-            title: "BANNED",
-            description: "**Name:** `" + banName
+        const banSendAdmin = new EmbedBuilder()
+            .setColor(0x991b0d)
+            .setTitle("Banned player: " + banName)
+            .setTitle("BANNED")
+            .setDescription(
+                "**Name:** `" + banName
                 + "`\n**By:** `" + banAdmin
                 + "`\n**Reason:** " + banReason
                 + "\n**Duration:** " + banDuration
                 + "\n**Hash-ID:** `" + banHash
-                + "`\n**IP:** `" + banIPSafe[0] + "." + banIPSafe[1] + ".***.***` :flag_" + geoready + ":",
-            timestamp: new Date(),
-        };
+                + "`\n**IP:** `" + banIPSafe[0] + "." + banIPSafe[1] + ".***.***` :flag_" + geoready + ":"
+            )
+            .setTimestamp();
 
         client.channels.cache.get("995387208947204257").send({ embeds: [banSendPub] }); //742795954729517077
         client.channels.cache.get("995520998554218557").send({ embeds: [banSendAdmin] });
