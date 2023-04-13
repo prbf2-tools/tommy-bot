@@ -38,7 +38,7 @@ const process = (client) => {
             if (parsed.command === "REPORTP" || parsed.command === "REPORT") {
                 adminLogPost = reportPlayer(parsed);
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-            } else if (adminLogSplit[2].includes("!KICK") == true) {
+            } else if (parsed.command === "KICK") {
                 adminLogPost, adminLogPostPub = kickPlayer(parsed);
                 client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] }); // to change
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
@@ -448,38 +448,27 @@ const reportPlayer = (data) => {
 };
 
 const kickPlayer = (data) => {
-    const adminLogPost = new EmbedBuilder()
-        .setTitle("KICK")
-        .setColor(0XEB7434)
-        .setTimestamp()
-        .setDescription(reasonedDescription(data));
+    const color = 0XEB7434;
 
-    const adminLogPostPub = new EmbedBuilder()
+    const adminLogPost = adminCommand(data)
+        .setColor(color);
+
+    const adminLogPostPub = adminCommand(data)
         .setTitle("Kicked")
-        .setColor(0XEB7434)
-        .setTimestamp()
+        .setColor(color)
         .setFooter({
             text: "You can rejoin after getting kicked."
-        })
-        .setDescription(reasonedDescription(data));
+        });
 
-    if (data.issuer_type === ISSUERS.SERVER) {
-        if (data.body.includes("Account related to banned key:")) {
-            adminLogPost.setFooter({
-                text: "THIS MESSAGE DOES NOT EXIST! IF PLAYER ASK WHY THEY GET KICKED, JUST PING MAX AND TELL HIM THAT I'LL LOOK INTO IT!"
-            });
-            adminLogPostPub
-                .setFooter({})
-                .setDescription(reasonedDescription(data, "ERROR"));
-        }
-    } else if (data.issuer_type === ISSUERS.PRISM) {
+    if (
+        data.issuer_type === ISSUERS.SERVER &&
+        data.body.includes("Account related to banned key:")
+    ) {
         adminLogPost.setFooter({
-            text: "PRISM"
+            text: "THIS MESSAGE DOES NOT EXIST! IF PLAYER ASK WHY THEY GET KICKED, JUST PING MAX AND TELL HIM THAT I'LL LOOK INTO IT!"
         });
-    } else {
-        adminLogPost.setFooter({
-            text: "IN-GAME"
-        });
+        adminLogPostPub
+            .setDescription(reasonedDescription(data, "ERROR"));
     }
 
     return [adminLogPost, adminLogPostPub];
