@@ -85,6 +85,7 @@ const process = (client) => {
                     .setDescription(prepDescription(parsed))
                     .setFooter({});
 
+                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
                 client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] });
             } else if (parsed.command === "SWITCH") {
                 adminLogPost = adminCommand(parsed)
