@@ -249,9 +249,7 @@ export default (client) => {
                     prjson.EndTime +
                     ":R> | <t:" +
                     prjson.EndTime +
-                    ":F>\n\n> **__TEMPORARY__**\n> *Demos are available under request only due to website issues.*\n> *To request a Demo, use the ticket system as an incident report and add the demo file name written bellow.*\n> *To view the tracker file that is joint above this message, download it then use it [here](https://yossizap.github.io/realitytracker/index.html).*\n > *__Demo File Name:__ `" +
-                    demoPath +
-                    ".bf2demo`*"
+                    ":F>\n"
                 )
                 .setImage("attachment://" + fileName1 + ".png")
                 .setTimestamp(prjson.EndTime * 1000);
