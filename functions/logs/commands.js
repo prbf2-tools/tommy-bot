@@ -1,8 +1,7 @@
 import fs from "fs";
 import Tail from "always-tail";
-import { EmbedBuilder } from "discord.js";
 
-import { ISSUERS, parseAdminCommand, reasonedDescription, prepDescription, content } from "./utils.js";
+import { ISSUERS, adminCommand, parseAdminCommand, reasonedDescription, prepDescription, content } from "./utils.js";
 
 export const watchCommands = (client) => {
     const filenameAdmin = "logs/ra_adminlog.txt";
@@ -117,25 +116,6 @@ const process = (client) => {
             }
         }
     };
-};
-
-const adminCommand = (data, reason) => {
-    const embed = new EmbedBuilder()
-        .setTitle(data.command)
-        .setDescription(reasonedDescription(data, reason))
-        .setTimestamp();
-
-    if (data.issuer_type === ISSUERS.PRISM) {
-        embed.setFooter({
-            text: "PRISM"
-        });
-    } else if (data.issuer_type === ISSUERS.USER) {
-        embed.setFooter({
-            text: "IN-GAME"
-        });
-    }
-
-    return embed;
 };
 
 const reportPlayer = (data) => {

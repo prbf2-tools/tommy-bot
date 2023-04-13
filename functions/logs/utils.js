@@ -1,3 +1,5 @@
+import { EmbedBuilder } from "discord.js";
+
 export const ISSUERS = {
     USER: "user",
     PRISM: "PRISM",
@@ -55,6 +57,25 @@ export const parseAdminCommand = (data) => {
     }
 
     return output;
+};
+
+export const adminCommand = (data, reason) => {
+    const embed = new EmbedBuilder()
+        .setTitle(data.command)
+        .setDescription(reasonedDescription(data, reason))
+        .setTimestamp();
+
+    if (data.issuer_type === ISSUERS.PRISM) {
+        embed.setFooter({
+            text: "PRISM"
+        });
+    } else if (data.issuer_type === ISSUERS.USER) {
+        embed.setFooter({
+            text: "IN-GAME"
+        });
+    }
+
+    return embed;
 };
 
 
