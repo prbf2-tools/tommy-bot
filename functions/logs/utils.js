@@ -9,7 +9,7 @@ export const parseAdminCommand = (data) => {
     const split = data.split(" ");
 
     const output = {
-        PRISM: false,
+        orig: data,
     };
 
     // '!REPORT',

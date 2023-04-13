@@ -108,99 +108,7 @@ const process = (client) => {
 
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
             } else if (parsed.command === "MAPVOTERESULT") {
-                const adminMapsVotesFull = data.split("Vote finished: ");
-                const adminMapsVotesEach = adminMapsVotesFull[1].split(" | ");
-                if (adminMapsVotesEach.length === 2) {
-                    const adminMapsVotesEachElem1 = adminMapsVotesEach[0].split(": ");
-                    const adminMapsVotesEachElem2 = adminMapsVotesEach[1].split(": ");
-
-                    if (adminLogSplit[7].includes("'PRISM") == true) {
-                        adminLogPost = {
-                            color: 0X5c32a8,
-                            title: "MAP VOTE RESULTS",
-                            description: "**Performed by: **`" + adminLogSplit[9].replace("':", "")
-                                + "`\n**" + adminMapsVotesEachElem1[0] + ": **`" + adminMapsVotesEachElem1[1]
-                                + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1] + "`",
-                            timestamp: new Date(),
-                            footer: {
-                                text: "PRISM"
-                            }
-                        };
-                        adminLogPostPub = {
-                            color: 0X5c32a8,
-                            title: "Map Vote Results",
-                            description: "**" + adminMapsVotesEachElem1[0] + ": **`" + adminMapsVotesEachElem1[1]
-                                + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1] + "`",
-                            timestamp: new Date()
-                        };
-                    } else {
-                        adminLogPost = {
-                            color: 0X5c32a8,
-                            title: "MAP VOTE RESULTS",
-                            description: "**Performed by: **`" + adminLogSplit[7].replace("'", "") + " " + adminLogSplit[8].replace("':", "")
-                                + "`\n**" + adminMapsVotesEachElem1[0] + ": **`" + adminMapsVotesEachElem1[1]
-                                + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1] + "`",
-                            timestamp: new Date(),
-                            footer: {
-                                text: "IN-GAME"
-                            }
-                        };
-                        adminLogPostPub = {
-                            color: 0X5c32a8,
-                            title: "Map Vote Results",
-                            description: "**" + adminMapsVotesEachElem1[0] + ": **`" + adminMapsVotesEachElem1[1]
-                                + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1] + "`",
-                            timestamp: new Date()
-                        };
-                    }
-                } else {
-                    const adminMapsVotesEachElem1 = adminMapsVotesEach[0].split(": ");
-                    const adminMapsVotesEachElem2 = adminMapsVotesEach[1].split(": ");
-                    const adminMapsVotesEachElem3 = adminMapsVotesEach[2].split(": ");
-                    if (adminLogSplit[7].includes("'PRISM") == true) {
-                        adminLogPost = {
-                            color: 0X5c32a8,
-                            title: "MAP VOTE RESULTS",
-                            description: "**Performed by: **`" + adminLogSplit[9].replace("':", "")
-                                + "`\n**" + adminMapsVotesEachElem1[0] + ": **`" + adminMapsVotesEachElem1[1]
-                                + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1]
-                                + "`\n**" + adminMapsVotesEachElem3[0] + ": **`" + adminMapsVotesEachElem3[1] + "`",
-                            timestamp: new Date(),
-                            footer: {
-                                text: "PRISM"
-                            }
-                        };
-                        adminLogPostPub = {
-                            color: 0X5c32a8,
-                            title: "Map Vote Results",
-                            description: "**" + adminMapsVotesEachElem1[0] + ": **`" + adminMapsVotesEachElem1[1]
-                                + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1]
-                                + "`\n**" + adminMapsVotesEachElem3[0] + ": **`" + adminMapsVotesEachElem3[1] + "`",
-                            timestamp: new Date(),
-                        };
-                    } else {
-                        adminLogPost = {
-                            color: 0X5c32a8,
-                            title: "MAP VOTE RESULTS",
-                            description: "**Performed by: **`" + adminLogSplit[7].replace("'", "") + " " + adminLogSplit[8].replace("':", "")
-                                + "`\n**" + adminMapsVotesEachElem1[0] + ": **`" + adminMapsVotesEachElem1[1]
-                                + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1]
-                                + "`\n**" + adminMapsVotesEachElem3[0] + ": **`" + adminMapsVotesEachElem3[1] + "`",
-                            timestamp: new Date(),
-                            footer: {
-                                text: "IN-GAME"
-                            }
-                        };
-                        adminLogPostPub = {
-                            color: 0X5c32a8,
-                            title: "Map Vote Results",
-                            description: "**" + adminMapsVotesEachElem1[0] + ": **`" + adminMapsVotesEachElem1[1]
-                                + "`\n**" + adminMapsVotesEachElem2[0] + ": **`" + adminMapsVotesEachElem2[1]
-                                + "`\n**" + adminMapsVotesEachElem3[0] + ": **`" + adminMapsVotesEachElem3[1] + "`",
-                            timestamp: new Date()
-                        };
-                    }
-                }
+                adminLogPost, adminLogPostPub = mapvoteResult(parsed);
 
                 client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] });
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
@@ -208,7 +116,6 @@ const process = (client) => {
                 client.channels.cache.get("995520998554218557").send("`" + adminLogSplit + "`");
             }
         }
-
     };
 };
 
@@ -270,6 +177,34 @@ const kickPlayer = (data) => {
 
     return [adminLogPost, adminLogPostPub];
 };
+
+const mapvoteResult = (data) => {
+    const adminMapsVotesFull = data.orig.split("Vote finished: ");
+    const adminMapsVotesEach = adminMapsVotesFull[1].split(" | ");
+
+    const votesDescription = [];
+    adminMapsVotesEach.forEach(option => {
+        const split = option.split(": ");
+        votesDescription.push(
+            `** ${split[0]}: **\`${split[1]}\``
+        );
+    });
+
+    const description = votesDescription.join("\n");
+
+    const adminLogPost = adminCommand(data)
+        .setTitle("MAP VOTE RESULTS")
+        .setColor(0X5c32a8)
+        .setDescription(prepDescription(data, null, description));
+
+    const adminLogPostPub = adminCommand(data)
+        .setTitle("Map Vote Results")
+        .setColor(0X5c32a8)
+        .setDescription(prepDescription(data, null, description))
+        .setFooter({});
+
+    return [adminLogPost, adminLogPostPub]
+}
 
 const reasonedDescription = (data, reason) => {
     return prepDescription(data, "Reason", reason);
