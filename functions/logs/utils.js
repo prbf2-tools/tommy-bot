@@ -56,3 +56,42 @@ export const parseAdminCommand = (data) => {
 
     return output;
 };
+
+
+export const reasonedDescription = (data, reason) => {
+    return prepDescription(data, "Reason", reason);
+};
+
+export const prepDescription = (data, header, reason) => {
+    let last = reason ? reason : data.body;
+
+    if (header) {
+        last = `**${header} : **\`${last}\``;
+    }
+
+    let description = [
+        `**Performed by: **\`${fullName(data.issuer)}\``,
+        last,
+    ];
+
+    if (data.receiver !== undefined) {
+        description.splice(1, 0, `**On user: ** ${fullName(data.receiver)}`);
+    }
+
+    return description.join("\n");
+};
+
+const fullName = (data) => {
+    const tag = data.tag;
+    const name = data.name;
+
+    if (tag) {
+        return tag + " " + name;
+    }
+
+    return name;
+};
+
+export const content = (body) => {
+    return body.split(" ").reverse().slice(4).reverse().join(" ");
+};

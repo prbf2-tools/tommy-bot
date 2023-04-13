@@ -2,7 +2,7 @@ import fs from "fs";
 import Tail from "always-tail";
 import { EmbedBuilder } from "discord.js";
 
-import { ISSUERS, parseAdminCommand } from "./utils.js";
+import { ISSUERS, parseAdminCommand, reasonedDescription, prepDescription, content } from "./utils.js";
 
 export const watchCommands = (client) => {
     const filenameAdmin = "logs/ra_adminlog.txt";
@@ -182,7 +182,7 @@ const mapvoteResult = (data) => {
     const adminMapsVotesFull = data.orig.split("Vote finished: ");
     const adminMapsVotesEach = adminMapsVotesFull[1].split(" | ");
 
-    const votesDescription = [];
+    let votesDescription = [];
     adminMapsVotesEach.forEach(option => {
         const split = option.split(": ");
         votesDescription.push(
@@ -203,39 +203,5 @@ const mapvoteResult = (data) => {
         .setDescription(prepDescription(data, null, description))
         .setFooter({});
 
-    return [adminLogPost, adminLogPostPub]
-}
-
-const reasonedDescription = (data, reason) => {
-    return prepDescription(data, "Reason", reason);
-};
-
-const prepDescription = (data, header, reason) => {
-    reason = reason ? reason : data.body;
-
-    description = [
-        `**Performed by: **\`${fullName(data.issuer)}\``,
-        `**${header} : **\`${reason}\`` ? header : reason,
-    ];
-
-    if (data.receiver !== undefined) {
-        description.splice(1, 0, `**On user: ** ${fullName(data.receiver)}`);
-    }
-
-    return description.join("\n");
-};
-
-const fullName = (data) => {
-    const tag = data.tag;
-    const name = data.name;
-
-    if (tag) {
-        return tag + " " + name;
-    }
-
-    return name;
-};
-
-const content = (body) => {
-    return body.split(" ").reverse().slice(4).reverse().join(" ");
+    return [adminLogPost, adminLogPostPub];
 };
