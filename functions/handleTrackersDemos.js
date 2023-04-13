@@ -288,9 +288,9 @@ export default (client) => {
                 clientFTP.ftp.verbose = true;
                 try {
                     await clientFTP.access({
-                        host: "ftp.mafiapr.com",
-                        user: "max@mafiapr.com",
-                        password: "max_can_login",
+                        host: process.env.FTP_HOST,
+                        user: process.env.FTP_USER,
+                        password: process.env.FTP_PASS,
                     });
                     await clientFTP.uploadFrom(
                         "logs/json_formated/" + fileName1 + ".json",
