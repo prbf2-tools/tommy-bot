@@ -415,26 +415,33 @@ const process = (client) => {
     };
 };
 
-const reportPlayer = (data) => {
-    const adminLogPost = new EmbedBuilder()
-        .setColor(0X89a110)
-        .setDescription(prepDescription(data))
+const adminCommand = (data, reason) => {
+    const embed = new EmbedBuilder()
+        .setTitle(data.command)
+        .setDescription(reasonedDescription(data, reason))
         .setTimestamp();
+
+    if (data.issuer_type === ISSUERS.PRISM) {
+        embed.setFooter({
+            text: "PRISM"
+        });
+    } else if (data.issuer_type === ISSUERS.USER) {
+        embed.setFooter({
+            text: "IN-GAME"
+        });
+    }
+
+    return embed;
+};
+
+const reportPlayer = (data) => {
+    const adminLogPost = adminCommand(data)
+        .setColor(0X89a110);
 
     if (data.receiver !== undefined) {
         adminLogPost.setTitle("REPORT PLAYER");
     } else {
         adminLogPost.setTitle("REPORT");
-    }
-
-    if (data.issuer_type === ISSUERS.PRISM) {
-        adminLogPost.setFooter({
-            text: "PRISM"
-        });
-    } else {
-        adminLogPost.setFooter({
-            text: "IN-GAME"
-        });
     }
 
     return adminLogPost;
@@ -445,7 +452,7 @@ const kickPlayer = (data) => {
         .setTitle("KICK")
         .setColor(0XEB7434)
         .setTimestamp()
-        .setDescription(prepDescription(data));
+        .setDescription(reasonedDescription(data));
 
     const adminLogPostPub = new EmbedBuilder()
         .setTitle("Kicked")
@@ -454,7 +461,7 @@ const kickPlayer = (data) => {
         .setFooter({
             text: "You can rejoin after getting kicked."
         })
-        .setDescription(prepDescription(data));
+        .setDescription(reasonedDescription(data));
 
     if (data.issuer_type === ISSUERS.SERVER) {
         if (data.body.includes("Account related to banned key:")) {
@@ -463,7 +470,7 @@ const kickPlayer = (data) => {
             });
             adminLogPostPub
                 .setFooter({})
-                .setDescription(prepDescription(data, "ERROR"));
+                .setDescription(reasonedDescription(data, "ERROR"));
         }
     } else if (data.issuer_type === ISSUERS.PRISM) {
         adminLogPost.setFooter({
@@ -478,24 +485,30 @@ const kickPlayer = (data) => {
     return [adminLogPost, adminLogPostPub];
 };
 
-const prepDescription = (data, reason) => {
-    let description = "**Performed by: **`" + fullName(data.issuer);
-    if (data.receiver !== undefined) {
-        description += "`\n**On user: **`" + fullName(data.receiver);
-    }
+const reasonedDescription = (data, reason) => {
+    return prepDescription(data, "Reason", reason);
+};
 
+const prepDescription = (data, header, reason) => {
     reason = reason ? reason : data.body;
 
-    description += "`\n**Reason: **" + reason;
+    description = [
+        `**Performed by: **\`${fullName(data.issuer)}\``,
+        `**${header} : **\`${reason}\``,
+    ];
 
-    return description;
+    if (data.receiver !== undefined) {
+        description.splice(1, 0, `**On user: ** ${fullName(data.receiver)}`);
+    }
+
+    return description.join("\n");
 };
 
 const fullName = (data) => {
     const tag = data.tag;
     const name = data.name;
 
-    if (tag !== "") {
+    if (tag) {
         return tag + " " + name;
     }
 
