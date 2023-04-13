@@ -42,217 +42,78 @@ const process = (client) => {
                 adminLogPost, adminLogPostPub = kickPlayer(parsed);
                 client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] }); // to change
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-            } else if (adminLogSplit[2].includes("!WARN") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[15].includes("'PRISM") == true) {
-                    adminLogPost = {
-                        color: 0XEBCD34,
-                        title: "WARN",
-                        description: "**Performed by: **`" + adminLogSplit[17].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[19].replace("'", "") + " " + adminLogSplit[20].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                } else {
-                    adminLogPost = {
-                        color: 0XEBCD34,
-                        title: "WARN",
-                        description: "**Performed by: **`" + adminLogSplit[15].replace("'", "") + " " + adminLogSplit[16].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[18].replace("'", "") + " " + adminLogSplit[19].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                }
+            } else if (parsed.command === "WARN") {
+                adminLogPost = adminCommand(parsed)
+                    .setColor(0XEBCD34);
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-            } else if (adminLogSplit[2].includes("!RESIGN") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[13].includes("'PRISM") == true) {
-                    adminLogPost = {
-                        color: 0Xbba170,
-                        title: "RESIGN",
-                        description: "**Performed by: **`" + adminLogSplit[15].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[17].replace("'", "") + " " + adminLogSplit[18].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                } else {
-                    adminLogPost = {
-                        color: 0Xbba170,
-                        title: "RESIGN",
-                        description: "**Performed by: **`" + adminLogSplit[13].replace("'", "") + " " + adminLogSplit[14].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[16].replace("'", "") + " " + adminLogSplit[17].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                }
+            } else if (parsed.command === "RESIGN") {
+                adminLogPost = adminCommand(parsed)
+                    .setColor(0Xbba170);
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-            } else if (adminLogSplit[2].includes("!KILL") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[15].includes("'PRISM") == true) {
-                    adminLogPost = {
-                        color: 0Xff8bcb,
-                        title: "KILL",
-                        description: "**Performed by: **`" + adminLogSplit[17].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[19].replace("'", "") + " " + adminLogSplit[20].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                } else {
-                    adminLogPost = {
-                        color: 0Xff8bcb,
-                        title: "KILL",
-                        description: "**Performed by: **`" + adminLogSplit[15].replace("'", "") + " " + adminLogSplit[16].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[18].replace("'", "") + " " + adminLogSplit[19].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                }
+            } else if (parsed.command === "KILL") {
+                adminLogPost = adminCommand(parsed)
+                    .setColor(0Xff8bcb);
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-            } else if (adminLogSplit[2].includes("!INIT") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[15].includes("'PRISM") == true) {
-                    //console.log(client.channels.cache.get('1033130739505565716').availableTags)
-                    adminLogPost = {
-                        color: 0X3f213f,
-                        title: "INIT",
-                        description: "**Performed by: **`" + adminLogSplit[17].replace("':", "")
-                            + "`\nAdminhashes and -powerlevels have been reloaded",
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                } else {
-                    adminLogPost = {
-                        color: 0X3f213f,
-                        title: "INIT",
-                        description: "**Performed by: **`" + adminLogSplit[15].replace("'", "") + " " + adminLogSplit[16].replace("':", "")
-                            + "`\nAdminhashes and -powerlevels have been reloaded",
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                }
-                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-            } else if (adminLogSplit[2].includes("!MESSAGE") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[12].includes("'PRISM") == true) {
-                    adminLogPost = {
-                        color: 0X2c37ca,
-                        title: "MESSAGE",
-                        description: "**Performed by: **`" + adminLogSplit[14].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[16].replace("'", "") + " " + adminLogSplit[17].replace("':", "")
-                            + "`\n**Message: **" + adminLogReason[1].split(" ").reverse().slice(4).reverse().join(" "),
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                } else {
-                    adminLogPost = {
-                        color: 0X2c37ca,
-                        title: "MESSAGE",
-                        description: "**Performed by: **`" + adminLogSplit[12].replace("'", "") + " " + adminLogSplit[13].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[15].replace("'", "") + " " + adminLogSplit[16].replace("':", "")
-                            + "`\n**Message: **" + adminLogReason[1].split(" ").reverse().slice(3).reverse().join(" "),
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                }
-                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-            } else if (adminLogSplit[2].includes("!SAY") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[16].includes("'PRISM") == true) {
-                    adminLogPost = {
-                        color: 0X34EB6B,
-                        title: "SAY",
-                        description: "**Performed by: **`" + adminLogSplit[18].replace("':", "")
-                            + "`\n**Content: **" + adminLogReason[1].split(" ").reverse().slice(4).reverse().join(" "),
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                } else {
-                    adminLogPost = {
-                        color: 0X34EB6B,
-                        title: "SAY",
-                        description: "**Performed by: **`" + adminLogSplit[16].replace("'", "") + " " + adminLogSplit[17].replace("':", "")
-                            + "`\n**Content: **" + adminLogReason[1].split(" ").reverse().slice(3).reverse().join(" "),
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                }
-                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-            } else if (adminLogSplit[2].includes("!SETNEXT") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[12].includes("'PRISM") == true) {
-                    adminLogPost = {
-                        color: 0X10a17d,
-                        title: "SETNEXT",
-                        description: "**Performed by: **`" + adminLogSplit[14].replace("':", "")
-                            + "`\n**Map: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                    adminLogPostPub = {
-                        color: 0X10a17d,
-                        title: "Next Map Set",
-                        description: adminLogReason[1],
-                        timestamp: new Date()
-                    };
-                } else {
-                    adminLogPost = {
-                        color: 0X10a17d,
-                        title: "SETNEXT",
-                        description: "**Performed by: **`" + adminLogSplit[12].replace("'", "") + " " + adminLogSplit[13].replace("':", "")
-                            + "`\n**Map: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                    adminLogPostPub = {
-                        color: 0X10a17d,
-                        title: "Next Map Set",
-                        description: adminLogReason[1],
-                        timestamp: new Date()
-                    };
-                }
-                client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] });
-                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+            } else if (parsed.command === "INIT") {
+                adminLogPost = adminCommand(parsed)
+                    .setColor(0X3f213f)
+                    .setDescription(prepDescription(parsed, null, "Adminhashes and -powerlevels have been reloaded"));
 
-            } else if (adminLogSplit[2].includes("MAPVOTERESULT") == true) {
+                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+            } else if (parsed.command === "MESSAGE") {
+                const msgContent = content(parsed.body);
+
+                adminLogPost = adminCommand(parsed)
+                    .setColor(0X2c37ca)
+                    .setDescription(prepDescription(parsed, "Message", msgContent));
+
+                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+            } else if (parsed.command === "SAY") {
+                const sayContent = content(parsed.body);
+
+                adminLogPost = adminCommand(parsed)
+                    .setColor(0X34EB6B)
+                    .setDescription(prepDescription(parsed, "Content", sayContent));
+
+                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+            } else if (parsed.command === "SETNEXT") {
+                adminLogPost = adminCommand(parsed)
+                    .setColor(0X10a17d)
+                    .setDescription(prepDescription(parsed, "Map"));
+
+                adminLogPostPub = adminCommand(parsed)
+                    .setColor(0X10a17d)
+                    .setDescription(prepDescription(parsed))
+                    .setFooter({});
+
+                client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] });
+            } else if (parsed.command === "SWITCH") {
+                adminLogPost = adminCommand(parsed)
+                    .setColor(0X3292a8)
+                    .setDescription(prepDescription(parsed, "When"));
+
+                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+            } else if (parsed.command === "RUNNEXT") {
+                fs.writeFile("logs/gungame_winner.txt", "Admin \"!runnext\"", function(err) {
+                    if (err) {
+                        // append failed
+                    } else {
+                        // done
+                    }
+                });
+
+                adminLogPost = adminCommand(parsed)
+                    .setColor(0X085441)
+                    .setDescription(prepDescription(parsed, null, " "));
+
+                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
+            } else if (parsed.command === "MAPVOTERESULT") {
                 const adminMapsVotesFull = data.split("Vote finished: ");
                 const adminMapsVotesEach = adminMapsVotesFull[1].split(" | ");
                 if (adminMapsVotesEach.length === 2) {
                     const adminMapsVotesEachElem1 = adminMapsVotesEach[0].split(": ");
                     const adminMapsVotesEachElem2 = adminMapsVotesEach[1].split(": ");
+
                     if (adminLogSplit[7].includes("'PRISM") == true) {
                         adminLogPost = {
                             color: 0X5c32a8,
@@ -343,70 +204,6 @@ const process = (client) => {
 
                 client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] });
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-
-            } else if (adminLogSplit[2].includes("!SWITCH") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[13].includes("'PRISM") == true) {
-                    adminLogPost = {
-                        color: 0X3292a8,
-                        title: "SWITCH",
-                        description: "**Performed by: **`" + adminLogSplit[15].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[17].replace("'", "") + " " + adminLogSplit[18].replace("':", "")
-                            + "`\n**When: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                } else {
-                    adminLogPost = {
-                        color: 0X3292a8,
-                        title: "SWITCH",
-                        description: "**Performed by: **`" + adminLogSplit[13].replace("'", "") + " " + adminLogSplit[14].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[16].replace("'", "") + " " + adminLogSplit[17].replace("':", "")
-                            + "`\n**When: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                }
-                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-
-            } else if (adminLogSplit[2].includes("!RUNNEXT") == true) {
-                adminLogReason = data.split("': ");
-
-                fs.writeFile("logs/gungame_winner.txt", "Admin \"!runnext\"", function(err) {
-                    if (err) {
-                        // append failed
-                    } else {
-                        // done
-                    }
-                });
-
-                if (adminLogSplit[12].includes("'PRISM") == true) {
-                    adminLogPost = {
-                        color: 0X085441,
-                        title: "RUNNEXT",
-                        description: "**Performed by: **`" + adminLogSplit[14].replace("':", "`"),
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                } else {
-                    adminLogPost = {
-                        color: 0X085441,
-                        title: "RUNNEXT",
-                        description: "**Performed by: **`" + adminLogSplit[12].replace("'", "") + " " + adminLogSplit[13].replace("'", ""),
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                }
-                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-
             } else {
                 client.channels.cache.get("995520998554218557").send("`" + adminLogSplit + "`");
             }
@@ -483,7 +280,7 @@ const prepDescription = (data, header, reason) => {
 
     description = [
         `**Performed by: **\`${fullName(data.issuer)}\``,
-        `**${header} : **\`${reason}\``,
+        `**${header} : **\`${reason}\`` ? header : reason,
     ];
 
     if (data.receiver !== undefined) {
@@ -502,4 +299,8 @@ const fullName = (data) => {
     }
 
     return name;
+};
+
+const content = (body) => {
+    return body.split(" ").reverse().slice(4).reverse().join(" ");
 };
