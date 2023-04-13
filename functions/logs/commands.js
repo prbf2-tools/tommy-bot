@@ -1,5 +1,8 @@
 import fs from "fs";
 import Tail from "always-tail";
+import { EmbedBuilder } from "discord.js";
+
+import { ISSUERS, parseAdminCommand } from "./utils.js";
 
 export const watchCommands = (client) => {
     const filenameAdmin = "logs/ra_adminlog.txt";
@@ -27,181 +30,16 @@ const process = (client) => {
         ];
 
         if (!skip.find((s) => adminLogSplit[2].includes(s))) {
-            let adminLogReason = "";
             let adminLogPost = {};
             let adminLogPostPub = {};
-            //console.log(adminLogSplit)
-            if (adminLogSplit[2].includes("!REPORTP") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[12].includes("'PRISM") == true) {
-                    if (adminLogSplit[15] === "on") {
-                        adminLogPost = {
-                            color: 0X89a110,
-                            title: "REPORT PLAYER",
-                            description: "**Performed by: **`" + adminLogSplit[14].replace("'", "")
-                                + "`\n**On user: **`" + adminLogSplit[16].replace("'", "") + " " + adminLogSplit[17].replace("':", "")
-                                + "`\n**Reason: **" + adminLogReason[1],
-                            timestamp: new Date(),
-                            footer: {
-                                text: "PRISM"
-                            }
-                        };
-                    } else {
-                        adminLogPost = {
-                            color: 0X89a110,
-                            title: "REPORT",
-                            description: "**Performed by: **`" + adminLogSplit[14].replace("':", "")
-                                + "`\n**Reason: **" + adminLogReason[1],
-                            timestamp: new Date(),
-                            footer: {
-                                text: "PRISM"
-                            }
-                        };
-                    }
-                } else {
-                    if (adminLogSplit[14] === "on") {
-                        adminLogPost = {
-                            color: 0X89a110,
-                            title: "REPORT PLAYER",
-                            description: "**Performed by: **`" + adminLogSplit[12].replace("'", "") + " " + adminLogSplit[13].replace("'", "")
-                                + "`\n**On user: **`" + adminLogSplit[15].replace("'", "") + " " + adminLogSplit[16].replace("':", "")
-                                + "`\n**Reason: **" + adminLogReason[1],
-                            timestamp: new Date(),
-                            footer: {
-                                text: "IN-GAME"
-                            }
-                        };
-                    } else {
-                        adminLogPost = {
-                            color: 0X89a110,
-                            title: "REPORT",
-                            description: "**Performed by: **`" + adminLogSplit[12].replace("'", "") + " " + adminLogSplit[13].replace("':", "")
-                                + "`\n**Reason: **" + adminLogReason[1],
-                            timestamp: new Date(),
-                            footer: {
-                                text: "IN-GAME"
-                            }
-                        };
-                    }
-                }
-                client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
-            } else if (adminLogSplit[2].includes("!REPORT") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[13].includes("'PRISM") == true) {
-                    adminLogPost = {
-                        color: 0X89a110,
-                        title: "REPORT",
-                        description: "**Performed by: **`" + adminLogSplit[15].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                } else {
-                    adminLogPost = {
-                        color: 0X89a110,
-                        title: "REPORT",
-                        description: "**Performed by: **`" + adminLogSplit[13].replace("'", "") + " " + adminLogSplit[14].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                }
+
+            const parsed = parseAdminCommand(data);
+
+            if (parsed.command === "REPORTP" || parsed.command === "REPORT") {
+                adminLogPost = reportPlayer(parsed);
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
             } else if (adminLogSplit[2].includes("!KICK") == true) {
-                adminLogReason = data.split("': ");
-                if (adminLogSplit[15].includes("'PRISM") == true) {
-                    adminLogPost = {
-                        color: 0XEB7434,
-                        title: "KICK",
-                        description: "**Performed by: **`" + adminLogSplit[17].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[19].replace("'", "") + " " + adminLogSplit[20].replace("':", "")
-                            + "`\n**Reason: **`ERROR`",
-                        timestamp: new Date(),
-                        footer: {
-                            text: "PRISM"
-                        }
-                    };
-                    adminLogPostPub = {
-                        color: 0XEB7434,
-                        title: "Kicked",
-                        description: "**Performed by: **`" + adminLogSplit[17].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[19].replace("'", "") + " " + adminLogSplit[20].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "You can rejoin after getting kicked."
-                        }
-                    };
-                } else if (adminLogSplit[15].includes("'SERVER'") == true) {
-                    if (adminLogReason[1].includes("Account related to banned key:") == true) {
-                        adminLogPost = {
-                            color: 0XEB7434,
-                            title: "KICK",
-                            description: "**Performed by: **`SERVER"
-                                + "`\n**On user: **`" + adminLogSplit[17].replace("'", "") + " " + adminLogSplit[18].replace("':", "")
-                                + "`\n**Reason: **" + adminLogReason[1],
-                            timestamp: new Date(),
-                            footer: {
-                                text: "THIS MESSAGE DOES NOT EXIST! IF PLAYER ASK WHY THEY GET KICKED, JUST PING MAX AND TELL HIM THAT I'LL LOOK INTO IT!"
-                            }
-                        };
-                        adminLogPostPub = {
-                            color: 0XEB7434,
-                            title: "Kicked",
-                            description: "**Performed by: **`SERVER"
-                                + "`\n**On user: **`" + adminLogSplit[17].replace("'", "") + " " + adminLogSplit[18].replace("':", "")
-                                + "`\n**Reason: **`ERROR`",
-                            timestamp: new Date(),
-                        };
-                    } else {
-                        adminLogPost = {
-                            color: 0XEB7434,
-                            title: "KICK",
-                            description: "**Performed by: **`SERVER"
-                                + "`\n**On user: **`" + adminLogSplit[17].replace("'", "") + " " + adminLogSplit[18].replace("':", "")
-                                + "`\n**Reason: **" + adminLogReason[1],
-                            timestamp: new Date(),
-                        };
-                        adminLogPostPub = {
-                            color: 0XEB7434,
-                            title: "Kicked",
-                            description: "**Performed by: **`SERVER"
-                                + "`\n**On user: **`" + adminLogSplit[17].replace("'", "") + " " + adminLogSplit[18].replace("':", "")
-                                + "`\n**Reason: **" + adminLogReason[1],
-                            timestamp: new Date(),
-                            footer: {
-                                text: "You can rejoin after getting kicked."
-                            }
-                        };
-                    }
-                } else {
-                    adminLogPost = {
-                        color: 0XEB7434,
-                        title: "KICK",
-                        description: "**Performed by: **`" + adminLogSplit[15].replace("'", "") + " " + adminLogSplit[16].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[18].replace("'", "") + " " + adminLogSplit[19].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "IN-GAME"
-                        }
-                    };
-                    adminLogPostPub = {
-                        color: 0XEB7434,
-                        title: "Kicked",
-                        description: "**Performed by: **`" + adminLogSplit[15].replace("'", "") + " " + adminLogSplit[16].replace("'", "")
-                            + "`\n**On user: **`" + adminLogSplit[18].replace("'", "") + " " + adminLogSplit[19].replace("':", "")
-                            + "`\n**Reason: **" + adminLogReason[1],
-                        timestamp: new Date(),
-                        footer: {
-                            text: "You can rejoin after getting kicked."
-                        }
-                    };
-                }
+                adminLogPost, adminLogPostPub = kickPlayer(parsed);
                 client.channels.cache.get("995387208947204257").send({ embeds: [adminLogPostPub] }); // to change
                 client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });
             } else if (adminLogSplit[2].includes("!WARN") == true) {
@@ -575,4 +413,91 @@ const process = (client) => {
         }
 
     };
+};
+
+const reportPlayer = (data) => {
+    const adminLogPost = new EmbedBuilder()
+        .setColor(0X89a110)
+        .setDescription(prepDescription(data))
+        .setTimestamp();
+
+    if (data.receiver !== undefined) {
+        adminLogPost.setTitle("REPORT PLAYER");
+    } else {
+        adminLogPost.setTitle("REPORT");
+    }
+
+    if (data.issuer_type === ISSUERS.PRISM) {
+        adminLogPost.setFooter({
+            text: "PRISM"
+        });
+    } else {
+        adminLogPost.setFooter({
+            text: "IN-GAME"
+        });
+    }
+
+    return adminLogPost;
+};
+
+const kickPlayer = (data) => {
+    const adminLogPost = new EmbedBuilder()
+        .setTitle("KICK")
+        .setColor(0XEB7434)
+        .setTimestamp()
+        .setDescription(prepDescription(data));
+
+    const adminLogPostPub = new EmbedBuilder()
+        .setTitle("Kicked")
+        .setColor(0XEB7434)
+        .setTimestamp()
+        .setFooter({
+            text: "You can rejoin after getting kicked."
+        })
+        .setDescription(prepDescription(data));
+
+    if (data.issuer_type === ISSUERS.SERVER) {
+        if (data.body.includes("Account related to banned key:")) {
+            adminLogPost.setFooter({
+                text: "THIS MESSAGE DOES NOT EXIST! IF PLAYER ASK WHY THEY GET KICKED, JUST PING MAX AND TELL HIM THAT I'LL LOOK INTO IT!"
+            });
+            adminLogPostPub
+                .setFooter({})
+                .setDescription(prepDescription(data, "ERROR"));
+        }
+    } else if (data.issuer_type === ISSUERS.PRISM) {
+        adminLogPost.setFooter({
+            text: "PRISM"
+        });
+    } else {
+        adminLogPost.setFooter({
+            text: "IN-GAME"
+        });
+    }
+
+    return [adminLogPost, adminLogPostPub];
+};
+
+const prepDescription = (data, reason) => {
+    let description = "**Performed by: **`" + fullName(data.issuer);
+    if (data.receiver !== undefined) {
+        description += "`\n**On user: **`" + fullName(data.receiver);
+    }
+
+    reason = reason ? reason : data.body;
+
+    description += "`\n**Reason: **" + reason;
+
+    return description;
+};
+
+const fullName = (data) => {
+    const tag = data.tag;
+    const name = data.name;
+
+    if (tag !== "") {
+        return tag + " " + name;
+    }
+
+    return name;
 };
