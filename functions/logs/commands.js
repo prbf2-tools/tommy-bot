@@ -16,7 +16,6 @@ const handledCommands = {
     KICK: {
         color: Colors.DarkOrange,
         func: kickPlayer,
-        pub: true,
     },
     WARN: {
         color: Colors.Yellow,
@@ -45,7 +44,6 @@ const handledCommands = {
     SETNEXT: {
         color: Colors.DarkGreen,
         header: "Map",
-        pub: true,
         func: setNext,
     },
     SWITCH: {
@@ -61,7 +59,6 @@ const handledCommands = {
     MAPVOTERESULT: {
         color: Colors.Purple,
         header: null,
-        pub: true,
         func: mapvoteResult,
     },
 };
