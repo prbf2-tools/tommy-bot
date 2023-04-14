@@ -96,7 +96,7 @@ const mapvoteResult = (blueprint, data) => {
     };
 };
 
-const reportColor = Colors.DarkYellow;
+const reportColor = 0X89a110;
 const handledCommands = {
     REPORT: {
         color: reportColor,
@@ -140,11 +140,11 @@ const handledCommands = {
         func: setNext,
     },
     SWITCH: {
-        color: Colors.DarkCyan,
+        color: 0X3292a8,
         header: "When",
     },
     RUNNEXT: {
-        color: Colors.DarkTeal,
+        color: 0X085441,
         header: null,
         body: null,
         func: runNext,
