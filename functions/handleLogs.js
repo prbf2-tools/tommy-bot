@@ -1,3 +1,5 @@
+import fs from "fs";
+import Tail from "always-tail";
 
 import { watchBanlist } from "./logs/bans.js";
 import { processCommand } from "./logs/commands.js";
@@ -19,7 +21,7 @@ const watchCommands = (client) => {
     tailAdmins.on("line", line => {
         let adminLogPost = null;
         let adminLogPostPub = null;
-        adminLogPost, adminLogPostPub = processCommand(line)
+        adminLogPost, adminLogPostPub = processCommand(line);
 
         if (adminLogPost !== null) {
             client.channels.cache.get("995520998554218557").send({ embeds: [adminLogPost] });

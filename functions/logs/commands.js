@@ -1,7 +1,6 @@
 import fs from "fs";
-import Tail from "always-tail";
 
-import { ISSUERS, adminCommand, parseAdminCommand, reasonedDescription, prepDescription, content } from "./utils.js";
+import { ISSUERS, adminCommand, parseAdminCommand, prepDescription } from "./utils.js";
 import { Colors } from "discord.js";
 
 const reportColor = Colors.DarkYellow;
@@ -68,25 +67,25 @@ const handledCommands = {
 };
 
 export const processCommand = (line) => {
-    let parsed = {}
+    let parsed = {};
     try {
         parsed = parseAdminCommand(line);
     } catch (e) {
-        console.error("Failed to parse an admin log line\n", line, e)
+        console.error("Failed to parse an admin log line\n", line, e);
     }
 
     if (parsed.command in handledCommands) {
-        const commandBlueprint = handledCommands[parsed.command]
+        const commandBlueprint = handledCommands[parsed.command];
 
         if (commandBlueprint.func) {
-            return commandBlueprint.func(commandBlueprint, parsed)
+            return commandBlueprint.func(commandBlueprint, parsed);
         } else {
-            return adminCommand(commandBlueprint, parsed)
+            return adminCommand(commandBlueprint, parsed);
         }
     }
 
     return {};
-}
+};
 
 const reportPlayer = (blueprint, data) => {
     const adminLogPost = adminCommand(blueprint, data);
@@ -99,7 +98,7 @@ const reportPlayer = (blueprint, data) => {
 
     return {
         priv: adminLogPost,
-    }
+    };
 };
 
 const kickPlayer = (blueprint, data) => {
@@ -118,13 +117,14 @@ const kickPlayer = (blueprint, data) => {
         adminLogPost.setFooter({
             text: "THIS MESSAGE DOES NOT EXIST! IF PLAYER ASK WHY THEY GET KICKED, JUST PING MAX AND TELL HIM THAT I'LL LOOK INTO IT!"
         });
-        adminLogPostPub.setDescription(reasonedDescription(data, "ERROR"));
+        data.body = "ERROR";
+        adminLogPostPub.setDescription(prepDescription(blueprint, data));
     }
 
     return {
         priv: adminLogPost,
         pub: adminLogPostPub,
-    }
+    };
 };
 
 
@@ -132,13 +132,13 @@ const setNext = (blueprint, data) => {
     const adminLogPost = adminCommand(blueprint, data);
 
     const adminLogPostPub = adminCommand(blueprint, data)
-        .setFooter({})
+        .setFooter({});
 
     return {
         priv: adminLogPost,
         pub: adminLogPostPub,
-    }
-}
+    };
+};
 
 const runNext = (blueprint, data) => {
     fs.writeFile("logs/gungame_winner.txt", "Admin \"!runnext\"", function(err) {
@@ -149,8 +149,8 @@ const runNext = (blueprint, data) => {
         }
     });
 
-    return adminCommand(blueprint, data)
-}
+    return adminCommand(blueprint, data);
+};
 
 const mapvoteResult = (blueprint, data) => {
     const adminMapsVotesFull = data.orig.split("Vote finished: ");
@@ -167,7 +167,7 @@ const mapvoteResult = (blueprint, data) => {
     data.body = votesDescription.join("\n");
 
     const adminLogPost = adminCommand(blueprint, data)
-        .setTitle("MAP VOTE RESULTS")
+        .setTitle("MAP VOTE RESULTS");
 
     const adminLogPostPub = adminCommand(data)
         .setTitle("Map Vote Results")
@@ -176,5 +176,5 @@ const mapvoteResult = (blueprint, data) => {
     return {
         priv: adminLogPost,
         pub: adminLogPostPub,
-    }
+    };
 };

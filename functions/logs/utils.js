@@ -84,7 +84,7 @@ export const prepDescription = (blueprint, data) => {
         `**Performed by: **\`${fullName(data.issuer)}\``,
     ];
 
-    let header = "Reason"
+    let header = "Reason";
     if (blueprint.header === null) {
         header = null;
     } else if (blueprint.header !== "") {
@@ -95,16 +95,16 @@ export const prepDescription = (blueprint, data) => {
     if (blueprint.body === null) {
         body = null;
     } else if (blueprint.body !== "") {
-        body = blueprint.body
+        body = blueprint.body;
     } else if (blueprint.extraContent) {
-        body = content(body)
+        body = content(body);
     }
 
     if (body !== null) {
         if (header !== null) {
-            description.push(`**${header} : **\`${last}\``);
+            description.push(`**${header} : **\`${body}\``);
         } else {
-            description.push(body)
+            description.push(body);
         }
     }
 
