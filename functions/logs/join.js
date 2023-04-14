@@ -1,5 +1,5 @@
-import geoip from "geoip-lite";
 import { EmbedBuilder } from "discord.js";
+import { flagFromIP } from "./utils";
 
 
 export const processJoin = (line) => {
@@ -17,18 +17,13 @@ export const processJoin = (line) => {
     }
 
     const ip = joinLogSplit[5];
-    let geoready = "white";
-    const geo2 = geoip.lookup(ip);
-    if (geo2 !== null) {
-        geoready = geo2.country.toLowerCase();
-    }
 
     return new EmbedBuilder()
         .setColor(0X6500B3)
         .setTitle(joinLogSplit[3])
         .setDescription(
             "**Hash-ID: **`" + joinLogSplit[1]
-            + "`\n**IP: **`" + joinLogSplit[5] + "` :flag_" + geoready
+            + "`\n**IP: **`" + joinLogSplit[5] + "` :flag_" + flagFromIP(ip)
             + ":\n**Account Level: **" + joinLogSplit[2]
             + "\n**Account Type: **" + accType
             + "\n**Creation Date: **" + joinLogSplit[4]

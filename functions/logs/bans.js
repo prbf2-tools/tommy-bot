@@ -1,5 +1,5 @@
-import geoip from "geoip-lite";
 import { EmbedBuilder } from "discord.js";
+import { flagFromIP } from "./utils";
 
 
 export const processBan = (line) => {
@@ -32,12 +32,6 @@ export const processBan = (line) => {
         })
         .setTimestamp();
 
-    let geoready = "white";
-    const geo2 = geoip.lookup(banIP);
-    if (geo2 !== null) {
-        geoready = geo2.country.toLowerCase();
-    }
-
     const banSendAdmin = new EmbedBuilder()
         .setColor(0x991b0d)
         .setTitle("Banned player: " + banName)
@@ -48,7 +42,7 @@ export const processBan = (line) => {
             + "`\n**Reason:** " + banReason
             + "\n**Duration:** " + banDuration
             + "\n**Hash-ID:** `" + banHash
-            + "`\n**IP:** `" + obfuscateIP(banIP) + "` :flag_" + geoready + ":"
+            + "`\n**IP:** `" + obfuscateIP(banIP) + "` :flag_" + flagFromIP(banIP) + ":"
         )
         .setTimestamp();
 

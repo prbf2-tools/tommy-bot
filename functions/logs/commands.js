@@ -172,7 +172,7 @@ export const processCommand = (line) => {
         } else {
             return {
                 priv: adminCommand(commandBlueprint, parsed),
-            }
+            };
         }
     }
 

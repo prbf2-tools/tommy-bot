@@ -1,4 +1,5 @@
 import { EmbedBuilder } from "discord.js";
+import geoip from "geoip-lite";
 
 export const ISSUERS = {
     USER: "user",
@@ -129,5 +130,10 @@ const fullName = (data) => {
 
 export const content = (body) => {
     const index = body.lastIndexOf(" - ");
-    return body.slice(0, index)
+    return body.slice(0, index);
+};
+
+export const flagFromIP = (ip) => {
+    const geo2 = geoip.lookup(ip);
+    return geo2 !== null ? geo2.country.toLowerCase() : "white";
 };
