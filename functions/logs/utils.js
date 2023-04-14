@@ -52,7 +52,7 @@ export const parseAdminCommand = (data) => {
     if (split[6 + offset] !== undefined && split[6 + offset].includes("on")) {
         output.receiver = {
             tag: split[7 + offset].replace("'", ""),
-            user: split[8 + offset].split("'")[0],
+            name: split[8 + offset].split("'")[0],
         };
     }
 
