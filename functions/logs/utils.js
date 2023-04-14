@@ -109,7 +109,7 @@ export const prepDescription = (blueprint, data) => {
     }
 
     if (data.receiver !== undefined) {
-        description.splice(1, 0, `**On user: ** ${fullName(data.receiver)}`);
+        description.splice(1, 0, `**On user: ** \`${fullName(data.receiver)}\``);
     }
 
     return description.join("\n");
