@@ -117,7 +117,7 @@ export const prepDescription = (blueprint, data) => {
     return description.join("\n");
 };
 
-const fullName = (data) => {
+export const fullName = (data) => {
     const tag = data.tag;
     const name = data.name;
 
