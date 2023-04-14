@@ -97,7 +97,7 @@ export const prepDescription = (blueprint, data) => {
         body = null;
     } else if (blueprint.body) {
         body = blueprint.body;
-    } else if (blueprint.extraContent) {
+    } else if (blueprint.extractContent) {
         body = content(body);
     }
 
@@ -128,5 +128,6 @@ const fullName = (data) => {
 };
 
 export const content = (body) => {
-    return body.split(" ").reverse().slice(4).reverse().join(" ");
+    const index = body.lastIndexOf(" - ");
+    return body.slice(0, index)
 };
