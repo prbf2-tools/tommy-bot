@@ -170,7 +170,9 @@ export const processCommand = (line) => {
         if (commandBlueprint.func) {
             return commandBlueprint.func(commandBlueprint, parsed);
         } else {
-            return adminCommand(commandBlueprint, parsed);
+            return {
+                priv: adminCommand(commandBlueprint, parsed),
+            }
         }
     }
 
