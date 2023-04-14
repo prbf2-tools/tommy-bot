@@ -47,7 +47,8 @@ export const parseAdminCommand = (data) => {
         offset = 1;
     }
 
-    output.body = data.split("]")[1].split(":")[1];
+    const i = data.indexOf("]");
+    output.body = data.slice(i).split(":")[1];
 
     if (split[6 + offset] !== undefined && split[6 + offset].includes("on")) {
         output.receiver = {
