@@ -49,7 +49,7 @@ const setNext = (blueprint, data) => {
     const adminLogPost = adminCommand(blueprint, data);
 
     const adminLogPostPub = adminCommand(blueprint, data)
-        .setFooter({});
+        .setFooter(null);
 
     return {
         priv: adminLogPost,
@@ -88,7 +88,7 @@ const mapvoteResult = (blueprint, data) => {
 
     const adminLogPostPub = adminCommand(data)
         .setTitle("Map Vote Results")
-        .setFooter({});
+        .setFooter(null);
 
     return {
         priv: adminLogPost,
