@@ -59,10 +59,11 @@ export const parseAdminCommand = (data) => {
     return output;
 };
 
-export const adminCommand = (data, reason) => {
+export const adminCommand = (blueprint, data) => {
     const embed = new EmbedBuilder()
+        .setColor(blueprint.color)
         .setTitle(data.command)
-        .setDescription(reasonedDescription(data, reason))
+        .setDescription(prepDescription(blueprint, data))
         .setTimestamp();
 
     if (data.issuer_type === ISSUERS.PRISM) {
@@ -78,22 +79,34 @@ export const adminCommand = (data, reason) => {
     return embed;
 };
 
-
-export const reasonedDescription = (data, reason) => {
-    return prepDescription(data, "Reason", reason);
-};
-
-export const prepDescription = (data, header, reason) => {
-    let last = reason ? reason : data.body;
-
-    if (header) {
-        last = `**${header} : **\`${last}\``;
-    }
-
+export const prepDescription = (blueprint, data) => {
     let description = [
         `**Performed by: **\`${fullName(data.issuer)}\``,
-        last,
     ];
+
+    let header = "Reason"
+    if (blueprint.header === null) {
+        header = null;
+    } else if (blueprint.header !== "") {
+        header = blueprint.header;
+    }
+
+    let body = data.body;
+    if (blueprint.body === null) {
+        body = null;
+    } else if (blueprint.body !== "") {
+        body = blueprint.body
+    } else if (blueprint.extraContent) {
+        body = content(body)
+    }
+
+    if (body !== null) {
+        if (header !== null) {
+            description.push(`**${header} : **\`${last}\``);
+        } else {
+            description.push(body)
+        }
+    }
 
     if (data.receiver !== undefined) {
         description.splice(1, 0, `**On user: ** ${fullName(data.receiver)}`);

@@ -3,92 +3,92 @@ import Tail from "always-tail";
 
 import { ISSUERS, adminCommand, parseAdminCommand, reasonedDescription, prepDescription, content } from "./utils.js";
 
-export const processCommand = (data) => {
-    const adminLogSplit = data.split(" ");
-    const skip = [
-        "SESSIONERR",
-        "!HASH",
-        "!TEMPBAN",
-        "!BAN",
-        "!MAPVOTE",
-    ];
-    let adminLogPost = null;
-    let adminLogPostPub = null;
+const REPORT_COLOR = 0X89a110; // green apple
+const handledCommands = {
+    REPORT: {
+        color: REPORT_COLOR,
+        func: reportPlayer,
+    },
+    REPORTP: {
+        color: REPORT_COLOR,
+        func: reportPlayer,
+    },
+    KICK: {
+        color: 0XEB7434, // orange
+        func: kickPlayer,
+        pub: true,
+    },
+    WARN: {
+        color: 0XEBCD34, // yellow
+    },
+    RESIGN: {
+        color: 0Xbba170, // skin brown
+    },
+    KILL: {
+        color: 0Xff8bcb, // pink
+    },
+    INIT: {
+        color: 0X3f213f, // brown purple
+        header: null,
+        body: "Adminhashes and -powerlevels have been reloaded",
+    },
+    MESSAGE: {
+        color: 0X2c37ca, // deep blue
+        header: "Message",
+        extractContent: true,
+    },
+    SAY: {
+        color: 0X34EB6B, // green saturated
+        header: "Content",
+        extractContent: true,
+    },
+    SETNEXT: {
+        color: 0X10a17d, // dark turquoise
+        header: "Map",
+        pub: true,
+        func: setNext,
+    },
+    SWITCH: {
+        color: 0X3292a8, // blueish
+        header: "When",
+    },
+    RUNNEXT: {
+        color: 0X085441, // dark green
+        header: null,
+        body: null,
+        func: runNext,
+    },
+    MAPVOTERESULT: {
+        color: 0X5c32a8, // purple
+        header: null,
+        pub: true,
+        func: mapvoteResult,
+    }
+}
 
-    if (!skip.find((s) => adminLogSplit[2].includes(s))) {
-
-        const parsed = parseAdminCommand(data);
-
-        if (parsed.command === "REPORTP" || parsed.command === "REPORT") {
-            adminLogPost = reportPlayer(parsed);
-        } else if (parsed.command === "KICK") {
-            adminLogPost, adminLogPostPub = kickPlayer(parsed);
-        } else if (parsed.command === "WARN") {
-            adminLogPost = adminCommand(parsed)
-                .setColor(0XEBCD34);
-        } else if (parsed.command === "RESIGN") {
-            adminLogPost = adminCommand(parsed)
-                .setColor(0Xbba170);
-        } else if (parsed.command === "KILL") {
-            adminLogPost = adminCommand(parsed)
-                .setColor(0Xff8bcb);
-        } else if (parsed.command === "INIT") {
-            adminLogPost = adminCommand(parsed)
-                .setColor(0X3f213f)
-                .setDescription(prepDescription(parsed, null, "Adminhashes and -powerlevels have been reloaded"));
-        } else if (parsed.command === "MESSAGE") {
-            const msgContent = content(parsed.body);
-
-            adminLogPost = adminCommand(parsed)
-                .setColor(0X2c37ca)
-                .setDescription(prepDescription(parsed, "Message", msgContent));
-        } else if (parsed.command === "SAY") {
-            const sayContent = content(parsed.body);
-
-            adminLogPost = adminCommand(parsed)
-                .setColor(0X34EB6B)
-                .setDescription(prepDescription(parsed, "Content", sayContent));
-        } else if (parsed.command === "SETNEXT") {
-            adminLogPost = adminCommand(parsed)
-                .setColor(0X10a17d)
-                .setDescription(prepDescription(parsed, "Map"));
-
-            adminLogPostPub = adminCommand(parsed)
-                .setColor(0X10a17d)
-                .setDescription(prepDescription(parsed))
-                .setFooter({});
-        } else if (parsed.command === "SWITCH") {
-            adminLogPost = adminCommand(parsed)
-                .setColor(0X3292a8)
-                .setDescription(prepDescription(parsed, "When"));
-        } else if (parsed.command === "RUNNEXT") {
-            fs.writeFile("logs/gungame_winner.txt", "Admin \"!runnext\"", function(err) {
-                if (err) {
-                    // append failed
-                } else {
-                    // done
-                }
-            });
-
-            adminLogPost = adminCommand(parsed)
-                .setColor(0X085441)
-                .setDescription(prepDescription(parsed, null, " "));
-
-        } else if (parsed.command === "MAPVOTERESULT") {
-            adminLogPost, adminLogPostPub = mapvoteResult(parsed);
-        }
-        // TODO: figure out a way to handle undefined
-        // else {
-        //     client.channels.cache.get("995520998554218557").send("`" + adminLogSplit + "`");
-        // }
+export const processCommand = (line) => {
+    let parsed = {}
+    try {
+        parsed = parseAdminCommand(line);
+    } catch (e) {
+        console.error("Failed to parse an admin log line\n", line, e)
     }
 
-    return [adminLogPost, adminLogPostPub]
-};
+    if (parsed.command in handledCommands) {
+        const commandBlueprint = handledCommands[parsed.command]
 
-const reportPlayer = (data) => {
-    const adminLogPost = adminCommand(data)
-        .setColor(0X89a110);
+        if (commandBlueprint.func) {
+            return commandBlueprint.func(commandBlueprint, parsed)
+        } else {
+            return adminCommand(commandBlueprint, parsed)
+        }
+    }
+
+    return {};
+}
+
+const reportPlayer = (blueprint, data) => {
+    const adminLogPost = adminCommand(blueprint, data);
 
     if (data.receiver !== undefined) {
         adminLogPost.setTitle("REPORT PLAYER");
@@ -96,18 +96,16 @@ const reportPlayer = (data) => {
         adminLogPost.setTitle("REPORT");
     }
 
-    return adminLogPost;
+    return {
+        priv: adminLogPost,
+    }
 };
 
-const kickPlayer = (data) => {
-    const color = 0XEB7434;
+const kickPlayer = (blueprint, data) => {
+    const adminLogPost = adminCommand(blueprint, data);
 
-    const adminLogPost = adminCommand(data)
-        .setColor(color);
-
-    const adminLogPostPub = adminCommand(data)
+    const adminLogPostPub = adminCommand(blueprint, data)
         .setTitle("Kicked")
-        .setColor(color)
         .setFooter({
             text: "You can rejoin after getting kicked."
         });
@@ -119,14 +117,41 @@ const kickPlayer = (data) => {
         adminLogPost.setFooter({
             text: "THIS MESSAGE DOES NOT EXIST! IF PLAYER ASK WHY THEY GET KICKED, JUST PING MAX AND TELL HIM THAT I'LL LOOK INTO IT!"
         });
-        adminLogPostPub
-            .setDescription(reasonedDescription(data, "ERROR"));
+        adminLogPostPub.setDescription(reasonedDescription(data, "ERROR"));
     }
 
-    return [adminLogPost, adminLogPostPub];
+    return {
+        priv: adminLogPost,
+        pub: adminLogPostPub,
+    }
 };
 
-const mapvoteResult = (data) => {
+
+const setNext = (blueprint, data) => {
+    const adminLogPost = adminCommand(blueprint, data);
+
+    const adminLogPostPub = adminCommand(blueprint, data)
+        .setFooter({})
+
+    return {
+        priv: adminLogPost,
+        pub: adminLogPostPub,
+    }
+}
+
+const runNext = (blueprint, data) => {
+    fs.writeFile("logs/gungame_winner.txt", "Admin \"!runnext\"", function(err) {
+        if (err) {
+            // append failed
+        } else {
+            // done
+        }
+    });
+
+    return adminCommand(blueprint, data)
+}
+
+const mapvoteResult = (blueprint, data) => {
     const adminMapsVotesFull = data.orig.split("Vote finished: ");
     const adminMapsVotesEach = adminMapsVotesFull[1].split(" | ");
 
@@ -138,18 +163,17 @@ const mapvoteResult = (data) => {
         );
     });
 
-    const description = votesDescription.join("\n");
+    data.body = votesDescription.join("\n");
 
-    const adminLogPost = adminCommand(data)
+    const adminLogPost = adminCommand(blueprint, data)
         .setTitle("MAP VOTE RESULTS")
-        .setColor(0X5c32a8)
-        .setDescription(prepDescription(data, null, description));
 
     const adminLogPostPub = adminCommand(data)
         .setTitle("Map Vote Results")
-        .setColor(0X5c32a8)
-        .setDescription(prepDescription(data, null, description))
         .setFooter({});
 
-    return [adminLogPost, adminLogPostPub];
+    return {
+        priv: adminLogPost,
+        pub: adminLogPostPub,
+    }
 };
