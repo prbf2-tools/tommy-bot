@@ -51,7 +51,7 @@ export const parseAdminCommand = (data) => {
     const i = data.indexOf("]");
     output.body = data.slice(i).split(":")[1];
 
-    if (split[6 + offset] !== undefined && split[6 + offset].includes("on")) {
+    if (split[6 + offset] !== undefined && split[6 + offset].trim() === "on") {
         output.receiver = {
             tag: split[7 + offset].slice(1),
             name: split[8 + offset].slice(0, -2),

@@ -64,6 +64,18 @@ test("parseAdminCommand", () => {
                 "issuer_type": "user",
                 "orig": "[2023-04-01 10:11] !INIT performed by 'TAG name':",
             }
+        }, {
+            in: "[2023-04-14 20:23] !REPORT         performed by ' Shil': dont switch!",
+            out: {
+                "body": " dont switch!",
+                "command": "REPORT",
+                "issuer": {
+                    "name": "Shil",
+                    "tag": "",
+                },
+                "issuer_type": "user",
+                "orig": "[2023-04-14 20:23] !REPORT performed by ' Shil': dont switch!",
+            }
         }
     ];
 
