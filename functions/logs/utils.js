@@ -87,14 +87,14 @@ export const prepDescription = (blueprint, data) => {
     let header = "Reason";
     if (blueprint.header === null) {
         header = null;
-    } else if (blueprint.header !== "") {
+    } else if (blueprint.header) {
         header = blueprint.header;
     }
 
     let body = data.body;
     if (blueprint.body === null) {
         body = null;
-    } else if (blueprint.body !== "") {
+    } else if (blueprint.body) {
         body = blueprint.body;
     } else if (blueprint.extraContent) {
         body = content(body);
