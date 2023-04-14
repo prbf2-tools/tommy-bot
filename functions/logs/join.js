@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { flagFromIP } from "./utils";
+import { flagFromIP } from "./utils.js";
 
 
 export const processJoin = (line) => {

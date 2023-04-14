@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { flagFromIP, fullName } from "./utils";
+import { flagFromIP, fullName } from "./utils.js";
 
 
 export const processBan = (line) => {
