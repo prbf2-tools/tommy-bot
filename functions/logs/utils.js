@@ -40,8 +40,8 @@ export const parseAdminCommand = (data) => {
         output.issuer_type = ISSUERS.USER;
 
         output.issuer = {
-            tag: split[5].replace("'", ""),
-            name: split[6].split("'")[0],
+            tag: split[5].slice(1),
+            name: split[6].slice(0, -2),
         };
 
         offset = 1;
@@ -52,8 +52,8 @@ export const parseAdminCommand = (data) => {
 
     if (split[6 + offset] !== undefined && split[6 + offset].includes("on")) {
         output.receiver = {
-            tag: split[7 + offset].replace("'", ""),
-            name: split[8 + offset].split("'")[0],
+            tag: split[7 + offset].slice(1),
+            name: split[8 + offset].slice(0, -2),
         };
     }
 
