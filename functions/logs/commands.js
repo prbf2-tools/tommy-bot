@@ -2,69 +2,70 @@ import fs from "fs";
 import Tail from "always-tail";
 
 import { ISSUERS, adminCommand, parseAdminCommand, reasonedDescription, prepDescription, content } from "./utils.js";
+import { Colors } from "discord.js";
 
-const REPORT_COLOR = 0X89a110; // green apple
+const reportColor = Colors.DarkYellow;
 const handledCommands = {
     REPORT: {
-        color: REPORT_COLOR,
+        color: reportColor,
         func: reportPlayer,
     },
     REPORTP: {
-        color: REPORT_COLOR,
+        color: reportColor,
         func: reportPlayer,
     },
     KICK: {
-        color: 0XEB7434, // orange
+        color: Colors.DarkOrange,
         func: kickPlayer,
         pub: true,
     },
     WARN: {
-        color: 0XEBCD34, // yellow
+        color: Colors.Yellow,
     },
     RESIGN: {
-        color: 0Xbba170, // skin brown
+        color: Colors.DarkGold,
     },
     KILL: {
-        color: 0Xff8bcb, // pink
+        color: Colors.LuminousVividPink,
     },
     INIT: {
-        color: 0X3f213f, // brown purple
+        color: Colors.DarkPurple,
         header: null,
         body: "Adminhashes and -powerlevels have been reloaded",
     },
     MESSAGE: {
-        color: 0X2c37ca, // deep blue
+        color: Colors.DarkBlue,
         header: "Message",
         extractContent: true,
     },
     SAY: {
-        color: 0X34EB6B, // green saturated
+        color: Colors.Green,
         header: "Content",
         extractContent: true,
     },
     SETNEXT: {
-        color: 0X10a17d, // dark turquoise
+        color: Colors.DarkGreen,
         header: "Map",
         pub: true,
         func: setNext,
     },
     SWITCH: {
-        color: 0X3292a8, // blueish
+        color: Colors.DarkCyan,
         header: "When",
     },
     RUNNEXT: {
-        color: 0X085441, // dark green
+        color: Colors.DarkTeal,
         header: null,
         body: null,
         func: runNext,
     },
     MAPVOTERESULT: {
-        color: 0X5c32a8, // purple
+        color: Colors.Purple,
         header: null,
         pub: true,
         func: mapvoteResult,
-    }
-}
+    },
+};
 
 export const processCommand = (line) => {
     let parsed = {}
