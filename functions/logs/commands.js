@@ -86,7 +86,7 @@ const mapvoteResult = (blueprint, data) => {
     const adminLogPost = adminCommand(blueprint, data)
         .setTitle("MAP VOTE RESULTS");
 
-    const adminLogPostPub = adminCommand(data)
+    const adminLogPostPub = adminCommand(blueprint, data)
         .setTitle("Map Vote Results")
         .setFooter(null);
 
