@@ -1,16 +1,24 @@
-enum UserType {
+export enum UserType {
   Player,
   Prism,
   Server,
 }
 
-interface User {
+export class User {
   typ: UserType;
   name: string;
   tag?: string;
+
+  toString(): string {
+    if (this.tag) {
+      return this.tag + " " + this.name;
+    }
+
+    return this.name;
+  }
 }
 
-interface Command {
+export interface CommandData {
   command: string;
   date: Date;
 
@@ -22,21 +30,16 @@ interface Command {
 
 const regex = /\[(?<date>(\d{4})-(\d{2})-(\d{2}))\s(?<time>(\d{2}):(\d{2})(:\d{2})?)\]\s!?(?<command>\w*)[^\']*'((PRISM user (?<prism>\S+))|(?<server>SERVER)|((?<issuer>(?<i_tag>\S+)? (?<i_name>\S+))))'( on '((?<receiver>(?<r_tag>\S+)? (?<r_name>\S+)))')?:\s(?<body>.*)/
 
-export const parseCommandLine = (line: string): Command | null => {
+export const parseCommandLine = (line: string): CommandData | null => {
   const match = line.match(regex);
-  if (!match) {
+  if (!match || !match.groups) {
+    console.log("Unable to parse command line: ", line)
     return null;
   }
 
-  const groups = match?.groups;
+  const groups = match.groups;
 
-  if (!groups) {
-    console.log("Unable to parse command line: ", line)
-    return null
-  }
-
-
-  let out: Command = {
+  let out: CommandData = {
     command: groups.command,
     date: new Date(groups.date + "T" + groups.time),
     issuer: {

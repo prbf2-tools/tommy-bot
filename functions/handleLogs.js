@@ -2,8 +2,9 @@ import fs from "fs";
 import Tail from "always-tail";
 
 import { processBan } from "./logs/bans.js";
-import { processCommand } from "./logs/commands.js";
+import { parseCommandLine } from "./logs/commands/parser.js";
 import { processJoin } from "./logs/join.js";
+import { prepareEmbeds as prepareCommandEmbeds } from "./logs/commands/embeds.js";
 
 export default (client) => {
     client.handleLogs = async () => {
@@ -44,7 +45,8 @@ const watchCommands = (client) => {
     const tailAdmins = new Tail(filenameAdmin, "\n");
 
     tailAdmins.on("line", line => {
-        const embeds = processCommand(line);
+        const command = parseCommandLine(line);
+        const embeds = prepareCommandEmbeds(command);
 
         if ("priv" in embeds) {
             client.channels.cache.get("995520998554218557").send({ embeds: [embeds.priv] });

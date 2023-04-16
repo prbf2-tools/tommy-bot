@@ -1,115 +1,214 @@
 import fs from "fs";
-import { Colors } from "discord.js";
+import { ColorResolvable, Colors, EmbedBuilder } from "discord.js";
 
-import { adminCommand, prepDescription } from "./utils.js";
-import { parseCommandLine } from "./parser.js";
+import { CommandData, UserType } from "./parser.js";
 
+interface Embeds {
+  priv?: EmbedBuilder;
+  pub?: EmbedBuilder;
+}
 
-const reportPlayer = (blueprint, data) => {
-  const adminLogPost = adminCommand(blueprint, data);
+interface HandlerConstructor {
+  new(blueprint: Blueprint): Handler
+}
 
-  if (data.receiver !== undefined) {
-    adminLogPost.setTitle("REPORT PLAYER");
-  } else {
-    adminLogPost.setTitle("REPORT");
+interface Handler {
+  handle(command: CommandData): Embeds
+}
+
+interface Blueprint {
+  color: ColorResolvable;
+  header?: string | null;
+  body?: string | null;
+  func?: HandlerConstructor;
+  extractContent?: boolean;
+}
+
+class CommandHandler implements Handler {
+  blueprint: Blueprint;
+
+  constructor(blueprint: Blueprint) {
+    this.blueprint = blueprint
   }
 
-  return {
-    priv: adminLogPost,
-  };
-};
+  prepareEmbed(data: CommandData): EmbedBuilder {
+    const embed = new EmbedBuilder()
+      .setColor(this.blueprint.color)
+      .setTitle(data.command)
+      .setDescription(this.prepDescription(data))
+      .setTimestamp();
 
-const kickPlayer = (blueprint, data) => {
-  const adminLogPost = adminCommand(blueprint, data);
-
-  const adminLogPostPub = adminCommand(blueprint, data)
-    .setTitle("Kicked")
-    .setFooter({
-      text: "You can rejoin after getting kicked."
-    });
-
-  if (
-    data.issuer_type === ISSUERS.SERVER &&
-    data.body.includes("Account related to banned key:")
-  ) {
-    adminLogPost.setFooter({
-      text: "THIS MESSAGE DOES NOT EXIST! IF PLAYER ASK WHY THEY GET KICKED, JUST PING MAX AND TELL HIM THAT I'LL LOOK INTO IT!"
-    });
-    data.body = "ERROR";
-    adminLogPostPub.setDescription(prepDescription(blueprint, data));
-  }
-
-  return {
-    priv: adminLogPost,
-    pub: adminLogPostPub,
-  };
-};
-
-
-const setNext = (blueprint, data) => {
-  const adminLogPost = adminCommand(blueprint, data);
-
-  const adminLogPostPub = adminCommand(blueprint, data)
-    .setFooter(null);
-
-  return {
-    priv: adminLogPost,
-    pub: adminLogPostPub,
-  };
-};
-
-const runNext = (blueprint, data) => {
-  fs.writeFile("logs/gungame_winner.txt", "Admin \"!runnext\"", function(err) {
-    if (err) {
-      // append failed
-    } else {
-      // done
+    if (data.issuer.typ === UserType.Prism) {
+      embed.setFooter({
+        text: "PRISM"
+      });
+    } else if (data.issuer.typ === UserType.Player) {
+      embed.setFooter({
+        text: "IN-GAME"
+      });
     }
-  });
 
-  return adminCommand(blueprint, data);
-};
+    return embed;
+  }
 
-const mapvoteResult = (blueprint, data) => {
-  const adminMapsVotesFull = data.orig.split("Vote finished: ");
-  const adminMapsVotesEach = adminMapsVotesFull[1].split(" | ");
+  handle(data: CommandData): Embeds {
+    return {
+      priv: this.prepareEmbed(data),
+    }
+  }
 
-  let votesDescription = [];
-  adminMapsVotesEach.forEach(option => {
-    const split = option.split(": ");
-    votesDescription.push(
-      `** ${split[0]}: **\`${split[1]}\``
-    );
-  });
+  prepDescription(data: CommandData): string {
+    let description = [
+      `**Performed by: **\`${data.issuer.toString()}\``,
+    ];
 
-  data.body = votesDescription.join("\n");
+    let header: string | null = "Reason";
+    if (this.blueprint.header === null) {
+      header = null;
+    } else if (this.blueprint.header) {
+      header = this.blueprint.header;
+    }
 
-  const adminLogPost = adminCommand(blueprint, data)
-    .setTitle("MAP VOTE RESULTS");
+    let body: string | null = data.body || "";
+    if (this.blueprint.body === null) {
+      body = null;
+    } else if (this.blueprint.body) {
+      body = this.blueprint.body;
+    } else if (this.blueprint.extractContent) {
+      body = this.extractContent(body);
+    }
 
-  const adminLogPostPub = adminCommand(blueprint, data)
-    .setTitle("Map Vote Results")
-    .setFooter(null);
+    if (body !== null) {
+      if (header !== null) {
+        description.push(`**${header} : **\`${body}\``);
+      } else {
+        description.push(body);
+      }
+    }
 
-  return {
-    priv: adminLogPost,
-    pub: adminLogPostPub,
+    if (data.receiver !== undefined) {
+      description.splice(1, 0, `**On user: ** \`${data.receiver.toString()}\``);
+    }
+
+    return description.join("\n");
   };
-};
+
+  extractContent(body: string): string {
+    const index = body.lastIndexOf(" - ");
+    return body.slice(0, index);
+  };
+}
+
+class Report extends CommandHandler {
+  handle(data: CommandData): Embeds {
+    const priv = this.prepareEmbed(data);
+
+    if (data.receiver !== undefined) {
+      priv.setTitle("REPORT PLAYER");
+    } else {
+      priv.setTitle("REPORT");
+    }
+
+    return { priv };
+  }
+}
+
+class Kick extends CommandHandler {
+  handle(data: CommandData): Embeds {
+    const priv = this.prepareEmbed(data);
+
+    const pub = this.prepareEmbed(data)
+      .setTitle("Kicked")
+      .setFooter({
+        text: "You can rejoin after getting kicked."
+      });
+
+    if (
+      data.issuer.typ === UserType.Server &&
+      data.body?.includes("Account related to banned key:")
+    ) {
+      priv.setFooter({
+        text: "THIS MESSAGE DOES NOT EXIST! IF PLAYER ASK WHY THEY GET KICKED, JUST PING MAX AND TELL HIM THAT I'LL LOOK INTO IT!"
+      });
+      data.body = "ERROR";
+      pub.setDescription(this.prepDescription(data));
+    }
+
+    return { priv, pub };
+  };
+}
+
+
+class SetNext extends CommandHandler {
+  handle(data: CommandData): Embeds {
+    const priv = this.prepareEmbed(data);
+
+    const pub = this.prepareEmbed(data)
+      .setFooter(null);
+
+    return { priv, pub };
+  };
+}
+
+class RunNext extends CommandHandler {
+  handle(data: CommandData): Embeds {
+    fs.writeFile("logs/gungame_winner.txt", "Admin \"!runnext\"", function(err) {
+      if (err) {
+        // append failed
+      } else {
+        // done
+      }
+    });
+
+    return {
+      priv: this.prepareEmbed(data)
+    }
+  };
+}
+
+class MapvoteResult extends CommandHandler {
+  handle(data: CommandData): Embeds {
+    if (!data.body) {
+      return {};
+    }
+
+    const i = data.body.indexOf(":");
+    const adminMapsVotesEach = data.body.slice(i).split(" | ");
+
+    let votesDescription: string[] = [];
+    adminMapsVotesEach.forEach(option => {
+      const split = option.split(": ");
+      votesDescription.push(
+        `** ${split[0]}: **\`${split[1]}\``
+      );
+    });
+
+    data.body = votesDescription.join("\n");
+
+    const priv = this.prepareEmbed(data)
+      .setTitle("MAP VOTE RESULTS");
+
+    const pub = this.prepareEmbed(data)
+      .setTitle("Map Vote Results")
+      .setFooter(null);
+
+    return { priv, pub };
+  };
+}
 
 const reportColor = 0X89a110;
-const handledCommands = {
+const handledCommands: { [key: string]: Blueprint } = {
   REPORT: {
     color: reportColor,
-    func: reportPlayer,
+    func: Report,
   },
   REPORTP: {
     color: reportColor,
-    func: reportPlayer,
+    func: Report,
   },
   KICK: {
     color: Colors.DarkOrange,
-    func: kickPlayer,
+    func: Kick,
   },
   WARN: {
     color: Colors.Yellow,
@@ -138,7 +237,7 @@ const handledCommands = {
   SETNEXT: {
     color: Colors.DarkGreen,
     header: "Map",
-    func: setNext,
+    func: SetNext,
   },
   SWITCH: {
     color: 0X3292a8,
@@ -148,31 +247,25 @@ const handledCommands = {
     color: 0X085441,
     header: null,
     body: null,
-    func: runNext,
+    func: RunNext,
   },
   MAPVOTERESULT: {
     color: Colors.Purple,
     header: null,
-    func: mapvoteResult,
+    func: MapvoteResult,
   },
 };
 
-export const processCommand = (line) => {
-  const parsed = parseCommandLine(line);
-
-  if (!parsed) {
-    return {}
-  }
-
-  if (parsed.command in handledCommands) {
-    const commandBlueprint = handledCommands[parsed.command];
+export const prepareEmbeds = (command: CommandData): Embeds => {
+  if (command.command in handledCommands) {
+    const commandBlueprint = handledCommands[command.command];
 
     if (commandBlueprint.func) {
-      return commandBlueprint.func(commandBlueprint, parsed);
+      const handler = new commandBlueprint.func(commandBlueprint);
+      return handler.handle(command)
     } else {
-      return {
-        priv: adminCommand(commandBlueprint, parsed),
-      };
+      const handler = new CommandHandler(commandBlueprint);
+      return handler.handle(command)
     }
   }
 
