@@ -1,4 +1,6 @@
-import { parseAdminCommand, prepDescription } from "./utils.js";
+import { parseCommandLine } from "./parsers/command.js";
+import { prepDescription } from "./utils.js";
+
 
 test("prepDescription", () => {
     const player = {
@@ -50,36 +52,3 @@ test("prepDescription", () => {
     });
 });
 
-test("parseAdminCommand", () => {
-    const tests = [
-        {
-            in: "[2023-04-01 10:11] !INIT           performed by 'TAG name': ",
-            out: {
-                "body": "",
-                "command": "INIT",
-                "issuer": {
-                    "name": "name",
-                    "tag": "TAG",
-                },
-                "issuer_type": "user",
-                "orig": "[2023-04-01 10:11] !INIT performed by 'TAG name':",
-            }
-        }, {
-            in: "[2023-04-14 20:23] !REPORT         performed by ' Shil': dont switch!",
-            out: {
-                "body": " dont switch!",
-                "command": "REPORT",
-                "issuer": {
-                    "name": "Shil",
-                    "tag": "",
-                },
-                "issuer_type": "user",
-                "orig": "[2023-04-14 20:23] !REPORT performed by ' Shil': dont switch!",
-            }
-        }
-    ];
-
-    tests.forEach(t => {
-        expect(parseAdminCommand(t.in)).toEqual(t.out);
-    });
-});
