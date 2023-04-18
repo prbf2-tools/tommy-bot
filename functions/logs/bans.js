@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { decideIssuerType, descriptionLine, flagFromIP } from "./utils.js";
+import { decideIssuerType, descriptionLine, flagFromIP, fullName } from "./utils.js";
 import { UserType } from "./interfaces.js";
 var Duration;
 (function (Duration) {
@@ -35,8 +35,8 @@ export const prepareEmbeds = (ban) => {
         .setColor(color)
         .setTitle("BANNED")
         .setDescription([
-        descriptionLine("Name", ban.receiver.toString()),
-        descriptionLine("By", ban.issuer.toString()),
+        descriptionLine("Name", fullName(ban.receiver)),
+        descriptionLine("By", fullName(ban.issuer)),
         descriptionLine("Reason", ban.body),
         descriptionLine("Duration", duration),
         descriptionLine("Hash-ID", ban.receiver.hash),

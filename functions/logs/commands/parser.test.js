@@ -1,4 +1,4 @@
-import { parseCommandLine } from "./command";
+import { parseCommandLine } from "./parser.js";
 
 test("parseCommandLine", () => {
     const tests = [

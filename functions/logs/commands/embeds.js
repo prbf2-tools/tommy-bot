@@ -1,6 +1,7 @@
 import fs from "fs";
 import { Colors, EmbedBuilder } from "discord.js";
 import { UserType } from "../interfaces.js";
+import { fullName } from "../utils.js";
 class CommandHandler {
     blueprint;
     constructor(blueprint) {
@@ -31,7 +32,7 @@ class CommandHandler {
     }
     prepDescription(data) {
         const description = [
-            `**Performed by: **\`${data.issuer.toString()}\``,
+            `**Performed by: **\`${fullName(data.issuer)}\``,
         ];
         let header = "Reason";
         if (this.blueprint.header === null) {
@@ -59,7 +60,7 @@ class CommandHandler {
             }
         }
         if (data.receiver !== undefined) {
-            description.splice(1, 0, `**On user: ** \`${data.receiver.toString()}\``);
+            description.splice(1, 0, `**On user: ** \`${fullName(data.receiver)}\``);
         }
         return description.join("\n");
     }
@@ -86,8 +87,8 @@ class Kick extends CommandHandler {
         const pub = this.prepareEmbed(data)
             .setTitle("Kicked")
             .setFooter({
-                text: "You can rejoin after getting kicked."
-            });
+            text: "You can rejoin after getting kicked."
+        });
         if (data.issuer.typ === UserType.Server &&
             data.body?.includes("Account related to banned key:")) {
             priv.setFooter({

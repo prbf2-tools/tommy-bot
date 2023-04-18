@@ -22,3 +22,9 @@ export const decideIssuerType = (groups) => {
     }
     return UserType.Player;
 };
+export const fullName = (u) => {
+    if (u.tag) {
+        return u.tag + " " + u.name;
+    }
+    return u.name;
+};

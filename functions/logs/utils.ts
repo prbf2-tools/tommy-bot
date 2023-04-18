@@ -1,5 +1,6 @@
 import geoip from "geoip-lite";
 import { UserType } from "./interfaces.js";
+import { User } from "./interfaces.js";
 
 export const descriptionLine = (header: string, body: string, code = true): string => {
     if (code) {
@@ -26,3 +27,10 @@ export const decideIssuerType = (groups: { [key: string]: string }): UserType =>
 
     return UserType.Player;
 };
+
+export const fullName = (u: User): string => {
+    if (u.tag) {
+        return u.tag + " " + u.name;
+    }
+    return u.name;
+}

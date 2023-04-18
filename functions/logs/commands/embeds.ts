@@ -3,6 +3,7 @@ import { ColorResolvable, Colors, EmbedBuilder } from "discord.js";
 
 import { CommandData } from "./parser.js";
 import { Embeds, UserType } from "../interfaces.js";
+import { fullName } from "../utils.js";
 
 
 interface HandlerConstructor {
@@ -56,7 +57,7 @@ class CommandHandler implements Handler {
 
     prepDescription(data: CommandData): string {
         const description = [
-            `**Performed by: **\`${data.issuer.toString()}\``,
+            `**Performed by: **\`${fullName(data.issuer)}\``,
         ];
 
         let header: string | null = "Reason";
@@ -84,7 +85,7 @@ class CommandHandler implements Handler {
         }
 
         if (data.receiver !== undefined) {
-            description.splice(1, 0, `**On user: ** \`${data.receiver.toString()}\``);
+            description.splice(1, 0, `**On user: ** \`${fullName(data.receiver)}\``);
         }
 
         return description.join("\n");

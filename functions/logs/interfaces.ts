@@ -11,21 +11,13 @@ export enum UserType {
     Server,
 }
 
-export class User {
+export interface User {
     typ: UserType;
     name: string;
     tag?: string;
-
-    toString(): string {
-        if (this.tag) {
-            return this.tag + " " + this.name;
-        }
-
-        return this.name;
-    }
 }
 
-export class UserDetailed extends User {
+export interface UserDetailed extends User {
     ip: string;
     hash: string;
 }
