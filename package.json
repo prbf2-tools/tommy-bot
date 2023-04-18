@@ -19,9 +19,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --ignore logs/ bot.js",
-    "lint": "eslint .",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
-    "build": "tsc functions/logs/***.ts --module node16"
+    "lint": "npm run build && eslint .",
+    "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "build": "tsc functions/logs/*.ts --module node16 && tsc functions/logs/commands/*.ts --module node16",
+    "clear": "cd functions/logs/ && find . -name '*.js' -delete"
   },
   "repository": {
     "type": "git",

@@ -38,7 +38,7 @@ export const parseJoinLine = (line: string): JoinData | null => {
     };
 };
 
-export const prepareEmbed = (join: JoinData): Embeds => {
+export const prepareEmbeds = (join: JoinData): Embeds => {
     const accType: string[] = [];
     if (join.legacy) {
         accType.push("Legacy");

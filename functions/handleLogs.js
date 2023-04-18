@@ -3,7 +3,7 @@ import Tail from "always-tail";
 
 import { prepareEmbeds as prepareBanEmbeds, parseBanLine } from "./logs/bans.js";
 import { parseCommandLine } from "./logs/commands/parser.js";
-import { processJoin } from "./logs/join.js";
+import { parseJoinLine, prepareEmbeds as prepareJoinEmbeds } from "./logs/join.js";
 import { prepareEmbeds as prepareCommandEmbeds } from "./logs/commands/embeds.js";
 
 export default (client) => {
@@ -79,9 +79,17 @@ const watchJoin = (client) => {
     const tailJoin = new Tail(filenameJoin, "\n");
 
     tailJoin.on("line", line => {
-        const embed = processJoin(line);
+        const join = parseJoinLine(line);
+        if (!join) {
+            return;
+        }
 
-        client.channels.cache.get("995521059119960144").send({ embeds: [embed] });
+        const embeds = prepareJoinEmbeds(join);
+
+        if ("priv" in embeds) {
+            client.channels.cache.get("995521059119960144").send({ embeds: [embeds.priv] });
+        }
+
     });
 
     tailJoin.on("error", function(error) {
