@@ -10,6 +10,11 @@ export const descriptionLine = (header: string, body: string, code = true): stri
     return `**${header}: **${body}`;
 };
 
+export const obfuscateIP = (ip: string) => {
+    const banIPSafe = ip.split(".");
+    return `${banIPSafe[0]}.${banIPSafe[1]}.***.***`;
+};
+
 export const flagFromIP = (ip: string): string => {
     const geo2 = geoip.lookup(ip);
     if (geo2 !== null && geo2 !== undefined) {

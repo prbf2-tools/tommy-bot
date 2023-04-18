@@ -6,6 +6,10 @@ export const descriptionLine = (header, body, code = true) => {
     }
     return `**${header}: **${body}`;
 };
+export const obfuscateIP = (ip) => {
+    const banIPSafe = ip.split(".");
+    return `${banIPSafe[0]}.${banIPSafe[1]}.***.***`;
+};
 export const flagFromIP = (ip) => {
     const geo2 = geoip.lookup(ip);
     if (geo2 !== null && geo2 !== undefined) {

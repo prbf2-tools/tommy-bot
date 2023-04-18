@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { decideIssuerType, descriptionLine, flagFromIP, fullName } from "./utils.js";
+import { decideIssuerType, descriptionLine, obfuscateIP, flagFromIP, fullName } from "./utils.js";
 import { Embeds, User, UserDetailed, UserType } from "./interfaces.js";
 
 enum Duration {
@@ -53,7 +53,7 @@ export const prepareEmbeds = (ban: BanData): Embeds => {
             descriptionLine("Reason", ban.body),
             descriptionLine("Duration", duration),
             descriptionLine("Hash-ID", ban.receiver.hash),
-            descriptionLine("IP", `\`${obfuscateIP(ip)}\` :flag_${flagFromIP(ip)}`)
+            descriptionLine("IP", `\`${obfuscateIP(ip)}\` :flag_${flagFromIP(ip)}`, false)
         ].join("\n"))
         .setTimestamp(ban.date);
 
@@ -61,11 +61,6 @@ export const prepareEmbeds = (ban: BanData): Embeds => {
         priv: banSendAdmin,
         pub: banSendPub,
     };
-};
-
-const obfuscateIP = (ip: string) => {
-    const banIPSafe = ip.split(".");
-    return `${banIPSafe[0]}.${banIPSafe[1]}.***.***`;
 };
 
 const regex = /\[(?<date>(\d{4})-(\d{2})-(\d{2}))\s(?<time>(\d{2}):(\d{2})(:\d{2})?)\]\s(?<hash>\w+)\s(?<receiver>(?<r_tag>\S*)\s(?<r_name>\S+))\s(?<ip>(\d{1,3}\.?){4})\s(?<body>.*) banned by (?<issuer>((PRISM user (?<prism>\S+))|(?<i_tag>\S*)\s(?<i_name>\S+)))\s\((?<duration>.+)\)/;
