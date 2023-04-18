@@ -10,7 +10,6 @@ test("parseBanLine", () => {
                     "tag": "[POV]",
                     "typ": 0,
                 },
-                "duration": "3 Hours",
                 "receiver": {
                     "hash": "b0b528173cd34eb6978f594b034f66e5",
                     "ip": "37.214.24.61",

@@ -23,25 +23,25 @@ export const prepareEmbeds = (ban) => {
         .setColor(color)
         .setTitle("Banned player: " + ban.receiver.toString())
         .setDescription([
-        descriptionLine("Reason", ban.body),
-        descriptionLine("Duration", duration)
-    ].join("\n"))
+            descriptionLine("Reason", ban.body),
+            descriptionLine("Duration", duration)
+        ].join("\n"))
         .setFooter({
-        text: ban.issuer.toString() + " In-Game"
-    })
+            text: ban.issuer.toString() + " In-Game"
+        })
         .setTimestamp(ban.date);
     const ip = ban.receiver.ip;
     const banSendAdmin = new EmbedBuilder()
         .setColor(color)
         .setTitle("BANNED")
         .setDescription([
-        descriptionLine("Name", fullName(ban.receiver)),
-        descriptionLine("By", fullName(ban.issuer)),
-        descriptionLine("Reason", ban.body),
-        descriptionLine("Duration", duration),
-        descriptionLine("Hash-ID", ban.receiver.hash),
-        descriptionLine("IP", `\`${obfuscateIP(ip)}\` :flag_${flagFromIP(ip)}`)
-    ].join("\n"))
+            descriptionLine("Name", fullName(ban.receiver)),
+            descriptionLine("By", fullName(ban.issuer)),
+            descriptionLine("Reason", ban.body),
+            descriptionLine("Duration", duration),
+            descriptionLine("Hash-ID", ban.receiver.hash),
+            descriptionLine("IP", `\`${obfuscateIP(ip)}\` :flag_${flagFromIP(ip)}`)
+        ].join("\n"))
         .setTimestamp(ban.date);
     return {
         priv: banSendAdmin,
@@ -62,14 +62,14 @@ export const parseBanLine = (line) => {
     const groups = match.groups;
     let duration = 0;
     switch (groups.duration) {
-        case "perm":
-            duration = Duration.Permanent;
-            break;
-        case "round":
-            duration = Duration.Round;
-            break;
-        default:
-            duration = Number(groups.duration);
+    case "perm":
+        duration = Duration.Permanent;
+        break;
+    case "round":
+        duration = Duration.Round;
+        break;
+    default:
+        duration = Number(groups.duration);
     }
     const out = {
         date: new Date(groups.date + "T" + groups.time),

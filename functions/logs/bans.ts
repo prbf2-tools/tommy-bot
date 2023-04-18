@@ -81,14 +81,14 @@ export const parseBanLine = (line: string): BanData | null => {
 
     let duration: Duration | number = 0;
     switch (groups.duration) {
-        case "perm":
-            duration = Duration.Permanent;
-            break;
-        case "round":
-            duration = Duration.Round;
-            break;
-        default:
-            duration = Number(groups.duration);
+    case "perm":
+        duration = Duration.Permanent;
+        break;
+    case "round":
+        duration = Duration.Round;
+        break;
+    default:
+        duration = Number(groups.duration);
     }
 
     const out: BanData = {

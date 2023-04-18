@@ -1,6 +1,5 @@
 import { prepareEmbeds } from "./embeds.js";
 import { parseCommandLine } from "./parser.js";
-import { fullName } from "../utils.js";
 
 test("processCommand", () => {
     const tests = [

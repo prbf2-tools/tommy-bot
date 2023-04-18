@@ -33,4 +33,4 @@ export const fullName = (u: User): string => {
         return u.tag + " " + u.name;
     }
     return u.name;
-}
+};

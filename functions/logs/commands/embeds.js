@@ -87,8 +87,8 @@ class Kick extends CommandHandler {
         const pub = this.prepareEmbed(data)
             .setTitle("Kicked")
             .setFooter({
-            text: "You can rejoin after getting kicked."
-        });
+                text: "You can rejoin after getting kicked."
+            });
         if (data.issuer.typ === UserType.Server &&
             data.body?.includes("Account related to banned key:")) {
             priv.setFooter({
