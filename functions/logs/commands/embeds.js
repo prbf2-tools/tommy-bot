@@ -1,6 +1,6 @@
 import fs from "fs";
 import { Colors, EmbedBuilder } from "discord.js";
-import { UserType } from "./parser.js";
+import { UserType } from "../interfaces.js";
 class CommandHandler {
     blueprint;
     constructor(blueprint) {
@@ -11,7 +11,7 @@ class CommandHandler {
             .setColor(this.blueprint.color)
             .setTitle(data.command)
             .setDescription(this.prepDescription(data))
-            .setTimestamp();
+            .setTimestamp(data.date);
         if (data.issuer.typ === UserType.Prism) {
             embed.setFooter({
                 text: "PRISM"
@@ -30,7 +30,7 @@ class CommandHandler {
         };
     }
     prepDescription(data) {
-        let description = [
+        const description = [
             `**Performed by: **\`${data.issuer.toString()}\``,
         ];
         let header = "Reason";
@@ -63,12 +63,10 @@ class CommandHandler {
         }
         return description.join("\n");
     }
-    
     extractContent(body) {
         const index = body.lastIndexOf(" - ");
         return body.slice(0, index);
     }
-    
 }
 class Report extends CommandHandler {
     handle(data) {
@@ -100,7 +98,6 @@ class Kick extends CommandHandler {
         }
         return { priv, pub };
     }
-    
 }
 class SetNext extends CommandHandler {
     handle(data) {
@@ -109,7 +106,6 @@ class SetNext extends CommandHandler {
             .setFooter(null);
         return { priv, pub };
     }
-    
 }
 class RunNext extends CommandHandler {
     handle(data) {
@@ -125,7 +121,6 @@ class RunNext extends CommandHandler {
             priv: this.prepareEmbed(data)
         };
     }
-    
 }
 class MapvoteResult extends CommandHandler {
     handle(data) {
@@ -134,7 +129,7 @@ class MapvoteResult extends CommandHandler {
         }
         const i = data.body.indexOf(":");
         const adminMapsVotesEach = data.body.slice(i).split(" | ");
-        let votesDescription = [];
+        const votesDescription = [];
         adminMapsVotesEach.forEach(option => {
             const split = option.split(": ");
             votesDescription.push(`** ${split[0]}: **\`${split[1]}\``);
@@ -147,7 +142,6 @@ class MapvoteResult extends CommandHandler {
             .setFooter(null);
         return { priv, pub };
     }
-    
 }
 const reportColor = 0X89a110;
 const handledCommands = {

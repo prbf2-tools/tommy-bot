@@ -71,8 +71,6 @@ const obfuscateIP = (ip: string) => {
 const regex = /\[(?<date>(\d{4})-(\d{2})-(\d{2}))\s(?<time>(\d{2}):(\d{2})(:\d{2})?)\]\s(?<hash>\w+)\s(?<receiver>(?<r_tag>\S*)\s(?<r_name>\S+))\s(?<ip>(\d{1,3}\.?){4})\s(?<body>.*) banned by (?<issuer>((PRISM user (?<prism>\S+))|(?<i_tag>\S*)\s(?<i_name>\S+)))\s\((?<duration>.+)\)/;
 
 export const parseBanLine = (line: string): BanData | null => {
-    const split = line.trim().split(" ");
-
     const match = line.match(regex);
     if (!match || !match.groups) {
         console.log("Unable to parse command line: ", line);
@@ -83,14 +81,14 @@ export const parseBanLine = (line: string): BanData | null => {
 
     let duration: Duration | number = 0;
     switch (groups.duration) {
-        case "perm":
-            duration = Duration.Permanent;
-            break;
-        case "round":
-            duration = Duration.Round;
-            break;
-        default:
-            duration = Number(groups.duration);
+    case "perm":
+        duration = Duration.Permanent;
+        break;
+    case "round":
+        duration = Duration.Round;
+        break;
+    default:
+        duration = Number(groups.duration);
     }
 
     const out: BanData = {
