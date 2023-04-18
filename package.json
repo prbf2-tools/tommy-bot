@@ -18,6 +18,7 @@
   "description": "Bot for MAFIA PR Discord server",
   "main": "index.js",
   "scripts": {
+    "start": "npm run build && node bot.js",
     "dev": "nodemon --ignore logs/ bot.js",
     "lint": "npm run build && eslint .",
     "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest",
