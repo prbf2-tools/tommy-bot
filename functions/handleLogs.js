@@ -1,7 +1,7 @@
 import fs from "fs";
 import Tail from "always-tail";
 
-import { processBan } from "./logs/bans.js";
+import { prepareEmbeds as prepareBanEmbeds, parseBanLine } from "./logs/bans.js";
 import { parseCommandLine } from "./logs/commands/parser.js";
 import { processJoin } from "./logs/join.js";
 import { prepareEmbeds as prepareCommandEmbeds } from "./logs/commands/embeds.js";
@@ -20,7 +20,12 @@ const watchBanlist = (client) => {
     const tailBans = new Tail(filenameBans, "\n");
 
     tailBans.on("line", line => {
-        const embeds = processBan(line);
+        const ban = parseBanLine(line);
+        if (!ban) {
+            return;
+        }
+
+        const embeds = prepareBanEmbeds(ban);
 
         if ("priv" in embeds) {
             client.channels.cache.get("995520998554218557").send({ embeds: [embeds.priv] });
@@ -46,6 +51,10 @@ const watchCommands = (client) => {
 
     tailAdmins.on("line", line => {
         const command = parseCommandLine(line);
+        if (!command) {
+            return;
+        }
+
         const embeds = prepareCommandEmbeds(command);
 
         if ("priv" in embeds) {

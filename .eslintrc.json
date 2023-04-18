@@ -5,11 +5,16 @@
     "jest/globals": true
   },
   "plugins": [
-    "jest"
+    "jest",
+    "@typescript-eslint"
   ],
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "overrides": [],
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module",

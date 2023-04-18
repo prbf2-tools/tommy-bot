@@ -1,35 +1,61 @@
 import { EmbedBuilder } from "discord.js";
-import { flagFromIP, fullName } from "./utils.js";
+import { decideIssuerType, descriptionLine, flagFromIP } from "./utils.js";
+import { Embeds, User, UserType } from "./interfaces.js";
 
+enum Duration {
+    Permanent = "perm",
+    Round = "round",
+}
 
-export const processBan = (line) => {
-    const parsed = parseBanLine(line);
+interface BanData {
+    date: Date;
+
+    issuer: User;
+    receiver: User;
+
+    duration: Duration | number;
+
+    body: string;
+}
+
+export const prepareEmbeds = (ban: BanData): Embeds => {
+    let duration = "";
+    if (ban.duration == Duration.Permanent) {
+        duration = "Permanently";
+    } else if (ban.duration == Duration.Round) {
+        duration = "Current Round";
+    } else {
+        const hours = ban.duration / 3600;
+        duration = hours + " Hours";
+    }
 
     const color = 0x991b0d;
     const banSendPub = new EmbedBuilder()
         .setColor(color)
-        .setTitle("Banned player: " + fullName(parsed))
-        .setDescription(
-            "\n**Reason:** " + parsed.reason
-            + "\n**Duration:** " + parsed.duration,
-        )
+        .setTitle("Banned player: " + ban.receiver.toString())
+        .setDescription([
+            descriptionLine("Reason", ban.body),
+            descriptionLine("Duration", duration)
+        ].join("\n"))
         .setFooter({
-            text: parsed.admin + " In-Game"
+            text: ban.issuer.toString() + " In-Game"
         })
-        .setTimestamp();
+        .setTimestamp(ban.date);
+
+    const ip = ban.receiver.ip || "";
 
     const banSendAdmin = new EmbedBuilder()
         .setColor(color)
         .setTitle("BANNED")
-        .setDescription(
-            "**Name:** `" + fullName(parsed)
-            + "`\n**By:** `" + parsed.admin
-            + "`\n**Reason:** " + parsed.reason
-            + "\n**Duration:** " + parsed.duration
-            + "\n**Hash-ID:** `" + parsed.hash
-            + "`\n**IP:** `" + obfuscateIP(parsed.ip) + "` :flag_" + flagFromIP(parsed.ip) + ":"
-        )
-        .setTimestamp();
+        .setDescription([
+            descriptionLine("Name", ban.receiver.toString()),
+            descriptionLine("By", ban.issuer.toString()),
+            descriptionLine("Reason", ban.body),
+            descriptionLine("Duration", duration),
+            descriptionLine("Hash-ID", ban.receiver.hash || ""),
+            descriptionLine("IP", `\`${obfuscateIP(ip)}\` :flag_${flagFromIP(ip)}`)
+        ].join("\n"))
+        .setTimestamp(ban.date);
 
     return {
         priv: banSendAdmin,
@@ -37,43 +63,53 @@ export const processBan = (line) => {
     };
 };
 
-const obfuscateIP = (ip) => {
+const obfuscateIP = (ip: string) => {
     const banIPSafe = ip.split(".");
     return `${banIPSafe[0]}.${banIPSafe[1]}.***.***`;
 };
 
-export const parseBanLine = (line) => {
+const regex = /\[(?<date>(\d{4})-(\d{2})-(\d{2}))\s(?<time>(\d{2}):(\d{2})(:\d{2})?)\]\s(?<hash>\w+)\s(?<receiver>(?<r_tag>\S*)\s(?<r_name>\S+))\s(?<ip>(\d{1,3}\.?){4})\s(?<body>.*) banned by (?<issuer>((PRISM user (?<prism>\S+))|(?<i_tag>\S*)\s(?<i_name>\S+)))\s\((?<duration>.+)\)/;
+
+export const parseBanLine = (line: string): BanData | null => {
     const split = line.trim().split(" ");
 
-    let offset = 0;
-    if (/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(split[5])) {
-        offset = 1;
+    const match = line.match(regex);
+    if (!match || !match.groups) {
+        console.log("Unable to parse command line: ", line);
+        return null;
     }
 
-    const out = {
-        hash: split[2],
-        ip: split[4 + offset],
-        name: split[3 + offset],
+    const groups = match.groups;
+
+    let duration: Duration | number = 0;
+    switch (groups.duration) {
+        case "perm":
+            duration = Duration.Permanent;
+            break;
+        case "round":
+            duration = Duration.Round;
+            break;
+        default:
+            duration = Number(groups.duration);
+    }
+
+    const out: BanData = {
+        date: new Date(groups.date + "T" + groups.time),
+
+        body: groups.body,
+        issuer: {
+            typ: decideIssuerType(groups),
+            name: groups.prism || groups.i_name,
+            tag: groups.i_tag,
+        },
+        receiver: {
+            typ: UserType.Player,
+            name: groups.r_name,
+            tag: groups.r_tag,
+        },
+
+        duration: duration,
     };
-
-    if (offset === 1) {
-        out.tag = split[3];
-    }
-
-    const rawContent = split.slice(5 + offset).join(" ").split("banned by");
-
-    out.reason = rawContent[0];
-    out.admin = rawContent[1].split(" ").slice(0, -1).join(" ").trim();
-
-    const rawDuration = split[split.length - 1].replace("(", "").replace(")", "");
-    if (rawDuration === "perm") {
-        out.duration = "Permanently";
-    } else if (rawDuration === "round") {
-        out.duration = "Current Round";
-    } else {
-        const hours = Number(rawDuration) / 3600;
-        out.duration = hours + " Hours";
-    }
 
     return out;
 }; 

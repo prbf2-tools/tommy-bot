@@ -63,12 +63,12 @@ class CommandHandler {
         }
         return description.join("\n");
     }
-    ;
+    
     extractContent(body) {
         const index = body.lastIndexOf(" - ");
         return body.slice(0, index);
     }
-    ;
+    
 }
 class Report extends CommandHandler {
     handle(data) {
@@ -88,8 +88,8 @@ class Kick extends CommandHandler {
         const pub = this.prepareEmbed(data)
             .setTitle("Kicked")
             .setFooter({
-            text: "You can rejoin after getting kicked."
-        });
+                text: "You can rejoin after getting kicked."
+            });
         if (data.issuer.typ === UserType.Server &&
             data.body?.includes("Account related to banned key:")) {
             priv.setFooter({
@@ -100,7 +100,7 @@ class Kick extends CommandHandler {
         }
         return { priv, pub };
     }
-    ;
+    
 }
 class SetNext extends CommandHandler {
     handle(data) {
@@ -109,7 +109,7 @@ class SetNext extends CommandHandler {
             .setFooter(null);
         return { priv, pub };
     }
-    ;
+    
 }
 class RunNext extends CommandHandler {
     handle(data) {
@@ -125,7 +125,7 @@ class RunNext extends CommandHandler {
             priv: this.prepareEmbed(data)
         };
     }
-    ;
+    
 }
 class MapvoteResult extends CommandHandler {
     handle(data) {
@@ -147,7 +147,7 @@ class MapvoteResult extends CommandHandler {
             .setFooter(null);
         return { priv, pub };
     }
-    ;
+    
 }
 const reportColor = 0X89a110;
 const handledCommands = {
