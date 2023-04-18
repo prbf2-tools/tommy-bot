@@ -8,12 +8,14 @@ export class User {
     typ;
     name;
     tag;
-    ip;
-    hash;
     toString() {
         if (this.tag) {
             return this.tag + " " + this.name;
         }
         return this.name;
     }
+}
+export class UserDetailed extends User {
+    ip;
+    hash;
 }

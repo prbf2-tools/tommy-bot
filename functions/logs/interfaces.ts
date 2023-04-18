@@ -16,9 +16,6 @@ export class User {
     name: string;
     tag?: string;
 
-    ip?: string;
-    hash?: string;
-
     toString(): string {
         if (this.tag) {
             return this.tag + " " + this.name;
@@ -26,4 +23,9 @@ export class User {
 
         return this.name;
     }
+}
+
+export class UserDetailed extends User {
+    ip: string;
+    hash: string;
 }
