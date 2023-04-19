@@ -1,3 +1,4 @@
+import config from "../../config.js";
 import { parseJoinLine } from "./join.js";
 
 test("parseJoinLine", () => {
@@ -5,8 +6,8 @@ test("parseJoinLine", () => {
         {
             in: "[2023-03-31 23:53:53]	3037f1e5fd6c4ed2bb3caad802a723dc	1	[GG] Ukranov	2020-05-05	2.222.127.13	(LEGACY)(VAC BANNED)",
             out: {
-                "created": new Date("2020-05-05T00:00:00.000Z"),
-                "date": new Date("2023-03-31T21:53:53.000Z"),
+                "created": new Date("2020-05-05"),
+                "joined": new Date("2023-03-31T23:53:53.000" + config.timezone),
                 "hash": "3037f1e5fd6c4ed2bb3caad802a723dc",
                 "ip": "2.222.127.13",
                 "legacy": true,

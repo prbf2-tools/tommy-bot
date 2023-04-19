@@ -1,3 +1,4 @@
+import config from "../../config.js";
 import { parseBanLine } from "./bans.js";
 
 test("parseBanLine", () => {
@@ -17,7 +18,7 @@ test("parseBanLine", () => {
                     "tag": "",
                     "typ": 0,
                 },
-                "date": new Date("2023-04-02T19:13:00.000Z"),
+                "date": new Date("2023-04-02T21:13:00.000" + config.timezone),
                 "duration": 10800,
                 "body": "No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info!",
             }
@@ -25,7 +26,7 @@ test("parseBanLine", () => {
             in: "[2023-04-02 20:34] e79068163db043379abacb66ed6ab6df [UCL] ded_cres 178.54.240.229 No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info! banned by KIA rPoXoTauJIo (10800)",
             out: {
                 "body": "No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info!",
-                "date": new Date("2023-04-02T18:34:00.000Z"),
+                "date": new Date("2023-04-02T20:34:00.000" + config.timezone),
                 "duration": 10800,
                 "issuer": {
                     "name": "rPoXoTauJIo",

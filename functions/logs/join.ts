@@ -1,6 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import { descriptionLine, flagFromIP, obfuscateIP } from "./utils.js";
 import { Embeds, UserDetailed, UserType } from "./interfaces.js";
+import config from "../../config.js";
 
 interface JoinData extends UserDetailed {
     joined: Date,
@@ -23,7 +24,7 @@ export const parseJoinLine = (line: string): JoinData | null => {
     const groups = match.groups;
 
     return {
-        joined: new Date(groups.date + "T" + groups.time),
+        joined: new Date(groups.date + "T" + groups.time + config.timezone),
         created: new Date(groups.created),
 
         typ: UserType.Player,

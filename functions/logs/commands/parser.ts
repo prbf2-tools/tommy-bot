@@ -1,3 +1,4 @@
+import config from "../../../config.js";
 import { User, UserType } from "../interfaces.js";
 import { decideIssuerType } from "../utils.js";
 
@@ -24,7 +25,7 @@ export const parseCommandLine = (line: string): CommandData | null => {
 
     const out: CommandData = {
         command: groups.command,
-        date: new Date(groups.date + "T" + groups.time),
+        date: new Date(groups.date + "T" + groups.time + config.timezone),
         issuer: {
             typ: decideIssuerType(groups),
             name: groups.prism || groups.server || groups.i_name,
