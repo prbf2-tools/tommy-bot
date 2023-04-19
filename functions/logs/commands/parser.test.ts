@@ -25,6 +25,18 @@ test("parseCommandLine", () => {
                 },
                 "date": new Date("2023-04-14T18:23:00.000Z"),
             }
+        }, {
+            in: "[2023-04-01 15:30] MAPVOTERESULT   performed by '[POV] ARC*fecht_niko': Vote finished: Aas: 32 | Ins: 11",
+            out: {
+                "body": "Vote finished: Aas: 32 | Ins: 11",
+                "command": "MAPVOTERESULT",
+                "date": new Date("2023-04-01T13:30:00.000Z"),
+                "issuer": {
+                    "name": "ARC*fecht_niko",
+                    "tag": "[POV]",
+                    "typ": 0,
+                },
+            },
         }
     ];
 

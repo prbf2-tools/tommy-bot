@@ -32,13 +32,13 @@ export const prepareEmbeds = (ban: BanData): Embeds => {
     const color = 0x991b0d;
     const banSendPub = new EmbedBuilder()
         .setColor(color)
-        .setTitle("Banned player: " + ban.receiver.toString())
+        .setTitle("Banned player: " + fullName(ban.receiver))
         .setDescription([
             descriptionLine("Reason", ban.body),
             descriptionLine("Duration", duration)
         ].join("\n"))
         .setFooter({
-            text: ban.issuer.toString() + " In-Game"
+            text: ban.issuer.name + " In-Game"
         })
         .setTimestamp(ban.date);
 
@@ -53,7 +53,7 @@ export const prepareEmbeds = (ban: BanData): Embeds => {
             descriptionLine("Reason", ban.body),
             descriptionLine("Duration", duration),
             descriptionLine("Hash-ID", ban.receiver.hash),
-            descriptionLine("IP", `\`${obfuscateIP(ip)}\` :flag_${flagFromIP(ip)}`, false)
+            descriptionLine("IP", `\`${obfuscateIP(ip)}\` :flag_${flagFromIP(ip)}:`, false)
         ].join("\n"))
         .setTimestamp(ban.date);
 
@@ -76,14 +76,14 @@ export const parseBanLine = (line: string): BanData | null => {
 
     let duration: Duration | number = 0;
     switch (groups.duration) {
-    case "perm":
-        duration = Duration.Permanent;
-        break;
-    case "round":
-        duration = Duration.Round;
-        break;
-    default:
-        duration = Number(groups.duration);
+        case "perm":
+            duration = Duration.Permanent;
+            break;
+        case "round":
+            duration = Duration.Round;
+            break;
+        default:
+            duration = Number(groups.duration);
     }
 
     const out: BanData = {

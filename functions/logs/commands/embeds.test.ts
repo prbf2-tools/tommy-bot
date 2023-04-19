@@ -120,11 +120,36 @@ test("processCommand", () => {
                     }
                 },
             }
+        }, {
+            in: "[2023-04-01 15:30] MAPVOTERESULT   performed by '[POV] ARC*fecht_niko': Vote finished: Aas: 32 | Ins: 11",
+            out: {
+                "priv": {
+                    "color": 10181046,
+                    "description": "**Performed by: **`[POV] ARC*fecht_niko`\n** Aas: **`32`\n** Ins: **`11`",
+                    "footer": {
+                        "icon_url": undefined,
+                        "text": "IN-GAME",
+                    },
+                    "timestamp": "2023-04-01T13:30:00.000Z",
+                    "title": "MAP VOTE RESULTS",
+                },
+                "pub": {
+                    "color": 10181046,
+                    "description": "**Performed by: **`[POV] ARC*fecht_niko`\n** Aas: **`32`\n** Ins: **`11`",
+                    "footer": undefined,
+                    "timestamp": "2023-04-01T13:30:00.000Z",
+                    "title": "Map Vote Results",
+                },
+            },
         }
     ];
 
     tests.forEach(t => {
         const parsed = parseCommandLine(t.in);
+        if (!parsed) {
+            expect(parsed).toBeTruthy()
+            return;
+        }
         expect(prepareEmbeds(parsed)).toEqual(t.out);
     });
 });

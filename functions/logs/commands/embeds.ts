@@ -171,7 +171,7 @@ class MapvoteResult extends CommandHandler {
         }
 
         const i = data.body.indexOf(":");
-        const adminMapsVotesEach = data.body.slice(i).split(" | ");
+        const adminMapsVotesEach = data.body.slice(i + 2).split(" | ");
 
         const votesDescription: string[] = [];
         adminMapsVotesEach.forEach(option => {
