@@ -6,9 +6,10 @@ import { parseCommandLine } from "./commands/parser.js";
 import { parseJoinLine, prepareEmbeds as prepareJoinEmbeds } from "./join.js";
 import { prepareEmbeds as prepareCommandEmbeds } from "./commands/embeds.js";
 import { Client, TextChannel } from "discord.js";
+import { channels, logs } from "../../config.js";
 
 export const watchBanlist = (client: Client) => {
-    const filenameBans = "logs/banlist_info.log";
+    const filenameBans = logs.bans;
     if (!fs.existsSync(filenameBans)) fs.writeFileSync(filenameBans, "");
     const tailBans = new Tail(filenameBans, "\n");
 
@@ -21,11 +22,11 @@ export const watchBanlist = (client: Client) => {
         const { priv, pub } = prepareBanEmbeds(ban);
 
         if (priv) {
-            (client.channels.cache.get("995520998554218557") as TextChannel).send({ embeds: [priv] });
+            (client.channels.cache.get(channels.bans.priv) as TextChannel).send({ embeds: [priv] });
         }
 
         if (pub) {
-            (client.channels.cache.get("995387208947204257") as TextChannel).send({ embeds: [pub] });
+            (client.channels.cache.get(channels.bans.pub) as TextChannel).send({ embeds: [pub] });
         }
 
     });
@@ -38,7 +39,7 @@ export const watchBanlist = (client: Client) => {
 };
 
 export const watchCommands = (client: Client) => {
-    const filenameAdmin = "logs/ra_adminlog.txt";
+    const filenameAdmin = logs.commands;
     if (!fs.existsSync(filenameAdmin)) fs.writeFileSync(filenameAdmin, "");
     const tailAdmins = new Tail(filenameAdmin, "\n");
 
@@ -63,11 +64,11 @@ export const watchCommands = (client: Client) => {
         const { priv, pub } = prepareCommandEmbeds(command);
 
         if (priv) {
-            (client.channels.cache.get("995520998554218557") as TextChannel).send({ embeds: [priv] });
+            (client.channels.cache.get(channels.commands.priv) as TextChannel).send({ embeds: [priv] });
         }
 
         if (pub) {
-            (client.channels.cache.get("995387208947204257") as TextChannel).send({ embeds: [pub] });
+            (client.channels.cache.get(channels.commands.pub) as TextChannel).send({ embeds: [pub] });
         }
     });
 
@@ -79,7 +80,7 @@ export const watchCommands = (client: Client) => {
 };
 
 export const watchJoin = (client: Client) => {
-    const filenameJoin = "logs/joinlog.log";
+    const filenameJoin = logs.joins;
     if (!fs.existsSync(filenameJoin)) fs.writeFileSync(filenameJoin, "");
     const tailJoin = new Tail(filenameJoin, "\n");
 
@@ -92,7 +93,7 @@ export const watchJoin = (client: Client) => {
         const { priv } = prepareJoinEmbeds(join);
 
         if (priv) {
-            (client.channels.cache.get("995521059119960144") as TextChannel).send({ embeds: [priv] });
+            (client.channels.cache.get(channels.join.priv) as TextChannel).send({ embeds: [priv] });
         }
 
     });
