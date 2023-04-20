@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import { descriptionLine, flagFromIP, prepareDiscordDate } from "./utils.js";
 import { DiscordTimeFormat, UserType } from "./interfaces.js";
 import config from "../../config.js";

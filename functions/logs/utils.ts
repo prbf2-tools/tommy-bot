@@ -41,5 +41,5 @@ export const fullName = (u: User): string => {
 };
 
 export const prepareDiscordDate = (unixTimestamp: number, format: DiscordTimeFormat): string => {
-    return `<t:${unixTimestamp}:${format}>`
-}
+    return `<t:${unixTimestamp}:${format}>`;
+};

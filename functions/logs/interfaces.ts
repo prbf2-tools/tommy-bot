@@ -22,8 +22,8 @@ export interface UserDetailed extends User {
     hash: string;
 }
 
-export const dateFormat = "YYYY-MM-DD"
-export const dateTimeFormat = dateFormat + " " + "HH:mm:ss"
+export const dateFormat = "YYYY-MM-DD";
+export const dateTimeFormat = dateFormat + " " + "HH:mm:ss";
 
 export enum DiscordTimeFormat {
     Date = "d",
