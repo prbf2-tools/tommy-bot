@@ -18,7 +18,7 @@ interface Blueprint {
     color: ColorResolvable;
     header?: string | null;
     body?: string | null;
-    func?: HandlerConstructor;
+    handlerC?: HandlerConstructor;
     extractContent?: boolean;
 }
 
@@ -198,15 +198,15 @@ const reportColor = 0X89a110;
 const handledCommands: { [key: string]: Blueprint } = {
     REPORT: {
         color: reportColor,
-        func: Report,
+        handlerC: Report,
     },
     REPORTP: {
         color: reportColor,
-        func: Report,
+        handlerC: Report,
     },
     KICK: {
         color: Colors.DarkOrange,
-        func: Kick,
+        handlerC: Kick,
     },
     WARN: {
         color: Colors.Yellow,
@@ -235,7 +235,7 @@ const handledCommands: { [key: string]: Blueprint } = {
     SETNEXT: {
         color: Colors.DarkGreen,
         header: "Map",
-        func: SetNext,
+        handlerC: SetNext,
     },
     SWITCH: {
         color: 0X3292a8,
@@ -245,12 +245,12 @@ const handledCommands: { [key: string]: Blueprint } = {
         color: 0X085441,
         header: null,
         body: null,
-        func: RunNext,
+        handlerC: RunNext,
     },
     MAPVOTERESULT: {
         color: Colors.Purple,
         header: null,
-        func: MapvoteResult,
+        handlerC: MapvoteResult,
     },
 };
 
@@ -258,8 +258,8 @@ export const prepareEmbeds = (command: CommandData): Embeds => {
     if (command.command in handledCommands) {
         const commandBlueprint = handledCommands[command.command];
 
-        if (commandBlueprint.func) {
-            const handler = new commandBlueprint.func(commandBlueprint);
+        if (commandBlueprint.handlerC) {
+            const handler = new commandBlueprint.handlerC(commandBlueprint);
             return handler.handle(command);
         } else {
             const handler = new CommandHandler(commandBlueprint);
