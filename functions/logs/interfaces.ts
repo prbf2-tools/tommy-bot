@@ -21,3 +21,6 @@ export interface UserDetailed extends User {
     ip: string;
     hash: string;
 }
+
+export const dateFormat = "YYYY-MM-DD"
+export const dateTimeFormat = dateFormat + " " + "HH:mm:ss"

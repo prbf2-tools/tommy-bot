@@ -34,7 +34,7 @@ test("parseBanLine", () => {
                 },
                 "receiver": {
                     "hash": "c79068163db043379abacb66ed6ab6df",
-                    "ip": "192.168.000.229",
+                    "ip": "192.168.240.229",
                     "name": "some_user",
                     "tag": "[TAG]",
                     "typ": 0,

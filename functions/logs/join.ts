@@ -1,11 +1,13 @@
 import { EmbedBuilder } from "discord.js";
+import dayjs from 'dayjs';
+
 import { descriptionLine, flagFromIP, obfuscateIP } from "./utils.js";
-import { Embeds, UserDetailed, UserType } from "./interfaces.js";
+import { Embeds, UserDetailed, UserType, dateFormat, dateTimeFormat } from "./interfaces.js";
 import config from "../../config.js";
 
 interface JoinData extends UserDetailed {
-    joined: Date,
-    created: Date,
+    joined: dayjs.Dayjs,
+    created: dayjs.Dayjs,
 
     level: string,
     vacBan: boolean,
@@ -24,8 +26,8 @@ export const parseJoinLine = (line: string): JoinData | null => {
     const groups = match.groups;
 
     return {
-        joined: new Date(groups.date + "T" + groups.time + config.timezone),
-        created: new Date(groups.created),
+        joined: dayjs(groups.date + "T" + groups.time + config.timezone),
+        created: dayjs(groups.created),
 
         typ: UserType.Player,
         name: groups.name,
@@ -60,8 +62,8 @@ export const prepareEmbeds = (join: JoinData): Embeds => {
             descriptionLine("IP", `\`${obfuscateIP(join.ip)}\` :flag_${flagFromIP(join.ip)}:`, false),
             descriptionLine("Account Level", join.level),
             descriptionLine("Account Type", accType.join(" and ")),
-            descriptionLine("Creation Date", join.created.toDateString(), false),
-            descriptionLine("Joined", join.joined.toString(), false),
+            descriptionLine("Creation Date", join.created.format(dateFormat), false),
+            descriptionLine("Joined", join.joined.format(dateTimeFormat), false),
         ].join("\n"));
 
     return { priv };
