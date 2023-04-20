@@ -33,7 +33,7 @@ test("parseJoinLine", () => {
         {
             in: "[2023-03-31 23:53:53]	c037f1e5fd6c4ed2bb3caad702a723dc	1	[TAG] User	2020-05-05	192.168.127.13	(LEGACY)(VAC BANNED)",
             out: {
-                "created": dayjs("2020-05-05"),
+                "created": dayjs("2020-05-05T00:00:00" + config.timezone),
                 "joined": dayjs("2023-03-31T23:53:53.000" + config.timezone),
                 "hash": "c037f1e5fd6c4ed2bb3caad702a723dc",
                 "ip": "192.168.127.13",
