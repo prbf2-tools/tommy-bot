@@ -20,10 +20,10 @@
   "scripts": {
     "start": "npm run build && node bot.js",
     "dev": "nodemon --ignore logs/ bot.js",
-    "lint": "npm run build && eslint .",
+    "lint": "eslint .",
     "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest",
     "build": "tsc functions/logs/*.ts --module node16 && tsc functions/logs/commands/*.ts --module node16",
-    "clear": "cd functions/logs/ && find . -name '*.js' -delete"
+    "cleanup": "cd functions/logs/ && find . -name '*.js' -delete"
   },
   "repository": {
     "type": "git",
