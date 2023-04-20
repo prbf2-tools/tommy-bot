@@ -14,7 +14,7 @@ export default {
             "Prompt buttons for admins to enter their hash corectly...."
         ),
     async execute(interaction) {
-        const file = new AttachmentBuilder("logs/images/flags/hash-id.gif");
+        const file = new AttachmentBuilder("assets/images/hash-id.gif");
         const embed = new EmbedBuilder()
             .setColor("#0074ba")
             .setTitle("🔷 Admin Hash-ID")

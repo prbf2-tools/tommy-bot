@@ -19,6 +19,9 @@ import {
     AttachmentBuilder,
 } from "discord.js";
 
+const imagesDir = "assets/images/";
+const flagsDir = imagesDir + "flags/";
+
 export default (client) => {
     client.handleTrackersDemos = async () => {
         var ticketsLog = "logs/tickets.log";
@@ -122,7 +125,7 @@ export default (client) => {
                 async (image) => {
                     context.drawImage(image, 0, 0, width, height);
 
-                    loadImage("logs/images/Flags/template.png").then(async (image2) => {
+                    loadImage(imagesDir + "template.png").then(async (image2) => {
                         context.drawImage(image2, 0, 0, width, height);
 
                         context.textAlign = "center";
@@ -179,17 +182,17 @@ export default (client) => {
                             context.textBaseline = "top";
                             context.fillText(Team2Tickets, 239, 62);
 
-                            loadImage("logs/images/Flags/" + prjson.Team1Name + ".png").then(
+                            loadImage(flagsDir + prjson.Team1Name + ".png").then(
                                 (imageTeam1) => {
                                     context.drawImage(imageTeam1, 280, 70, 50, 28);
 
                                     loadImage(
-                                        "logs/images/Flags/" + prjson.Team2Name + ".png"
+                                        flagsDir + prjson.Team2Name + ".png"
                                     ).then((imageTeam2) => {
                                         context.drawImage(imageTeam2, 71, 70, 50, 28);
 
                                         if (prjson.MapMode == "gpm_insurgency") {
-                                            loadImage("logs/images/Flags/Cache.png").then(
+                                            loadImage(imagesDir + "Cache.png").then(
                                                 (imageCache) => {
                                                     context.drawImage(imageCache, 249, 68, 32, 32);
 
@@ -319,10 +322,10 @@ export default (client) => {
                 /*await client.channels.cache.get('1033130739505565716').threads.create({
           name: `__**${locals.mapNames[prjson.MapName].name}**__ -  ${locals.gameModes[prjson.MapMode].name}, ${locals.layers[prjson.MapLayer].name}`,
           message: {
-            content: `<t:${prjson.StartTime}:d> <t:${prjson.StartTime}:T> **-** <t:${prjson.EndTime}:d> <t:${prjson.EndTime}:T> **│** ${locals.factions[prjson.Team2Name]} \` ${Team1Tickets} \` **-** ${locals.factions[prjson.Team1Name]} \` ${Team2Tickets} \``, 
+            content: `<t:${prjson.StartTime}:d> <t:${prjson.StartTime}:T> **-** <t:${prjson.EndTime}:d> <t:${prjson.EndTime}:T> **│** ${locals.factions[prjson.Team2Name]} \` ${Team1Tickets} \` **-** ${locals.factions[prjson.Team1Name]} \` ${Team2Tickets} \``,
             embeds: [roundEmbed],
-            components: [row], 
-            files: [file, filecl] 
+            components: [row],
+            files: [file, filecl]
           },
           appliedTags: [locals.gameModes[prjson.MapMode].tagPriv, locals.layers[prjson.MapLayer].tagPriv]
         })*/
