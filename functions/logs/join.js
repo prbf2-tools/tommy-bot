@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import dayjs from 'dayjs';
-import { descriptionLine, flagFromIP, obfuscateIP } from "./utils.js";
-import { UserType, dateFormat, dateTimeFormat } from "./interfaces.js";
+import { descriptionLine, flagFromIP, obfuscateIP, prepareDiscordDate } from "./utils.js";
+import { DiscordTimeFormat, UserType } from "./interfaces.js";
 import config from "../../config.js";
 const regex = /\[(?<date>(\d{4})-(\d{2})-(\d{2}))\s(?<time>(\d{2}):(\d{2})(:\d{2})?)\]\s(?<hash>\w+)\s(?<level>\d)\s(?<player>(?<tag>\S*)\s(?<name>\S+))\s(?<created>(\d{4})-(\d{2})-(\d{2}))\s+(?<ip>(\d{1,3}\.?){4})\s+(\((?<legacy>LEGACY)\))?(\((?<vac_ban>VAC BANNED)\))?/;
 export const parseJoinLine = (line) => {
@@ -35,6 +35,8 @@ export const prepareEmbeds = (join) => {
     if (accType.length === 0) {
         accType.push("Standard");
     }
+    const created = `${prepareDiscordDate(join.created.unix(), DiscordTimeFormat.Date)}`;
+    const joined = `${prepareDiscordDate(join.joined.unix(), DiscordTimeFormat.Date)} ${prepareDiscordDate(join.joined.unix(), DiscordTimeFormat.LongTime)}`;
     const priv = new EmbedBuilder()
         .setColor(0X6500B3)
         .setTitle(join.name)
@@ -43,8 +45,8 @@ export const prepareEmbeds = (join) => {
         descriptionLine("IP", `\`${obfuscateIP(join.ip)}\` :flag_${flagFromIP(join.ip)}:`, false),
         descriptionLine("Account Level", join.level),
         descriptionLine("Account Type", accType.join(" and ")),
-        descriptionLine("Creation Date", join.created.format(dateFormat), false),
-        descriptionLine("Joined", join.joined.format(dateTimeFormat), false),
+        descriptionLine("Creation Date", created, false),
+        descriptionLine("Joined", joined, false),
     ].join("\n"));
     return { priv };
 };

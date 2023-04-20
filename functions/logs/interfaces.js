@@ -6,3 +6,13 @@ export var UserType;
 })(UserType = UserType || (UserType = {}));
 export const dateFormat = "YYYY-MM-DD";
 export const dateTimeFormat = dateFormat + " " + "HH:mm:ss";
+export var DiscordTimeFormat;
+(function (DiscordTimeFormat) {
+    DiscordTimeFormat["Date"] = "d";
+    DiscordTimeFormat["LongDate"] = "D";
+    DiscordTimeFormat["Time"] = "t";
+    DiscordTimeFormat["LongTime"] = "T";
+    DiscordTimeFormat["DateTime"] = "f";
+    DiscordTimeFormat["LongDateTime"] = "F";
+    DiscordTimeFormat["Relative"] = "R";
+})(DiscordTimeFormat = DiscordTimeFormat || (DiscordTimeFormat = {}));

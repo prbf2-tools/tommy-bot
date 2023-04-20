@@ -24,3 +24,13 @@ export interface UserDetailed extends User {
 
 export const dateFormat = "YYYY-MM-DD"
 export const dateTimeFormat = dateFormat + " " + "HH:mm:ss"
+
+export enum DiscordTimeFormat {
+    Date = "d",
+    LongDate = "D",
+    Time = "t",
+    LongTime = "T",
+    DateTime = "f",
+    LongDateTime = "F",
+    Relative = "R",
+}

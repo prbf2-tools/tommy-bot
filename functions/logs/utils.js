@@ -32,3 +32,6 @@ export const fullName = (u) => {
     }
     return u.name;
 };
+export const prepareDiscordDate = (unixTimestamp, format) => {
+    return `<t:${unixTimestamp}:${format}>`;
+};

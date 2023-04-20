@@ -1,8 +1,8 @@
 import { EmbedBuilder } from "discord.js";
 import dayjs from 'dayjs';
 
-import { descriptionLine, flagFromIP, obfuscateIP } from "./utils.js";
-import { Embeds, UserDetailed, UserType, dateFormat, dateTimeFormat } from "./interfaces.js";
+import { descriptionLine, flagFromIP, obfuscateIP, prepareDiscordDate } from "./utils.js";
+import { DiscordTimeFormat, Embeds, UserDetailed, UserType } from "./interfaces.js";
 import config from "../../config.js";
 
 interface JoinData extends UserDetailed {
@@ -54,6 +54,9 @@ export const prepareEmbeds = (join: JoinData): Embeds => {
         accType.push("Standard");
     }
 
+    const created = `${prepareDiscordDate(join.created.unix(), DiscordTimeFormat.Date)}`;
+    const joined = `${prepareDiscordDate(join.joined.unix(), DiscordTimeFormat.Date)} ${prepareDiscordDate(join.joined.unix(), DiscordTimeFormat.LongTime)}`;
+
     const priv = new EmbedBuilder()
         .setColor(0X6500B3)
         .setTitle(join.name)
@@ -62,8 +65,8 @@ export const prepareEmbeds = (join: JoinData): Embeds => {
             descriptionLine("IP", `\`${obfuscateIP(join.ip)}\` :flag_${flagFromIP(join.ip)}:`, false),
             descriptionLine("Account Level", join.level),
             descriptionLine("Account Type", accType.join(" and ")),
-            descriptionLine("Creation Date", join.created.format(dateFormat), false),
-            descriptionLine("Joined", join.joined.format(dateTimeFormat), false),
+            descriptionLine("Creation Date", created, false),
+            descriptionLine("Joined", joined, false),
         ].join("\n"));
 
     return { priv };

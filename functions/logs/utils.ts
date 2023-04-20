@@ -1,5 +1,5 @@
 import geoip from "geoip-lite";
-import { UserType } from "./interfaces.js";
+import { DiscordTimeFormat, UserType } from "./interfaces.js";
 import { User } from "./interfaces.js";
 
 export const descriptionLine = (header: string, body: string, code = true): string => {
@@ -39,3 +39,7 @@ export const fullName = (u: User): string => {
     }
     return u.name;
 };
+
+export const prepareDiscordDate = (unixTimestamp: number, format: DiscordTimeFormat): string => {
+    return `<t:${unixTimestamp}:${format}>`
+}
