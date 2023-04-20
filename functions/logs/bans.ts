@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { decideIssuerType, descriptionLine, obfuscateIP, flagFromIP, fullName } from "./utils.js";
 import { Embeds, User, UserDetailed, UserType } from "./interfaces.js";
 
-import config from '../../config.js';
+import config from "../../config.js";
 
 enum Duration {
     Permanent = "perm",
@@ -78,14 +78,14 @@ export const parseBanLine = (line: string): BanData | null => {
 
     let duration: Duration | number = 0;
     switch (groups.duration) {
-        case "perm":
-            duration = Duration.Permanent;
-            break;
-        case "round":
-            duration = Duration.Round;
-            break;
-        default:
-            duration = Number(groups.duration);
+    case "perm":
+        duration = Duration.Permanent;
+        break;
+    case "round":
+        duration = Duration.Round;
+        break;
+    default:
+        duration = Number(groups.duration);
     }
 
     const out: BanData = {

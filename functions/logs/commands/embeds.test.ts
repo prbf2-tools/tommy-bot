@@ -151,7 +151,7 @@ test("processCommand", () => {
     tests.forEach(t => {
         const parsed = parseCommandLine(t.in);
         if (!parsed) {
-            expect(parsed).toBeTruthy()
+            expect(parsed).toBeTruthy();
             return;
         }
         expect(prepareEmbeds(parsed)).toEqual(t.out);
