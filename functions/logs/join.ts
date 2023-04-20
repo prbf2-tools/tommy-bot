@@ -63,8 +63,8 @@ export const prepareEmbeds = (join: JoinData): Embeds => {
         .setDescription([
             descriptionLine("Hash-ID", join.hash),
             descriptionLine("IP", `\`${join.ip}\` :flag_${flagFromIP(join.ip)}:`, false),
-            descriptionLine("Account Level", join.level),
-            descriptionLine("Account Type", accType.join(" and ")),
+            descriptionLine("Account Level", join.level, false),
+            descriptionLine("Account Type", accType.join(" and "), false),
             descriptionLine("Creation Date", created, false),
             descriptionLine("Joined", joined, false),
         ].join("\n"));
