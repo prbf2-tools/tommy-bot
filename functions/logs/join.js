@@ -13,7 +13,7 @@ export const parseJoinLine = (line) => {
     const groups = match.groups;
     return {
         joined: dayjs(groups.date + "T" + groups.time + config.timezone),
-        created: dayjs(groups.created),
+        created: dayjs(groups.created + "T" + "00:00:00" + config.timezone),
         typ: UserType.Player,
         name: groups.name,
         tag: groups.tag,
