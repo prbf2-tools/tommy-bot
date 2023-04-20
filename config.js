@@ -26,6 +26,6 @@ export const logs = {
 
 export default {
     timezone: process.env.TZ || "+02:00",
-
     channels,
+    logs,
 };
