@@ -9,5 +9,7 @@ jobs:
       run: yarn
     - name: Run tests
       run: yarn test
+    - name: Cleanup
+      run: yarn run cleanup
     - name: Run linter
       run: yarn run lint

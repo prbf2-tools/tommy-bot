@@ -18,9 +18,12 @@
   "description": "Bot for MAFIA PR Discord server",
   "main": "index.js",
   "scripts": {
+    "start": "npm run build && node bot.js",
     "dev": "nodemon --ignore logs/ bot.js",
     "lint": "eslint .",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
+    "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "build": "tsc functions/logs/*.ts --module node16 && tsc functions/logs/commands/*.ts --module node16",
+    "cleanup": "cd functions/logs/ && find . -name '*.js' -delete"
   },
   "repository": {
     "type": "git",
@@ -35,9 +38,13 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",
     "@babel/plugin-syntax-import-assertions": "^7.20.0",
-    "eslint": "^8.37.0",
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "eslint": "^8.38.0",
     "eslint-plugin-jest": "^27.2.1",
     "jest": "^29.5.0",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "typescript": "^5.0.4"
   }
 }

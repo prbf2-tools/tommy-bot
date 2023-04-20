@@ -2,3 +2,4 @@
 node_modules
 /logs
 db.json
+functions/logs/**/*.js
