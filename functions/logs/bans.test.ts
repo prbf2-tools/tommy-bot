@@ -4,7 +4,7 @@ import { parseBanLine } from "./bans.js";
 test("parseBanLine", () => {
     const tests = [
         {
-            in: "[2023-04-02 21:13] b0b528173cd34eb6978f594b034f66e5  XaJlk 37.214.24.61 No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info! banned by [POV] Oblivium (10800)",
+            in: "[2023-04-02 21:13] c0b528173cd34eb6978f594b034f66e5  User 192.168.24.61 No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info! banned by [POV] Oblivium (10800)",
             out: {
                 "issuer": {
                     "name": "Oblivium",
@@ -12,9 +12,9 @@ test("parseBanLine", () => {
                     "typ": 0,
                 },
                 "receiver": {
-                    "hash": "b0b528173cd34eb6978f594b034f66e5",
-                    "ip": "37.214.24.61",
-                    "name": "XaJlk",
+                    "hash": "c0b528173cd34eb6978f594b034f66e5",
+                    "ip": "192.168.24.61",
+                    "name": "User",
                     "tag": "",
                     "typ": 0,
                 },
@@ -23,7 +23,7 @@ test("parseBanLine", () => {
                 "body": "No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info!",
             }
         }, {
-            in: "[2023-04-02 20:34] e79068163db043379abacb66ed6ab6df [UCL] ded_cres 178.54.240.229 No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info! banned by KIA rPoXoTauJIo (10800)",
+            in: "[2023-04-02 20:34] c79068163db043379abacb66ed6ab6df [TAG] some_user 192.168.240.229 No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info! banned by KIA rPoXoTauJIo (10800)",
             out: {
                 "body": "No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info!",
                 "date": new Date("2023-04-02T20:34:00.000" + config.timezone),
@@ -34,10 +34,10 @@ test("parseBanLine", () => {
                     "typ": 0,
                 },
                 "receiver": {
-                    "hash": "e79068163db043379abacb66ed6ab6df",
-                    "ip": "178.54.240.229",
-                    "name": "ded_cres",
-                    "tag": "[UCL]",
+                    "hash": "c79068163db043379abacb66ed6ab6df",
+                    "ip": "192.168.240.229",
+                    "name": "some_user",
+                    "tag": "[TAG]",
                     "typ": 0,
                 },
             }
