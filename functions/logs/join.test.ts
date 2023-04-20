@@ -10,7 +10,7 @@ test("prepareEmbeds", () => {
                 "priv": {
                     "data": {
                         "color": 6619315,
-                        "description": "**Hash-ID: **`c037f1e5fd6c4ed2bb3caad702a723dc`\n**IP: **`192.168.***.***` :flag_white:\n**Account Level: **`1`\n**Account Type: **`Legacy and VAC Banned`\n**Creation Date: **<t:1588629600:d>\n**Joined: **<t:1680299633:d> <t:1680299633:T>",
+                        "description": "**Hash-ID: **`c037f1e5fd6c4ed2bb3caad702a723dc`\n**IP: **`192.168.127.13` :flag_white:\n**Account Level: **`1`\n**Account Type: **`Legacy and VAC Banned`\n**Creation Date: **<t:1588629600:d>\n**Joined: **<t:1680299633:d> <t:1680299633:T>",
                         "title": "User",
                     }
                 }
