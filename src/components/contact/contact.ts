@@ -3,15 +3,20 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     SlashCommandBuilder,
-    ButtonStyle,
     AttachmentBuilder,
+    ChatInputCommandInteraction,
 } from "discord.js";
 
-export default {
+import * as appeal from "./appeal";
+import * as apply from "./apply";
+import * as report from "./report";
+
+export const command = {
     data: new SlashCommandBuilder()
         .setName("contactadmin")
         .setDescription("Prompt buttons for Ban Appeals, Admin Application and Reports"),
-    async execute(interaction) {
+
+    async execute(interaction: ChatInputCommandInteraction) {
         const file = new AttachmentBuilder("assets/images/hash-id.gif");
         const embed = new EmbedBuilder()
             .setColor("#e98f27")
@@ -23,25 +28,23 @@ export default {
                 > 🔴 **Report** an incident that happened on our Discord or Project Reality servers\n\n
                 If you are having issues finding your Hash-ID check the .GIF image bellow to learn how to find it.`)
             .setImage("attachment://hash-id.gif");
-        const row = new ActionRowBuilder()
+
+        const row = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
-                new ButtonBuilder()
-                    .setCustomId("apply")
-                    .setLabel("Admin Application")
-                    .setStyle(ButtonStyle.Primary),
-                new ButtonBuilder()
-                    .setCustomId("appeal")
-                    .setLabel("Ban Appeal")
-                    .setStyle(ButtonStyle.Success),
-                new ButtonBuilder()
-                    .setCustomId("report")
-                    .setLabel("Report Incident")
-                    .setStyle(ButtonStyle.Danger)
+                apply.button.builder(),
+                appeal.button.builder(),
+                report.button.builder(),
             );
-        await interaction.reply({
+
+        await interaction.deferReply()
+        await interaction.editReply({
             embeds: [embed],
             components: [row],
             files: [file]
         });
     },
-};
+}
+
+export default {
+    command
+}
