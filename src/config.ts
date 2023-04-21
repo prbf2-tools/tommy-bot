@@ -26,12 +26,12 @@ export const logs = {
 
 const token = process.env.TOKEN;
 if (!token) {
-    throw Error("Discord Bot token wasn't provided")
+    throw Error("Discord Bot token wasn't provided");
 }
 const clientID = process.env.CLIENT_ID;
 const guildID = process.env.GUILD_ID;
 if (!clientID || !guildID) {
-    throw Error("Client and Guild ID are required")
+    throw Error("Client and Guild ID are required");
 }
 
 export default {

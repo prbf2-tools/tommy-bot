@@ -1,4 +1,4 @@
-import * as fs from 'fs/promises';
+import * as fs from "fs/promises";
 import path from "path";
 
 import { Client, Components } from "./client";
@@ -12,7 +12,7 @@ export async function registerComponents(client: Client, ...dirs: string[]): Pro
 
             if (stat.isDirectory())
                 await registerComponents(client, path.join(dir, file));
-            else if (file.endsWith('.js')) {
+            else if (file.endsWith(".js")) {
                 try {
                     const components: Components = (await import(path.join(__dirname, dir, file))).default;
 
@@ -45,8 +45,8 @@ export async function registerEvents(client: Client, ...dirs: string[]): Promise
 
             if (stat.isDirectory())
                 await registerEvents(client, path.join(dir, file));
-            else if (file.endsWith('.js')) {
-                const eventName = file.substring(0, file.indexOf('.js'));
+            else if (file.endsWith(".js")) {
+                const eventName = file.substring(0, file.indexOf(".js"));
                 try {
                     const eventModule = (await import(path.join(__dirname, dir, file))).default;
                     client.on(eventName, eventModule.bind(null, client));

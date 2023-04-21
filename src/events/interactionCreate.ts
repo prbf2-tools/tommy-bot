@@ -27,7 +27,7 @@ export default async (client: Client, interaction: Interaction): Promise<void> =
         const button = client.buttons.get(interaction.customId);
         if (!button) {
             await interaction.reply({ content: `There was no button code found for this button. ${interaction.user.username}` });
-            return
+            return;
         }
 
         try {
@@ -56,4 +56,4 @@ export default async (client: Client, interaction: Interaction): Promise<void> =
             });
         }
     }
-}
+};

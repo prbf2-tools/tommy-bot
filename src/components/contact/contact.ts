@@ -36,15 +36,15 @@ export const command = {
                 report.button.builder(),
             );
 
-        await interaction.deferReply()
+        await interaction.deferReply();
         await interaction.editReply({
             embeds: [embed],
             components: [row],
             files: [file]
         });
     },
-}
+};
 
 export default {
     command
-}
+};

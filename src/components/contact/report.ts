@@ -18,7 +18,7 @@ export const button = {
     execute: (interaction: ButtonInteraction) => {
         interaction.showModal(modal.builder());
     }
-}
+};
 
 export const modal = {
     data: {
@@ -61,7 +61,7 @@ export const modal = {
 
         modal.addComponents(firstActionRow, secondActionRow, thirdActionRow, fourthActionRow);
 
-        return modal
+        return modal;
     },
     async execute(interaction: ModalSubmitInteraction) {
         const embed = new EmbedBuilder()
@@ -119,8 +119,8 @@ export const modal = {
                 });
             });
     }
-}
+};
 
 export default {
     button, modal,
-}
+};

@@ -1,10 +1,10 @@
-import { Client as DiscordClient, GatewayIntentBits, Events, Collection, ButtonBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, CommandInteraction, REST, Routes, Interaction, ApplicationCommandData } from "discord.js";
+import { Client as DiscordClient, GatewayIntentBits, Collection, ButtonBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, CommandInteraction, ApplicationCommandData } from "discord.js";
 import config from "./config";
 import { registerComponents, registerEvents } from "./registry";
 
 interface Component {
     data: {
-        name: any
+        name: string
     },
 }
 
@@ -30,9 +30,9 @@ export interface Components {
 }
 
 export class Client extends DiscordClient {
-    buttons: Collection<string, ButtonComponent>
-    commands: Collection<string, CommandComponent>
-    modals: Collection<string, ModalComponent>
+    buttons: Collection<string, ButtonComponent>;
+    commands: Collection<string, CommandComponent>;
+    modals: Collection<string, ModalComponent>;
 
     constructor() {
         super({
@@ -49,49 +49,49 @@ export class Client extends DiscordClient {
     }
 
     async loadComponents(): Promise<void> {
-        await registerComponents(this, './components');
+        await registerComponents(this, "./components");
 
-        const commands = toApplicationCommand(this.commands)
+        const commands = toApplicationCommand(this.commands);
 
         const guild = await this.guilds.fetch(config.guildID);
         if (!guild) {
-            console.error("Couldn't fetch guild")
-        };
+            console.error("Couldn't fetch guild");
+        }
 
         await guild.commands.set(commands);
     }
 
     async loadEvents(): Promise<void> {
-        await registerEvents(this, './events');
+        await registerEvents(this, "./events");
     }
 
     async login(token: string): Promise<string> {
         try {
-            console.log('Logging in...');
+            console.log("Logging in...");
             await super.login(token);
-            console.log(`Logged in as ${this.user!.tag}`);
+            console.log(`Logged in as ${this.user?.tag}`);
         } catch (e) {
             console.log(`Error logging in: ${e}`);
             process.exit(1);
         }
 
         try {
-            console.log('Loading events...');
+            console.log("Loading events...");
             await this.loadEvents();
-            console.log('Loaded all events!');
+            console.log("Loaded all events!");
         } catch (e) {
             console.log(`Error loading events: ${e}`);
         }
 
         try {
-            console.log('Loading components...');
+            console.log("Loading components...");
             await this.loadComponents();
-            console.log('Loaded all components!');
+            console.log("Loaded all components!");
         } catch (e) {
             console.log(`Error loading components: ${e}`);
         }
 
-        return this.token!;
+        return token;
     }
 }
 
