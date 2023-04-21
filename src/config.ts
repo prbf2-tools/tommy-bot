@@ -24,6 +24,13 @@ export const logs = {
     joins: process.env.LOGS_JOIN || "logs/joinlog.log",
 };
 
+export const prism = {
+    ip: process.env.PRISM_IP || "127.0.0.1",
+    port: Number(process.env.PRISM_PORT || 4712),
+    username: process.env.PRISM_USRNAME || "",
+    password: process.env.PRISM_USRPW || "",
+};
+
 const token = process.env.TOKEN;
 if (!token) {
     throw Error("Discord Bot token wasn't provided");
@@ -41,4 +48,5 @@ export default {
     token,
     clientID,
     guildID,
+    prism,
 };
