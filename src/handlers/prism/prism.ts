@@ -8,7 +8,10 @@ import { prism as prismConfig } from "../../config";
 
 export enum Events {
     MessageLogin = "login1",
+    MessageConnected = "connected",
+    MessageRAConfig = "raconfig",
     MessageChat = "chat",
+    MessageInvalid = "invalid",
 }
 
 class PRISM extends EventEmitter {
@@ -51,8 +54,8 @@ class PRISM extends EventEmitter {
                     this.buffer += rawData.toString("utf-8");
                     while (this.buffer.includes(this.MSG_END)) {
                         const length = this.buffer.indexOf(this.MSG_END);
-                        const msg = this.buffer.substr(0, length);
-                        this.buffer = this.buffer.substr(length + 2);
+                        const msg = this.buffer.substring(0, length);
+                        this.buffer = this.buffer.substring(length + 2);
                         const { subject, fields } = parseMessage(msg);
                         this.emit(subject, fields);
                     }
@@ -109,11 +112,21 @@ interface Message {
 const parseMessage = (msg: string): Message => {
     const data = msg.toString();
 
-    const subject = data.split("\x01")[1].split("\x02")[0];
+    const subjectStr = data.split("\x01")[1].split("\x02")[0];
     const fields = data.split("\x01")[1].split("\x02")[1].split("\x04")[0].split("\x03");
 
+    const subject: Events = (() => {
+        switch (subjectStr) {
+            case "login1": return Events.MessageLogin
+            case "connected": return Events.MessageConnected
+            case "raconfig": return Events.MessageRAConfig
+            case "chat": return Events.MessageChat
+            default: return Events.MessageInvalid
+        }
+    })()
+
     return {
-        subject: Events[subject as keyof typeof Events],
+        subject: subject,
         fields,
     };
 };
