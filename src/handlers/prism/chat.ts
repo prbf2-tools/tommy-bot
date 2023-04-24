@@ -3,10 +3,10 @@ import fs from "fs/promises";
 import { EmbedBuilder, TextChannel } from "discord.js";
 
 import { Client } from "../../client";
-import PRISM, { Events } from "./prism";
+import PRISM, { Subject } from "./prism";
 
 export default (client: Client) => {
-    PRISM.on(Events.MessageChat, handlePRISMChat.bind(null, client));
+    PRISM.on(Subject.Chat, handlePRISMChat.bind(null, client));
 };
 
 function handlePRISMChat(client: Client, fields: string[]) {

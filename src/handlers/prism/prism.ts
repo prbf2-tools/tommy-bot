@@ -6,12 +6,19 @@ import rand from "csprng";
 
 import { prism as prismConfig } from "../../config";
 
-export enum Events {
-    MessageLogin = "login1",
-    MessageConnected = "connected",
-    MessageRAConfig = "raconfig",
-    MessageChat = "chat",
-    MessageInvalid = "invalid",
+export enum Subject {
+    Login = "login1",
+    Connected = "connected",
+
+    RAConfig = "raconfig",
+    Success = "success",
+    Error = "success",
+    Chat = "chat",
+
+    UpdatePlayers = "updateplayers",
+    Kill = "kill",
+
+    Invalid = "invalid",
 }
 
 class PRISM extends EventEmitter {
@@ -57,7 +64,11 @@ class PRISM extends EventEmitter {
                         const msg = this.buffer.substring(0, length);
                         this.buffer = this.buffer.substring(length + 2);
                         const { subject, fields } = parseMessage(msg);
-                        this.emit(subject, fields);
+                        if (subject === Subject.Chat) {
+                            this.handleChat(fields);
+                        } else {
+                            this.emit(subject, fields);
+                        }
                     }
                 });
             this.connect();
@@ -65,7 +76,14 @@ class PRISM extends EventEmitter {
             console.error(error);
         }
 
-        this.on(Events.MessageLogin, this.login2);
+        this.on(Subject.Login, this.login2);
+        this.on(Subject.Connected, () => {
+            this.sendChat("!report test");
+            this.sendChat("Test");
+        })
+        this.on(Subject.Chat, (fields: string[][]) => {
+            console.log(fields)
+        })
     }
 
     connect() {
@@ -101,11 +119,16 @@ class PRISM extends EventEmitter {
     sendChat(msg: string) {
         this.send("say", msg);
     }
+
+    handleChat(fields: string[]) {
+        const fieldsReady = fields.join("##^##").split("\n").map(v => v.split("##^##"));
+        this.emit(Subject.Chat, fieldsReady)
+    }
 }
 
 
 interface Message {
-    subject: Events
+    subject: Subject
     fields: string[]
 }
 
@@ -115,13 +138,17 @@ const parseMessage = (msg: string): Message => {
     const subjectStr = data.split("\x01")[1].split("\x02")[0];
     const fields = data.split("\x01")[1].split("\x02")[1].split("\x04")[0].split("\x03");
 
-    const subject: Events = (() => {
+    console.log(subjectStr)
+
+    const subject: Subject = (() => {
         switch (subjectStr) {
-            case "login1": return Events.MessageLogin
-            case "connected": return Events.MessageConnected
-            case "raconfig": return Events.MessageRAConfig
-            case "chat": return Events.MessageChat
-            default: return Events.MessageInvalid
+            case Subject.Login.toString(): return Subject.Login
+            case Subject.Connected.toString(): return Subject.Connected
+            case Subject.RAConfig.toString(): return Subject.RAConfig
+            case Subject.Success.toString(): return Subject.Success
+            case Subject.Error.toString(): return Subject.Error
+            case Subject.Chat.toString(): return Subject.Chat
+            default: return Subject.Invalid
         }
     })()
 
