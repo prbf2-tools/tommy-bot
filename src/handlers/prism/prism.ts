@@ -34,6 +34,13 @@ class PRISM extends EventEmitter {
     constructor() {
         super();
 
+        this.setupSocket();
+
+        this.on(Subject.Login, this.login2);
+    }
+
+    setupSocket() {
+        const connect = () => this.socket.connect(prismConfig.port, prismConfig.ip);
         try {
             this.socket
                 .once("connect", () => {
@@ -45,17 +52,17 @@ class PRISM extends EventEmitter {
                     console.log(e);
                     console.log("Waiting for 10 seconds before trying again");
                     this.socket.destroy();
-                    setTimeout(this.connect, 10000);
+                    setTimeout(connect, 10000);
                 })
                 .on("close", () => {
                     console.log("The PRISM connection was closed");
                     this.socket.destroy();
-                    setTimeout(this.connect, 10000);
+                    setTimeout(connect, 10000);
                 })
                 .on("end", () => {
                     console.log("The PRISM connection was ended");
                     this.socket.destroy();
-                    setTimeout(this.connect, 10000);
+                    setTimeout(connect, 10000);
                 })
                 .on("data", (rawData) => {
                     this.buffer += rawData.toString("utf-8");
@@ -72,16 +79,10 @@ class PRISM extends EventEmitter {
                         }
                     }
                 });
-            this.connect();
+            connect();
         } catch (error) {
             console.error(error);
         }
-
-        this.on(Subject.Login, this.login2);
-    }
-
-    connect() {
-        this.socket.connect(prismConfig.port, prismConfig.ip);
     }
 
     login1() {
@@ -132,17 +133,15 @@ const parseMessage = (msg: string): Message => {
     const subjectStr = data.split("\x01")[1].split("\x02")[0];
     const fields = data.split("\x01")[1].split("\x02")[1].split("\x04")[0].split("\x03");
 
-    console.log(subjectStr);
-
     const subject: Subject = (() => {
         switch (subjectStr) {
-        case Subject.Login.toString(): return Subject.Login;
-        case Subject.Connected.toString(): return Subject.Connected;
-        case Subject.RAConfig.toString(): return Subject.RAConfig;
-        case Subject.Success.toString(): return Subject.Success;
-        case Subject.Error.toString(): return Subject.Error;
-        case Subject.Chat.toString(): return Subject.Chat;
-        default: return Subject.Invalid;
+            case Subject.Login.toString(): return Subject.Login;
+            case Subject.Connected.toString(): return Subject.Connected;
+            case Subject.RAConfig.toString(): return Subject.RAConfig;
+            case Subject.Success.toString(): return Subject.Success;
+            case Subject.Error.toString(): return Subject.Error;
+            case Subject.Chat.toString(): return Subject.Chat;
+            default: return Subject.Invalid;
         }
     })();
 
