@@ -64,6 +64,7 @@ class PRISM extends EventEmitter {
                         const msg = this.buffer.substring(0, length);
                         this.buffer = this.buffer.substring(length + 2);
                         const { subject, fields } = parseMessage(msg);
+                        console.log(subject, fields);
                         if (subject === Subject.Chat) {
                             this.handleChat(fields);
                         } else {
@@ -77,13 +78,6 @@ class PRISM extends EventEmitter {
         }
 
         this.on(Subject.Login, this.login2);
-        this.on(Subject.Connected, () => {
-            this.sendChat("!report test");
-            this.sendChat("Test");
-        })
-        this.on(Subject.Chat, (fields: string[][]) => {
-            console.log(fields)
-        })
     }
 
     connect() {
@@ -122,7 +116,7 @@ class PRISM extends EventEmitter {
 
     handleChat(fields: string[]) {
         const fieldsReady = fields.join("##^##").split("\n").map(v => v.split("##^##"));
-        this.emit(Subject.Chat, fieldsReady)
+        this.emit(Subject.Chat, fieldsReady);
     }
 }
 
@@ -138,19 +132,19 @@ const parseMessage = (msg: string): Message => {
     const subjectStr = data.split("\x01")[1].split("\x02")[0];
     const fields = data.split("\x01")[1].split("\x02")[1].split("\x04")[0].split("\x03");
 
-    console.log(subjectStr)
+    console.log(subjectStr);
 
     const subject: Subject = (() => {
         switch (subjectStr) {
-            case Subject.Login.toString(): return Subject.Login
-            case Subject.Connected.toString(): return Subject.Connected
-            case Subject.RAConfig.toString(): return Subject.RAConfig
-            case Subject.Success.toString(): return Subject.Success
-            case Subject.Error.toString(): return Subject.Error
-            case Subject.Chat.toString(): return Subject.Chat
-            default: return Subject.Invalid
+        case Subject.Login.toString(): return Subject.Login;
+        case Subject.Connected.toString(): return Subject.Connected;
+        case Subject.RAConfig.toString(): return Subject.RAConfig;
+        case Subject.Success.toString(): return Subject.Success;
+        case Subject.Error.toString(): return Subject.Error;
+        case Subject.Chat.toString(): return Subject.Chat;
+        default: return Subject.Invalid;
         }
-    })()
+    })();
 
     return {
         subject: subject,
