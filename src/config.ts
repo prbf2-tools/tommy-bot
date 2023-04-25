@@ -15,6 +15,10 @@ export const channels = {
     },
     join: {
         priv: defaultTextCh || process.env.CH_JOIN_PRIV || "995521059119960144"
+    },
+    prism: {
+        chat: defaultTextCh || process.env.CH_PRISM_CHAT || "1022258448508928031",
+        teamkill: defaultTextCh || process.env.CH_PRISM_TK || "1033130972264276018",
     }
 };
 

@@ -1,24 +1,19 @@
 import fs from "fs/promises";
 
-import { EmbedBuilder, TextChannel } from "discord.js";
-
 import { Client } from "../../client";
 import PRISM, { Subject } from "./prism";
+import { channels } from "../../config";
+import { TextChannel } from "discord.js";
 
 export default (client: Client) => {
     PRISM.on(Subject.Chat, handlePRISMChat.bind(null, client));
 };
 
-function handlePRISMChat(client: Client, fields: string[]) {
-    const fieldsReady = fields.join("##^##").split("\n").map(v => v.split("##^##"));
-
-
-    //console.log(fieldsReady+'\n\n\n')
-
-
-    fieldsReady.forEach(function(data) {
-        //console.log(dataLenght)
-        //fieldsReady = dataLenght.split('\1')[1].split('\2')[1].split('\4')[0].split('\3')
+const handlePRISMChat = (client: Client, fields: string[][]) => {
+    fields.forEach(function(data) {
+        if (data.length !== 5) {
+            return;
+        }
 
         let SquadNum = "";
         let Player = "";
@@ -73,35 +68,14 @@ function handlePRISMChat(client: Client, fields: string[]) {
             }
 
 
-            let tkString = fields[fields.length - 1].split(" ");
+            (client.channels.cache.get(channels.prism.chat) as TextChannel).send(formatedFields);
+        }
 
-            (client.channels.cache.get("1022258448508928031") as TextChannel).send(formatedFields);
-            //client.channels.cache.get('1022258448508928031').send("`"+fields+"`");
-            if (tkString[5] == "m]") {
-                tkString = fields[fields.length - 1].split(" ");
-                //console.log(fields[fields.length-1].split(' '))
-                const adminLogPost = new EmbedBuilder()
-                    .setColor(0Xa7367b)
-                    .setTitle("TEAMKILL")
-                    .setDescription(
-                        "**Performed by: **`" + tkString[0] + " " + tkString[1] + "`"
-                        + "\n**On player: **`" + tkString[6] + " " + tkString[7].replace("\n", "") + "`"
-                        + "\n**With: **`" + tkString[2].slice(1) + "` : `" + tkString[4] + "m`",
-                    )
-                    .setTimestamp()
-                    .setFooter({
-                        text: "IN-GAME"
-                    });
-                (client.channels.cache.get("1033130972264276018") as TextChannel).send({ content: "`" + fields[fields.length - 1].split(" ") + "`", embeds: [adminLogPost] });
-            }
-            else if (data[data.length - 1].includes("is victorious!") == true) {
-                const ggWinner = data[data.length - 1].split(" ");
-                console.log("GUNGAME WINNER::::" + ggWinner[1].slice(0, -2));
-                fs.writeFile("logs/gungame_winner.txt", ggWinner[1].slice(0, -2));
-                //gungame_winner.txt
-            } else if (contentString.includes("!cookie") == true) {
-                PRISM.sendChat("!w " + Player.split(" ")[1] + " NOM! You have ate a cookie!");
-            }
+        if (data[data.length - 1].includes("is victorious!")) {
+            const ggWinner = data[data.length - 1].split(" ");
+            console.log("GUNGAME WINNER::::" + ggWinner[1].slice(0, -2));
+            fs.writeFile("logs/gungame_winner.txt", ggWinner[1].slice(0, -2));
+            //gungame_winner.txt
         }
     });
-}
+};

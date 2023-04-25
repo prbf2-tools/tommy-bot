@@ -71,7 +71,6 @@ class PRISM extends EventEmitter {
                         const msg = this.buffer.substring(0, length);
                         this.buffer = this.buffer.substring(length + 2);
                         const { subject, fields } = parseMessage(msg);
-                        console.log(subject, fields);
                         if (subject === Subject.Chat) {
                             this.handleChat(fields);
                         } else {
@@ -135,13 +134,14 @@ const parseMessage = (msg: string): Message => {
 
     const subject: Subject = (() => {
         switch (subjectStr) {
-            case Subject.Login.toString(): return Subject.Login;
-            case Subject.Connected.toString(): return Subject.Connected;
-            case Subject.RAConfig.toString(): return Subject.RAConfig;
-            case Subject.Success.toString(): return Subject.Success;
-            case Subject.Error.toString(): return Subject.Error;
-            case Subject.Chat.toString(): return Subject.Chat;
-            default: return Subject.Invalid;
+        case Subject.Login.toString(): return Subject.Login;
+        case Subject.Connected.toString(): return Subject.Connected;
+        case Subject.RAConfig.toString(): return Subject.RAConfig;
+        case Subject.Success.toString(): return Subject.Success;
+        case Subject.Error.toString(): return Subject.Error;
+        case Subject.Chat.toString(): return Subject.Chat;
+        case Subject.Kill.toString(): return Subject.Kill;
+        default: return Subject.Invalid;
         }
     })();
 

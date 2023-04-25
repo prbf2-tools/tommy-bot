@@ -489,4 +489,4 @@ export default {
             "galleryUrl": "https://www.realitymod.com/mapgallery/#!/shipment/"
         }
     }
-}
+};
