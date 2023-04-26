@@ -9,7 +9,8 @@ export const get = (discordID: string): User | null => {
     return db.chain.get("users").find({ discordID }).value()
 };
 
-export const insert = (user: User) => {
+export const insert = async (user: User) => {
     db.chain.get("users").remove({ discordID: user.discordID });
-    db.chain.get("users").push(user);
+    db.chain.get("users").push(user).value();
+    await db.write();
 };
