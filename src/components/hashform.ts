@@ -80,7 +80,7 @@ export const modal = {
             .setMinLength(32)
             .setStyle(TextInputStyle.Short);
 
-        const dbUser = users.get(discordID)
+        const dbUser = users.get(discordID);
         if (dbUser) {
             hashId.setValue(dbUser.hash);
         }
@@ -99,7 +99,7 @@ export const modal = {
             users.insert({
                 discordID: user.id,
                 hash: hashId,
-            })
+            });
 
             interaction.reply({
                 content: `Your Hash-ID has been updated to \`${hashId}\`. It might take up to 5 minutes for the changes to take effect.`,

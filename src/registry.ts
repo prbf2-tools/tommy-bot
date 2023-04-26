@@ -1,6 +1,6 @@
 import * as fs from "fs/promises";
 import path from "path";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 
 import { Client, Components } from "./client.js";
 

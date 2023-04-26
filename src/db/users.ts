@@ -6,7 +6,7 @@ export interface User {
 }
 
 export const get = (discordID: string): User | null => {
-    return db.chain.get("users").find({ discordID }).value()
+    return db.chain.get("users").find({ discordID }).value();
 };
 
 export const insert = async (user: User) => {
