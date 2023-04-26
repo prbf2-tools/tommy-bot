@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import prism from "../../handlers/prism"
+import prism from "../../handlers/prism";
 import { ChatInputCommandInteraction } from "discord.js";
 
 export const command = {
@@ -21,4 +21,4 @@ export const command = {
 
 export default {
     command,
-}
+};

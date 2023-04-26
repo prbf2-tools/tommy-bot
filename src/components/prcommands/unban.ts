@@ -34,4 +34,4 @@ export const command = {
 
 export default {
     command,
-}
+};
