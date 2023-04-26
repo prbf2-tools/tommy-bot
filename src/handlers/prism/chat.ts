@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 
 import { Client } from "../../client";
-import PRISM, { Subject } from "./prism";
+import PRISM, { Subject } from "./";
 import { channels } from "../../config";
 import { TextChannel } from "discord.js";
 

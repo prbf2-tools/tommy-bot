@@ -132,6 +132,8 @@ const parseMessage = (msg: string): Message => {
     const subjectStr = data.split("\x01")[1].split("\x02")[0];
     const fields = data.split("\x01")[1].split("\x02")[1].split("\x04")[0].split("\x03");
 
+    console.log(subjectStr, fields);
+
     const subject: Subject = (() => {
         switch (subjectStr) {
         case Subject.Login.toString(): return Subject.Login;

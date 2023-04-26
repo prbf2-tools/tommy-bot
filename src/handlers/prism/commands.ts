@@ -1,4 +1,4 @@
-import prism from "./prism";
+import prism from "./";
 
 export function init() {
     prism.sendChat("!init");

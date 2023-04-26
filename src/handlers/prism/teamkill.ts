@@ -1,7 +1,7 @@
 import { EmbedBuilder, TextChannel } from "discord.js";
 
 import { Client } from "../../client";
-import PRISM, { Subject } from "./prism";
+import PRISM, { Subject } from "./";
 import { channels } from "../../config";
 
 export default (client: Client) => {
