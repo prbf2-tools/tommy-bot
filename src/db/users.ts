@@ -1,4 +1,4 @@
-import db from "./";
+import db from "./index.js";
 
 export interface User {
     discordID: string,

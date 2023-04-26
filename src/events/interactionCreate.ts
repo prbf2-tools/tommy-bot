@@ -1,5 +1,5 @@
 import { Interaction } from "discord.js";
-import { Client } from "../client";
+import { Client } from "../client.js";
 
 export default async (client: Client, interaction: Interaction): Promise<void> => {
     if (interaction.isCommand()) { //======== COMMANDS ===========

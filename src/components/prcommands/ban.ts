@@ -1,8 +1,6 @@
-import { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder, ChatInputCommandInteraction } from "discord.js";
-import { banid, timebanid, unbanid } from "../../handlers/prism/commands";
-import { TextChannel } from "discord.js";
+import { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder, ChatInputCommandInteraction, TextChannel } from "discord.js";
 
-
+import { banid, timebanid, unbanid } from "../../handlers/prism/commands.js";
 
 function sleep(ms: number) {
     return new Promise((resolve) => {

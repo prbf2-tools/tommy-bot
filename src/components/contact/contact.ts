@@ -7,9 +7,9 @@ import {
     ChatInputCommandInteraction,
 } from "discord.js";
 
-import * as appeal from "./appeal";
-import * as apply from "./apply";
-import * as report from "./report";
+import * as appeal from "./appeal.js";
+import * as apply from "./apply.js";
+import * as report from "./report.js";
 
 export const command = {
     data: new SlashCommandBuilder()

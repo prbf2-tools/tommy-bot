@@ -1,6 +1,6 @@
 import { Client as DiscordClient, GatewayIntentBits, Collection, ButtonBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, CommandInteraction, ApplicationCommandData } from "discord.js";
-import config from "./config";
-import { registerComponents, registerEvents } from "./registry";
+import config from "./config.js";
+import { registerComponents, registerEvents } from "./registry.js";
 
 interface Component {
     data: {

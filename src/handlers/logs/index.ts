@@ -8,8 +8,8 @@ import { parseCommandLine } from "./commands/parser.js";
 import { parseJoinLine, prepareEmbeds as prepareJoinEmbeds } from "./join.js";
 import { prepareEmbeds as prepareCommandEmbeds } from "./commands/embeds.js";
 
-import { Client } from "../../client";
-import { channels, logs } from "../../config";
+import { Client } from "../../client.js";
+import { channels, logs } from "../../config.js";
 
 export default (client: Client) => {
     watchBanlist(client);

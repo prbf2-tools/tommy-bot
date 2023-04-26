@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import prism from "../../handlers/prism";
 import { ChatInputCommandInteraction } from "discord.js";
+
+import prism from "../../handlers/prism/index.js";
 
 export const command = {
     data: new SlashCommandBuilder()

@@ -1,8 +1,8 @@
 import lodash from "lodash";
 import { Low } from "lowdb";
-import { JSONFile } from "lowdb/lib/node";
+import { JSONFile } from "lowdb/node";
 
-import { User } from './users'
+import { User } from './users.js'
 
 interface Data {
     users: User[],
@@ -18,6 +18,5 @@ const defaultData: Data = {
 
 const adapter = new JSONFile<Data>('db.json');
 const db = new LowWithLodash(adapter, defaultData);
-await db.read();
 
 export default db;

@@ -4,7 +4,7 @@ import crypto from "crypto";
 
 import rand from "csprng";
 
-import { prism as prismConfig } from "../../config";
+import { prism as prismConfig } from "../../config.js";
 
 export enum Subject {
     Login = "login1",
@@ -136,14 +136,14 @@ const parseMessage = (msg: string): Message => {
 
     const subject: Subject = (() => {
         switch (subjectStr) {
-        case Subject.Login.toString(): return Subject.Login;
-        case Subject.Connected.toString(): return Subject.Connected;
-        case Subject.RAConfig.toString(): return Subject.RAConfig;
-        case Subject.Success.toString(): return Subject.Success;
-        case Subject.Error.toString(): return Subject.Error;
-        case Subject.Chat.toString(): return Subject.Chat;
-        case Subject.Kill.toString(): return Subject.Kill;
-        default: return Subject.Invalid;
+            case Subject.Login.toString(): return Subject.Login;
+            case Subject.Connected.toString(): return Subject.Connected;
+            case Subject.RAConfig.toString(): return Subject.RAConfig;
+            case Subject.Success.toString(): return Subject.Success;
+            case Subject.Error.toString(): return Subject.Error;
+            case Subject.Chat.toString(): return Subject.Chat;
+            case Subject.Kill.toString(): return Subject.Kill;
+            default: return Subject.Invalid;
         }
     })();
 

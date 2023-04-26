@@ -1,6 +1,6 @@
 import { createCanvas, loadImage, CanvasRenderingContext2D } from "canvas";
 
-import { GameMode, Layer, MapName, PRJSONExt } from "./interfaces";
+import { GameMode, Layer, MapName, PRJSONExt } from "./interfaces.js";
 
 const width = 400;
 const height = 120;
@@ -45,7 +45,7 @@ export const createImage = async (prjson: PRJSONExt, mapName: MapName, mapLayer:
         // console.log("Trying to read winner");
         // await sleep(3000);
 
-        writeGGWinner(context, prjson.ggwinner);
+        writeGGWinner(context, prjson.ggwinner!);
 
         console.log("\x1b[36m", "IMAGE DONE GG", "\x1b[0m");
     } else {
@@ -53,13 +53,13 @@ export const createImage = async (prjson: PRJSONExt, mapName: MapName, mapLayer:
         context.font = "bold 25pt Sans";
         context.fillStyle = "#fff";
         context.textBaseline = "top";
-        context.fillText(prjson.truet1t, 161, 62);
+        context.fillText(prjson.truet1t!, 161, 62);
 
         context.textAlign = "center";
         context.font = "bold 25pt Sans";
         context.fillStyle = "#fff";
         context.textBaseline = "top";
-        context.fillText(prjson.truet2t, 239, 62);
+        context.fillText(prjson.truet2t!, 239, 62);
 
         const flag1Img = await loadImage(flagsDir + prjson.Team1Name + ".png");
         context.drawImage(flag1Img, 280, 70, 50, 28);

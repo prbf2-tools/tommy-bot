@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, TextChannel } from "discord.js";
-import { unbanid } from "../../handlers/prism/commands";
+
+import { unbanid } from "../../handlers/prism/commands.js";
 
 export const command = {
     data: new SlashCommandBuilder()

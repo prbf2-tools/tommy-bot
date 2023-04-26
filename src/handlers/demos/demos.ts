@@ -15,11 +15,11 @@ import {
     TextChannel,
 } from "discord.js";
 
-import locals from "../../localization";
-import { createImage } from "./image";
-import { GameMode, Layer, MapName, PRJSONExt } from "./interfaces";
-import { Client } from "../../client";
-import { uploadFiles } from "./ftp";
+import locals from "../../localization.js";
+import { createImage } from "./image.js";
+import { GameMode, Layer, MapName, PRJSONExt } from "./interfaces.js";
+import { Client } from "../../client.js";
+import { uploadFiles } from "./ftp.js";
 
 const mapNames: { [key: string]: MapName } = locals.mapNames;
 const gameModes: { [key: string]: GameMode } = locals.gameModes;

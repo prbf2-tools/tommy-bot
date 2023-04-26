@@ -14,7 +14,7 @@ import {
     ModalActionRowComponentBuilder,
 } from "discord.js";
 
-import * as users from "../db/users";
+import * as users from "../db/users.js";
 
 const ID = "adminhashid";
 

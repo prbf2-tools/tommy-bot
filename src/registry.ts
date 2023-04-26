@@ -1,7 +1,11 @@
 import * as fs from "fs/promises";
 import path from "path";
+import { fileURLToPath } from 'url';
 
-import { Client, Components } from "./client";
+import { Client, Components } from "./client.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export async function registerComponents(client: Client, ...dirs: string[]): Promise<void> {
     for (const dir of dirs) {
