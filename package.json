@@ -24,8 +24,7 @@
     "dev": "nodemon --ignore logs/ bot.js",
     "lint": "eslint .",
     "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest",
-    "build": "tsc functions/logs/*.ts --module node16 && tsc functions/logs/commands/*.ts --module node16",
-    "cleanup": "cd functions/logs/ && find . -name '*.js' -delete"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -41,6 +40,8 @@
     "@babel/eslint-parser": "^7.21.3",
     "@babel/plugin-syntax-import-assertions": "^7.20.0",
     "@tsconfig/node16": "^1.0.3",
+    "@types/csprng": "^0.1.2",
+    "@types/geoip-lite": "^1.4.1",
     "@types/jest": "^29.5.0",
     "@types/lodash": "^4.14.194",
     "@types/lowdb": "^1.0.11",
