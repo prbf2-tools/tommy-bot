@@ -21,12 +21,14 @@ export enum Subject {
     Invalid = "invalid",
 }
 
-class PRISM extends EventEmitter {
-    MSG_START = "\x01";
-    MSG_SUBJECT = "\x02";
-    MSG_FIELD = "\x03";
-    MSG_END = "\x04\x00";
+enum Separator {
+    Start = "\x01",
+    Subject = "\x02",
+    Field = "\x03",
+    End = "\x04\x00",
+}
 
+export class PRISM extends EventEmitter {
     private socket: Socket = new Socket();
     private buffer = "";
     private theCCK: string = rand(160, 36);
@@ -66,8 +68,8 @@ class PRISM extends EventEmitter {
                 })
                 .on("data", (rawData) => {
                     this.buffer += rawData.toString("utf-8");
-                    while (this.buffer.includes(this.MSG_END)) {
-                        const length = this.buffer.indexOf(this.MSG_END);
+                    while (this.buffer.includes(Separator.End)) {
+                        const length = this.buffer.indexOf(Separator.End);
                         const msg = this.buffer.substring(0, length);
                         this.buffer = this.buffer.substring(length + 2);
                         const { subject, fields } = parseMessage(msg);
@@ -94,19 +96,19 @@ class PRISM extends EventEmitter {
         const challengedigest = crypto.createHash("sha1");
 
         passwordhash.update(prismConfig.password);
-        saltedpass.update(passHash + this.MSG_START + passwordhash.digest("hex"));
-        challengedigest.update(prismConfig.username + this.MSG_FIELD + this.theCCK + this.MSG_FIELD + serverChallenge + this.MSG_FIELD + saltedpass.digest("hex"));
+        saltedpass.update(passHash + Separator.Start + passwordhash.digest("hex"));
+        challengedigest.update(prismConfig.username + Separator.Field + this.theCCK + Separator.Field + serverChallenge + Separator.Field + saltedpass.digest("hex"));
 
         this.send("login2", challengedigest.digest("hex"));
     }
 
     send(subject: string, ...args: string[]) {
         this.socket.write(
-            this.MSG_START +
+            Separator.Start +
             subject +
-            this.MSG_SUBJECT +
-            args.join(this.MSG_FIELD) +
-            this.MSG_END
+            Separator.Subject +
+            args.join(Separator.Field) +
+            Separator.End
         );
     }
 
@@ -136,14 +138,14 @@ const parseMessage = (msg: string): Message => {
 
     const subject: Subject = (() => {
         switch (subjectStr) {
-        case Subject.Login.toString(): return Subject.Login;
-        case Subject.Connected.toString(): return Subject.Connected;
-        case Subject.RAConfig.toString(): return Subject.RAConfig;
-        case Subject.Success.toString(): return Subject.Success;
-        case Subject.Error.toString(): return Subject.Error;
-        case Subject.Chat.toString(): return Subject.Chat;
-        case Subject.Kill.toString(): return Subject.Kill;
-        default: return Subject.Invalid;
+            case Subject.Login.toString(): return Subject.Login;
+            case Subject.Connected.toString(): return Subject.Connected;
+            case Subject.RAConfig.toString(): return Subject.RAConfig;
+            case Subject.Success.toString(): return Subject.Success;
+            case Subject.Error.toString(): return Subject.Error;
+            case Subject.Chat.toString(): return Subject.Chat;
+            case Subject.Kill.toString(): return Subject.Kill;
+            default: return Subject.Invalid;
         }
     })();
 
