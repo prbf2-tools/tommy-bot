@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { ChatInputCommandInteraction } from "discord.js";
 
-import prism from "../../handlers/prism/index.js";
+import { Client } from "../../client.js";
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -11,8 +11,8 @@ export const command = {
             .setName("command")
             .setDescription("Command as if you typing it in PRISM or in-game")
             .setRequired(true)),
-    async execute(interaction: ChatInputCommandInteraction) {
-        prism.sendChat(`${interaction.options.getString("command")} - Discord User ${interaction.user.username}`);
+    async execute(client: Client, interaction: ChatInputCommandInteraction) {
+        client.prism.sendChat(`${interaction.options.getString("command")} - Discord User ${interaction.user.username}`);
         await interaction.reply({
             content: `"${interaction.options.getString("command")}" sent to the server`,
             ephemeral: true

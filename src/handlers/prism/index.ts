@@ -5,6 +5,7 @@ import crypto from "crypto";
 import rand from "csprng";
 
 import logger from "../../logger.js";
+import { Commands } from "./commands.js";
 
 const log = logger("PRISM");
 
@@ -30,35 +31,25 @@ enum Separator {
     End = "\x04\x00",
 }
 
-interface PrismOpts {
-    ip: string,
-    port: number,
-    username: string,
-    password: string,
-}
-
 export class PRISM extends EventEmitter {
     private socket: Socket;
     private buffer;
     private theCCK: string;
-    private opts: PrismOpts;
 
-    constructor(opts: PrismOpts) {
+    commands: Commands;
+
+    constructor() {
         super();
-
-        this.opts = opts;
 
         this.socket = new Socket();
         this.buffer = "";
         this.theCCK = rand(160, 36);
 
-        this.on(Subject.Login, this.login2);
-
-        this.connect();
+        this.commands = new Commands(this);
     }
 
-    connect() {
-        const connect = () => this.socket.connect(this.opts.port, this.opts.ip);
+    connect(ip: string, port: number, username: string, password: string) {
+        const connect = () => this.socket.connect(port, ip);
         const reconnect = () => {
             log("Reconnecting");
             this.socket.destroy();
@@ -68,7 +59,8 @@ export class PRISM extends EventEmitter {
             this.socket
                 .once("connect", () => {
                     log("Connected to PRISM API");
-                    this.login1();
+                    this.login1(username);
+                    this.on(Subject.Login, this.login2.bind(null, username, password));
                 })
                 .on("error", (e) => {
                     log("The PRISM connection was lost");
@@ -106,18 +98,18 @@ export class PRISM extends EventEmitter {
         }
     }
 
-    login1() {
-        this.send("login1", "1", this.opts.username, this.theCCK);
+    login1(username: string) {
+        this.send("login1", "1", username, this.theCCK);
     }
 
-    login2([passHash, serverChallenge]: [string, string]) {
+    login2(username: string, password: string, [passHash, serverChallenge]: [string, string]) {
         const passwordhash = crypto.createHash("sha1");
         const saltedpass = crypto.createHash("sha1");
         const challengedigest = crypto.createHash("sha1");
 
-        passwordhash.update(this.opts.password);
+        passwordhash.update(password);
         saltedpass.update(passHash + Separator.Start + passwordhash.digest("hex"));
-        challengedigest.update(this.opts.username + Separator.Field + this.theCCK + Separator.Field + serverChallenge + Separator.Field + saltedpass.digest("hex"));
+        challengedigest.update(username + Separator.Field + this.theCCK + Separator.Field + serverChallenge + Separator.Field + saltedpass.digest("hex"));
 
         this.send("login2", challengedigest.digest("hex"));
     }
@@ -172,5 +164,3 @@ const parseMessage = (msg: string): {
         fields,
     };
 };
-
-export default new PRISM();

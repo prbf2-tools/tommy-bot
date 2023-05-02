@@ -1,10 +1,14 @@
-import prism, { PRISM, Subject } from "./index.js";
+import { PRISM, Subject } from "./index.js";
 
-class CommandsQueue {
+export class Commands {
     private point: Promise<void> | null = null;
-    private prism: PRISM = prism
+    private prism: PRISM;
 
-    async add(command: string): Promise<string> {
+    constructor(prism: PRISM) {
+        this.prism = prism
+    }
+
+    private async add(command: string): Promise<string> {
         const p = new Promise<string>(resolve => {
 
             const point = this.point;
@@ -12,51 +16,49 @@ class CommandsQueue {
             const handle = async () => {
                 const chatListener = (fields: string[][]) => {
                     // TODO: find response logic
-                    const response = ""
+                    const response = "";
 
-                    this.prism.removeListener(Subject.Chat, chatListener)
+                    this.prism.removeListener(Subject.Chat, chatListener);
 
-                    resolve(response)
-                }
+                    resolve(response);
+                };
 
-                this.prism.on(Subject.Chat, chatListener)
+                this.prism.on(Subject.Chat, chatListener);
 
-                this.prism.sendChat(command)
-            }
+                this.prism.sendChat(command);
+            };
 
             if (point !== null) {
                 point.finally(() => {
-                    handle()
-                })
+                    handle();
+                });
             } else {
-                handle()
+                handle();
             }
-        })
+        });
 
         this.point = new Promise<void>(resolve => {
             p.finally(() => {
-                resolve()
-            })
-        })
+                resolve();
+            });
+        });
 
-        return p
+        return p;
     }
-}
 
-const queue = new CommandsQueue()
+    init(): Promise<string> {
+        return this.add("!init");
+    }
 
-export function init(): Promise<string> {
-    return queue.add("!init");
-}
+    unbanid(hashID: string): Promise<string> {
+        return this.add(`!unbanid ${hashID}`);
+    }
 
-export function unbanid(hashID: string): Promise<string> {
-    return queue.add(`!unbanid ${hashID}`);
-}
+    banid(hashID: string, reason: string): Promise<string> {
+        return this.add(`!banid ${hashID} ${reason}`);
+    }
 
-export function banid(hashID: string, reason: string): Promise<string> {
-    return queue.add(`!banid ${hashID} ${reason}`);
-}
-
-export function timebanid(hashID: string, duration: string, reason: string): Promise<string> {
-    return queue.add(`!timebanid ${hashID} ${duration} ${reason}`);
+    timebanid(hashID: string, duration: string, reason: string): Promise<string> {
+        return this.add(`!timebanid ${hashID} ${duration} ${reason}`);
+    }
 }

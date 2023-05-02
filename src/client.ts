@@ -1,6 +1,7 @@
 import { Client as DiscordClient, GatewayIntentBits, Collection, ButtonBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, CommandInteraction, ApplicationCommandData } from "discord.js";
 import config from "./config.js";
 import { registerComponents, registerEvents } from "./registry.js";
+import { PRISM } from "./handlers/prism/index.js";
 
 interface Component {
     data: {
@@ -9,18 +10,16 @@ interface Component {
 }
 
 interface ButtonComponent extends Component {
-    builder(): ButtonBuilder
-    execute(interaction: ButtonInteraction): Promise<void>
+    execute(client: Client, interaction: ButtonInteraction): Promise<void>
 }
 
 interface ModalComponent extends Component {
-    builder(): ModalBuilder
-    execute(interaction: ModalSubmitInteraction): Promise<void>
+    execute(client: Client, interaction: ModalSubmitInteraction): Promise<void>
 }
 
 interface CommandComponent {
     data: SlashCommandBuilder
-    execute(interaction: CommandInteraction): Promise<void>
+    execute(client: Client, interaction: CommandInteraction): Promise<void>
 }
 
 export interface Components {
@@ -34,7 +33,9 @@ export class Client extends DiscordClient {
     commands: Collection<string, CommandComponent>;
     modals: Collection<string, ModalComponent>;
 
-    constructor() {
+    prism: PRISM;
+
+    constructor(prism: PRISM) {
         super({
             intents: [
                 GatewayIntentBits.Guilds,
@@ -46,6 +47,8 @@ export class Client extends DiscordClient {
         this.buttons = new Collection();
         this.commands = new Collection();
         this.modals = new Collection();
+
+        this.prism = prism;
     }
 
     async loadComponents(): Promise<void> {

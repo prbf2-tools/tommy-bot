@@ -1,3 +1,3 @@
 export default (mod: string) => {
-    return console.log.bind(null, mod, ": ")
-}
+    return console.log.bind(null, mod, ": ");
+};

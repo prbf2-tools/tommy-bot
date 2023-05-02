@@ -12,7 +12,7 @@ export default async (client: Client, interaction: Interaction): Promise<void> =
             //     if (!interaction.member.permissions.has(command.permissions)) return await interaction.reply({ content: "You do not have permissions to use this command.", ephemeral: true });
             // }
 
-            await command.execute(interaction);
+            await command.execute(client, interaction);
         } catch (error) {
             console.error(error);
             const msg = {
@@ -31,7 +31,7 @@ export default async (client: Client, interaction: Interaction): Promise<void> =
         }
 
         try {
-            await button.execute(interaction);
+            await button.execute(client, interaction);
         } catch (error) {
             console.error(error);
             await interaction.reply({
@@ -47,7 +47,7 @@ export default async (client: Client, interaction: Interaction): Promise<void> =
         }
 
         try {
-            await modal.execute(interaction);
+            await modal.execute(client, interaction);
         } catch (error) {
             console.error(error);
             await interaction.reply({

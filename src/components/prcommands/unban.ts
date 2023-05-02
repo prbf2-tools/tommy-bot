@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, TextChannel } from "discord.js";
 
-import { unbanid } from "../../handlers/prism/commands.js";
+import { Client } from "../../client.js";
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -14,12 +14,14 @@ export const command = {
             .setName("reason")
             .setDescription("Reason of the unban")
             .setRequired(true)),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(client: Client, interaction: ChatInputCommandInteraction) {
         const hashId = interaction.options.getString("hashid");
         const reason = interaction.options.getString("reason");
         const perfUsr = interaction.user.username;
 
-        unbanid(hashId!);
+        await interaction.deferReply();
+
+        await client.prism.commands.unbanid(hashId!);
 
         const embedReply = new EmbedBuilder()
             .setColor(0x36a040)
@@ -27,9 +29,9 @@ export const command = {
             .setDescription(`**Performed by: **\`${perfUsr}\`\n**Hash-ID: **\`${hashId}\`\n**Reason: **${reason}`)
             .setTimestamp()
             .setFooter({ text: "DISCORD" });
-        await interaction.reply({ embeds: [embedReply] });
-        await (interaction.guild?.channels.cache.get("995387208947204257") as TextChannel).send({ embeds: [embedReply] });
-        await (interaction.guild?.channels.cache.get("995520998554218557") as TextChannel).send({ embeds: [embedReply] });
+        interaction.editReply({ embeds: [embedReply] });
+        (interaction.guild?.channels.cache.get("995387208947204257") as TextChannel).send({ embeds: [embedReply] });
+        (interaction.guild?.channels.cache.get("995520998554218557") as TextChannel).send({ embeds: [embedReply] });
     },
 };
 

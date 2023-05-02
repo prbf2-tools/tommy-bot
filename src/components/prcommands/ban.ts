@@ -1,12 +1,6 @@
 import { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder, ChatInputCommandInteraction, TextChannel } from "discord.js";
 
-import { banid, timebanid, unbanid } from "../../handlers/prism/commands.js";
-
-function sleep(ms: number) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
-}
+import { Client } from "../../client.js";
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -45,7 +39,7 @@ export const command = {
         .addAttachmentOption(option => option
             .setName("attachment")
             .setDescription("Proof? (Optional)")),
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(client: Client, interaction: ChatInputCommandInteraction) {
         const hashId = interaction.options.getString("hashid", true);
         const prName = interaction.options.getString("prname", true);
         const durValue = interaction.options.getNumber("durationvalue", true);
@@ -54,21 +48,23 @@ export const command = {
         const attachment = interaction.options.getAttachment("attachment");
         const perfUsr = interaction.user.username;
 
-        unbanid(hashId);
-        await sleep(1000);
+        const commands = client.prism.commands;
+
+        await interaction.deferReply();
+
+        await commands.unbanid(hashId);
         let duration = "";
         const longReason = `${reason} | On: ${prName} - By Discord: ${perfUsr}`;
         if (durFormat === "perm") {
             duration = "Permanent";
-            banid(hashId, longReason);
+            await commands.banid(hashId, longReason);
         } else if (durFormat === "round") {
             duration = "Remaining of the round";
-            timebanid(hashId, durFormat, longReason);
+            await commands.timebanid(hashId, durFormat, longReason);
         } else {
             duration = durValue + durFormat;
-            timebanid(hashId, duration, longReason);
+            await commands.timebanid(hashId, duration, longReason);
         }
-        await sleep(500);
 
         const embedReply = new EmbedBuilder()
             .setColor(0x991b0d)
@@ -84,9 +80,9 @@ export const command = {
             embedReply.setImage("attachment://" + attachment.url.split("/")[-1]);
         }
 
-        await interaction.reply({ embeds: [embedReply], files: files });
-        await (interaction.guild?.channels.cache.get("995387208947204257") as TextChannel).send({ embeds: [embedReply], files: files });
-        await (interaction.guild?.channels.cache.get("995520998554218557") as TextChannel).send({ embeds: [embedReply], files: files });
+        interaction.editReply({ embeds: [embedReply], files: files });
+        (interaction.guild?.channels.cache.get("995387208947204257") as TextChannel).send({ embeds: [embedReply], files: files });
+        (interaction.guild?.channels.cache.get("995520998554218557") as TextChannel).send({ embeds: [embedReply], files: files });
     },
 };
 
