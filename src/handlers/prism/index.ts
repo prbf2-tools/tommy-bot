@@ -4,7 +4,9 @@ import crypto from "crypto";
 
 import rand from "csprng";
 
-import { prism as prismConfig } from "../../config.js";
+import logger from "../../logger.js";
+
+const log = logger("PRISM");
 
 export enum Subject {
     Login = "login1",
@@ -28,66 +30,84 @@ enum Separator {
     End = "\x04\x00",
 }
 
-export class PRISM extends EventEmitter {
-    private socket: Socket = new Socket();
-    private buffer = "";
-    private theCCK: string = rand(160, 36);
+interface PrismOpts {
+    ip: string,
+    port: number,
+    username: string,
+    password: string,
+}
 
-    constructor() {
+export class PRISM extends EventEmitter {
+    private socket: Socket;
+    private buffer;
+    private theCCK: string;
+    private opts: PrismOpts;
+
+    constructor(opts: PrismOpts) {
         super();
 
-        this.setupSocket();
+        this.opts = opts;
+
+        this.socket = new Socket();
+        this.buffer = "";
+        this.theCCK = rand(160, 36);
 
         this.on(Subject.Login, this.login2);
+
+        this.connect();
     }
 
-    setupSocket() {
-        const connect = () => this.socket.connect(prismConfig.port, prismConfig.ip);
+    connect() {
+        const connect = () => this.socket.connect(this.opts.port, this.opts.ip);
+        const reconnect = () => {
+            log("Reconnecting");
+            this.socket.destroy();
+            setTimeout(connect, 10000);
+        };
         try {
             this.socket
                 .once("connect", () => {
-                    console.log("Connected to PRISM API");
+                    log("Connected to PRISM API");
                     this.login1();
                 })
                 .on("error", (e) => {
-                    console.log("The PRISM connection was lost");
-                    console.log(e);
-                    console.log("Waiting for 10 seconds before trying again");
-                    this.socket.destroy();
-                    setTimeout(connect, 10000);
+                    log("The PRISM connection was lost");
+                    log(e);
+                    log("Waiting for 10 seconds before trying again");
+                    reconnect();
                 })
                 .on("close", () => {
-                    console.log("The PRISM connection was closed");
-                    this.socket.destroy();
-                    setTimeout(connect, 10000);
+                    log("The connection was closed");
+                    reconnect();
                 })
                 .on("end", () => {
-                    console.log("The PRISM connection was ended");
-                    this.socket.destroy();
-                    setTimeout(connect, 10000);
+                    log("The connection was ended");
+                    reconnect();
                 })
-                .on("data", (rawData) => {
-                    this.buffer += rawData.toString("utf-8");
-                    while (this.buffer.includes(Separator.End)) {
-                        const length = this.buffer.indexOf(Separator.End);
-                        const msg = this.buffer.substring(0, length);
-                        this.buffer = this.buffer.substring(length + 2);
-                        const { subject, fields } = parseMessage(msg);
-                        if (subject === Subject.Chat) {
-                            this.handleChat(fields);
-                        } else {
-                            this.emit(subject, fields);
-                        }
-                    }
-                });
+                .on("data", this.handleData);
             connect();
         } catch (error) {
             console.error(error);
         }
     }
 
+    handleData(rawData: Buffer) {
+        this.buffer += rawData.toString("utf-8");
+        while (this.buffer.includes(Separator.End)) {
+            const length = this.buffer.indexOf(Separator.End);
+            const msg = this.buffer.substring(0, length);
+            this.buffer = this.buffer.substring(length + 2);
+            const { subject, fields } = parseMessage(msg);
+            if (subject === Subject.Chat) {
+                this.handleChat(fields);
+            } else {
+                this.emit(subject, fields);
+            }
+        }
+    }
+
     login1() {
-        this.send("login1", "1", prismConfig.username, this.theCCK);
+        this.send("login1", "1", this.opts.username, this.theCCK);
     }
 
     login2([passHash, serverChallenge]: [string, string]) {
@@ -95,9 +115,9 @@ export class PRISM extends EventEmitter {
         const saltedpass = crypto.createHash("sha1");
         const challengedigest = crypto.createHash("sha1");
 
-        passwordhash.update(prismConfig.password);
+        passwordhash.update(this.opts.password);
         saltedpass.update(passHash + Separator.Start + passwordhash.digest("hex"));
-        challengedigest.update(prismConfig.username + Separator.Field + this.theCCK + Separator.Field + serverChallenge + Separator.Field + saltedpass.digest("hex"));
+        challengedigest.update(this.opts.username + Separator.Field + this.theCCK + Separator.Field + serverChallenge + Separator.Field + saltedpass.digest("hex"));
 
         this.send("login2", challengedigest.digest("hex"));
     }
@@ -123,18 +143,16 @@ export class PRISM extends EventEmitter {
 }
 
 
-interface Message {
+const parseMessage = (msg: string): {
     subject: Subject
     fields: string[]
-}
-
-const parseMessage = (msg: string): Message => {
+} => {
     const data = msg.toString();
 
     const subjectStr = data.split("\x01")[1].split("\x02")[0];
     const fields = data.split("\x01")[1].split("\x02")[1].split("\x04")[0].split("\x03");
 
-    console.log(subjectStr, fields);
+    log(subjectStr, fields);
 
     const subject: Subject = (() => {
         switch (subjectStr) {
