@@ -2,6 +2,7 @@ import { Client as DiscordClient, GatewayIntentBits, Collection, ButtonBuilder, 
 import config from "./config.js";
 import { registerComponents, registerEvents } from "./registry.js";
 import { PRISM } from "./handlers/prism/index.js";
+import { EntityManager } from "@mikro-orm/core";
 
 interface Component {
     data: {
@@ -34,8 +35,9 @@ export class Client extends DiscordClient {
     modals: Collection<string, ModalComponent>;
 
     prism: PRISM;
+    em: EntityManager;
 
-    constructor(prism: PRISM) {
+    constructor(prism: PRISM, em: EntityManager) {
         super({
             intents: [
                 GatewayIntentBits.Guilds,
@@ -49,6 +51,7 @@ export class Client extends DiscordClient {
         this.modals = new Collection();
 
         this.prism = prism;
+        this.em = em;
     }
 
     async loadComponents(): Promise<void> {

@@ -2,5 +2,7 @@
 node_modules
 /logs
 db.json
+*.sqlite3
+*.sqlite3.json
 functions/logs/**/*.js
 build

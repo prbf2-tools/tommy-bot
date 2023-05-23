@@ -14,7 +14,8 @@ import {
     ModalActionRowComponentBuilder,
 } from "discord.js";
 
-import * as users from "../db/users.js";
+import { Client } from "../client.js";
+import { User } from "../entities/user.js";
 
 const ID = "adminhashid";
 
@@ -24,7 +25,7 @@ export const command = {
         .setDescription(
             "Prompt buttons for admins to enter their hash corectly...."
         ),
-    async execute(interaction: CommandInteraction) {
+    async execute(client: Client, interaction: CommandInteraction) {
         const file = new AttachmentBuilder("assets/images/hash-id.gif");
         const embed = new EmbedBuilder()
             .setColor("#0074ba")
@@ -57,8 +58,9 @@ export const button = {
             .setLabel("Admin Hash-ID form")
             .setStyle(ButtonStyle.Primary);
     },
-    async execute(interaction: ButtonInteraction) {
-        interaction.showModal(modal.builder(interaction.user.id));
+    async execute(client: Client, interaction: ButtonInteraction) {
+        const m = await modal.builder(client, interaction.user.id)
+        interaction.showModal(m);
     }
 };
 
@@ -66,7 +68,7 @@ export const modal = {
     data: {
         name: ID,
     },
-    builder: (discordID: string): ModalBuilder => {
+    builder: async (c: Client, discordID: string): Promise<ModalBuilder> => {
         const modal = new ModalBuilder()
             .setCustomId("adminhashid")
             .setTitle("🔷 Admin Hash-ID form");
@@ -80,9 +82,12 @@ export const modal = {
             .setMinLength(32)
             .setStyle(TextInputStyle.Short);
 
-        const dbUser = users.get(discordID);
-        if (dbUser) {
-            hashId.setValue(dbUser.hash);
+        const em = c.em.fork();
+
+        const user = await em.findOne(User, { discordID });
+
+        if (user && user.hash) {
+            hashId.setValue(user.hash);
         }
 
         const firstActionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(hashId);
@@ -91,15 +96,25 @@ export const modal = {
 
         return modal;
     },
-    async execute(interaction: ModalSubmitInteraction) {
+    async execute(c: Client, interaction: ModalSubmitInteraction) {
         try {
             const user = interaction.user;
             const hashId = interaction.fields.getTextInputValue("hashId");
 
-            users.insert({
-                discordID: user.id,
-                hash: hashId,
-            });
+            const em = c.em.fork();
+
+            const dbUser = await em.findOne(User, { discordID: user.id });
+
+            if (dbUser) {
+                dbUser.hash = hashId;
+            } else {
+                em.create(User, {
+                    discordID: user.id,
+                    hash: hashId,
+                });
+            }
+
+            await em.flush()
 
             interaction.reply({
                 content: `Your Hash-ID has been updated to \`${hashId}\`. It might take up to 5 minutes for the changes to take effect.`,
