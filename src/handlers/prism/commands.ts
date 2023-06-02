@@ -14,16 +14,14 @@ export class Commands {
             const point = this.point;
 
             const handle = async () => {
-                const chatListener = (fields: string[][]) => {
+                const chatListener = (fields: string[]) => {
                     // TODO: find response logic
-                    const response = "";
+                    this.prism.removeListener(Subject.Success, chatListener);
 
-                    this.prism.removeListener(Subject.Chat, chatListener);
-
-                    resolve(response);
+                    resolve(fields[1]);
                 };
 
-                this.prism.on(Subject.Chat, chatListener);
+                this.prism.on(Subject.Success, chatListener);
 
                 this.prism.sendChat(command);
             };
@@ -46,8 +44,8 @@ export class Commands {
         return p;
     }
 
-    init(): Promise<string> {
-        return this.add("!init");
+    init(issuer: string): Promise<string> {
+        return this.add("!init" + suffix(issuer));
     }
 
     unbanid(hashID: string): Promise<string> {
@@ -61,4 +59,8 @@ export class Commands {
     timebanid(hashID: string, duration: string, reason: string): Promise<string> {
         return this.add(`!timebanid ${hashID} ${duration} ${reason}`);
     }
+}
+
+const suffix = (issuer: string): string => {
+    return ` - Discord User ${issuer}`
 }
