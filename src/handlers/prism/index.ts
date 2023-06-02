@@ -48,7 +48,7 @@ export class PRISM extends EventEmitter {
         this.commands = new Commands(this);
     }
 
-    connect(ip: string, port: number, username: string, password: string) {
+    connect = (ip: string, port: number, username: string, password: string) => {
         const connect = () => this.socket.connect(port, ip);
         const reconnect = () => {
             log("Reconnecting");
@@ -59,8 +59,8 @@ export class PRISM extends EventEmitter {
             this.socket
                 .once("connect", () => {
                     log("Connected to PRISM API");
-                    this.login1(username);
                     this.on(Subject.Login, this.login2.bind(null, username, password));
+                    this.login1(username);
                 })
                 .on("error", (e) => {
                     log("The PRISM connection was lost");
@@ -83,7 +83,7 @@ export class PRISM extends EventEmitter {
         }
     }
 
-    handleData(rawData: Buffer) {
+    handleData = (rawData: Buffer) => {
         this.buffer += rawData.toString("utf-8");
         while (this.buffer.includes(Separator.End)) {
             const length = this.buffer.indexOf(Separator.End);
@@ -98,11 +98,15 @@ export class PRISM extends EventEmitter {
         }
     }
 
-    login1(username: string) {
+    login1 = (username: string) => {
+        log("Login: sending login request")
+
         this.send("login1", "1", username, this.theCCK);
     }
 
-    login2(username: string, password: string, [passHash, serverChallenge]: [string, string]) {
+    login2 = (username: string, password: string, [passHash, serverChallenge]: [string, string]) => {
+        log("Login: received server challenge")
+
         const passwordhash = crypto.createHash("sha1");
         const saltedpass = crypto.createHash("sha1");
         const challengedigest = crypto.createHash("sha1");
@@ -114,7 +118,7 @@ export class PRISM extends EventEmitter {
         this.send("login2", challengedigest.digest("hex"));
     }
 
-    send(subject: string, ...args: string[]) {
+    send = (subject: string, ...args: string[]) => {
         this.socket.write(
             Separator.Start +
             subject +
@@ -124,11 +128,11 @@ export class PRISM extends EventEmitter {
         );
     }
 
-    sendChat(msg: string) {
+    sendChat = (msg: string) => {
         this.send("say", msg);
     }
 
-    handleChat(fields: string[]) {
+    handleChat = (fields: string[]) => {
         const fieldsReady = fields.join("##^##").split("\n").map(v => v.split("##^##"));
         this.emit(Subject.Chat, fieldsReady);
     }
