@@ -1,11 +1,11 @@
 import { EmbedBuilder, TextChannel } from "discord.js";
 
 import { Client } from "../../client.js";
-import PRISM, { Subject } from "./index.js";
+import { Subject } from "./index.js";
 import { channels } from "../../config.js";
 
 export default (client: Client) => {
-    PRISM.on(Subject.Chat, handlePRISMTeamKill.bind(null, client));
+    client.prism.on(Subject.Chat, handlePRISMTeamKill.bind(null, client));
 };
 
 const handlePRISMTeamKill = (client: Client, messages: string[][]) => {
