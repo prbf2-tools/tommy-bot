@@ -1,4 +1,4 @@
-import { Client as DiscordClient, GatewayIntentBits, Collection, ButtonBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, CommandInteraction, ApplicationCommandData } from "discord.js";
+import { Client as DiscordClient, GatewayIntentBits, Collection, ButtonBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, CommandInteraction, ApplicationCommandData, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js";
 import config from "./config.js";
 import { registerComponents, registerEvents } from "./registry.js";
 import { PRISM } from "./handlers/prism/index.js";
@@ -101,8 +101,8 @@ export class Client extends DiscordClient {
     }
 }
 
-function toApplicationCommand(collection: Collection<string, CommandComponent>): ApplicationCommandData[] {
+function toApplicationCommand(collection: Collection<string, CommandComponent>): RESTPostAPIChatInputApplicationCommandsJSONBody[] {
     // TODO: handle options and others
+    return collection.map(s => { return s.data.toJSON() });
     // return collection.map(s => { return { name: s.data.name, description: s.data.description, options: s.data.options }; });
-    return collection.map(s => { return { name: s.data.name, description: s.data.description }; });
 }
