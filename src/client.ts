@@ -1,4 +1,4 @@
-import { Client as DiscordClient, GatewayIntentBits, Collection, ButtonBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, CommandInteraction, ApplicationCommandData, RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js";
+import { Client as DiscordClient, GatewayIntentBits, Collection, ButtonBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, CommandInteraction, ApplicationCommandData, RESTPostAPIChatInputApplicationCommandsJSONBody, Guild } from "discord.js";
 import config from "./config.js";
 import { registerComponents, registerEvents } from "./registry.js";
 import { PRISM } from "./handlers/prism/index.js";
@@ -52,6 +52,10 @@ export class Client extends DiscordClient {
 
         this.prism = prism;
         this.em = em;
+    }
+
+    guild = (): Promise<Guild> => {
+        return this.guilds.fetch(config.guildID);
     }
 
     async loadComponents(): Promise<void> {
