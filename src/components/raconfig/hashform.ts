@@ -82,17 +82,26 @@ export const modal = {
             .setMinLength(32)
             .setStyle(TextInputStyle.Short);
 
+        const ingameName = new TextInputBuilder()
+            .setCustomId("ingameName")
+            .setLabel("What is your Project Reality in-game name?")
+            .setPlaceholder("In-game name")
+            .setRequired(true)
+            .setStyle(TextInputStyle.Short);
+
         const em = c.em.fork();
 
         const user = await em.findOne(User, { discordID });
 
-        if (user && user.hash) {
+        if (user) {
             hashId.setValue(user.hash);
+            ingameName.setValue(user.ign);
         }
 
         const firstActionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(hashId);
+        const secondActionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(ingameName);
 
-        modal.addComponents(firstActionRow);
+        modal.addComponents(firstActionRow, secondActionRow);
 
         return modal;
     },
@@ -100,6 +109,7 @@ export const modal = {
         try {
             const user = interaction.user;
             const hashId = interaction.fields.getTextInputValue("hashId");
+            const ingameName = interaction.fields.getTextInputValue("ingameName");
 
             const em = c.em.fork();
 
@@ -107,9 +117,11 @@ export const modal = {
 
             if (dbUser) {
                 dbUser.hash = hashId;
+                dbUser.ign = ingameName
             } else {
                 em.create(User, {
                     discordID: user.id,
+                    ign: ingameName,
                     hash: hashId,
                     prismCreated: false,
                 });
@@ -117,34 +129,46 @@ export const modal = {
 
             await em.flush()
 
+            const embed = new EmbedBuilder()
+                .setColor("#008be0")
+                .setTitle(`🔹 ${interaction.user.username} Hash-ID`)
+                .setThumbnail(interaction.user.avatarURL())
+                .setDescription(`
+                    **Discord User:** <@${interaction.user.id}>
+                    **Hash ID: **\`${interaction.fields.getTextInputValue(
+                    "hashId"
+                )}\`
+                    **In-game name: **\`${interaction.fields.getTextInputValue(
+                    "ingameName"
+                )}\``)
             interaction.reply({
-                content: `Your Hash-ID has been updated to \`${hashId}\`. It might take up to 5 minutes for the changes to take effect.`,
+                embeds: [embed],
                 ephemeral: true,
             });
         } catch (e) {
             console.log("Error setting hash id", e);
         }
         // const embed = new EmbedBuilder()
-        //   .setColor("#008be0")
-        //   .setTitle(`🔹 ${interaction.user.username} Hash-ID`)
-        //   .setThumbnail(interaction.user.avatarURL()).setDescription(`
+        //     .setColor("#008be0")
+        //     .setTitle(`🔹 ${interaction.user.username} Hash-ID`)
+        //     .setThumbnail(interaction.user.avatarURL()).setDescription(`
         //             **Discord User:** <@${interaction.user.id}>
         //             **Hash ID: **\`${interaction.fields.getTextInputValue(
-        //               "hashId"
-        //             )}\`
+        //         "hashId"
+        //     )}\`
         //             **In-game name: **\`${interaction.fields.getTextInputValue(
-        //               "ingameName"
-        //             )}\`
+        //         "ingameName"
+        //     )}\`
         //             **Clan Tag: **\`${interaction.fields.getTextInputValue(
-        //               "clanTag"
-        //             )}\`
+        //         "clanTag"
+        //     )}\`
         //             **Time Zone: **\`${interaction.fields.getTextInputValue(
-        //               "timeZone"
-        //             )}\`
+        //         "timeZone"
+        //     )}\`
         //         `);
         // await interaction.reply({
-        //   content: `Success! Your Hash-ID has been set to \`${hashId}\`. It might take up to 5 minutes for the changes to take effect.`,
-        //   ephemeral: true,
+        //     content: `Success! Your Hash-ID has been set to \`${hashId}\`. It might take up to 5 minutes for the changes to take effect.`,
+        //     ephemeral: true,
         // });
     },
 };

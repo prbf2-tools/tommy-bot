@@ -8,6 +8,9 @@ export class User {
     @Property()
     hash: string;
 
+    @Property()
+    ign: string
+
     @Property({
         default: false,
     })
