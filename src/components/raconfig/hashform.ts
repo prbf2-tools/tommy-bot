@@ -14,8 +14,8 @@ import {
     ModalActionRowComponentBuilder,
 } from "discord.js";
 
-import { Client } from "../client.js";
-import { User } from "../entities/user.js";
+import { Client } from "../../client.js";
+import { User } from "../../entities/user.js";
 
 const ID = "adminhashid";
 
@@ -25,7 +25,7 @@ export const command = {
         .setDescription(
             "Prompt buttons for admins to enter their hash corectly...."
         ),
-    async execute(client: Client, interaction: CommandInteraction) {
+    async execute(_: Client, interaction: CommandInteraction) {
         const file = new AttachmentBuilder("assets/images/hash-id.gif");
         const embed = new EmbedBuilder()
             .setColor("#0074ba")
@@ -111,6 +111,7 @@ export const modal = {
                 em.create(User, {
                     discordID: user.id,
                     hash: hashId,
+                    prismCreated: false,
                 });
             }
 

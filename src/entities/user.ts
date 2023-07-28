@@ -7,5 +7,10 @@ export class User {
 
     @Property()
     hash: string;
+
+    @Property({
+        default: false,
+    })
+    prismCreated: boolean
 }
 

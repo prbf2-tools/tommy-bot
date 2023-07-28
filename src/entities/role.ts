@@ -14,4 +14,8 @@ export class Role {
         default: false,
     })
     reservedSlot: boolean;
+    @Property({
+        default: false,
+    })
+    prism: boolean;
 }
