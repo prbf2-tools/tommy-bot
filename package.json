@@ -8,8 +8,8 @@
     "crypto": "^1.0.1",
     "csprng": "^0.1.2",
     "dayjs": "^1.11.7",
-    "discord-api-types": "^0.36.1",
-    "discord.js": "^14.9.0",
+    "discord-api-types": "^0.37.50",
+    "discord.js": "^14.11.0",
     "dotenv": "^16.0.1",
     "geoip-lite": "^1.4.6",
     "lodash": "^4.17.21",
@@ -27,8 +27,8 @@
     "lint": "eslint .",
     "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest",
     "build": "tsc",
-    "makemigration": "npx mikro-orm migration:create",
-    "migrate": "npx mikro-orm migration:up"
+    "makemigration": "npx mikro-orm-esm migration:create",
+    "migrate": "npx mikro-orm-esm migration:up"
   },
   "repository": {
     "type": "git",
