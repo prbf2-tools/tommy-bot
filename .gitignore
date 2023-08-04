@@ -6,3 +6,4 @@ db.json
 *.sqlite3.json
 functions/logs/**/*.js
 build
+data
