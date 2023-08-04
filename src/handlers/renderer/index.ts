@@ -32,7 +32,7 @@ class RAConfigRenderer implements EventSubscriber<User | Role> {
             return rolesMap.has(id)
         })
 
-        const levelsMap: { [key: string]: number } = {};
+        const admins: { [key: string]: { discordID: string, ign: string, level: number } } = {};
 
         usedRoles.forEach(dRole => {
             const level = rolesMap.get(dRole.id)?.level;
@@ -41,17 +41,25 @@ class RAConfigRenderer implements EventSubscriber<User | Role> {
             users.forEach(user => {
                 if (!dRole.members.has(user.discordID)) return;
 
-                const currentLevel = levelsMap[user.hash];
+                if (admins[user.hash] === undefined) {
+                    admins[user.hash] = {
+                        ign: user.ign,
+                        discordID: user.discordID,
+                        level: 777,
+                    };
+                }
+
+                const currentLevel = admins[user.hash].level;
                 if (
                     currentLevel === undefined ||
                     currentLevel > level
                 ) {
-                    levelsMap[user.hash] = level;
+                    admins[user.hash].level = level;
                 }
             })
         })
 
-        await writeFile("./data/admins.json", JSON.stringify(levelsMap))
+        await writeFile("./data/admins.json", JSON.stringify(admins))
     }
 
     getSubscribedEntities(): EntityName<User | Role>[] {
