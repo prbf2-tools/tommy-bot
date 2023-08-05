@@ -4,25 +4,12 @@ import crypto from "crypto";
 
 import rand from "csprng";
 
-import logger from "../../logger.js";
+import logger from "../../../logger.js";
 import { Commands } from "./commands.js";
+import { Subject, customProcessor, findSubject } from "./responses.js";
 
 const log = logger("PRISM");
 
-export enum Subject {
-    Login = "login1",
-    Connected = "connected",
-
-    RAConfig = "raconfig",
-    Success = "success",
-    Error = "success",
-    Chat = "chat",
-
-    UpdatePlayers = "updateplayers",
-    Kill = "kill",
-
-    Invalid = "invalid",
-}
 
 enum Separator {
     Start = "\x01",
@@ -59,7 +46,7 @@ export class PRISM extends EventEmitter {
             this.socket
                 .once("connect", () => {
                     log("Connected to PRISM API");
-                    this.on(Subject.Login, this.login2.bind(null, username, password));
+                    this.on(Subject.Login1, this.login2.bind(null, username, password));
                     this.login1(username);
                 })
                 .on("error", (e) => {
@@ -89,12 +76,7 @@ export class PRISM extends EventEmitter {
             const length = this.buffer.indexOf(Separator.End);
             const msg = this.buffer.substring(0, length);
             this.buffer = this.buffer.substring(length + 2);
-            const { subject, fields } = parseMessage(msg);
-            if (subject === Subject.Chat) {
-                this.handleChat(fields);
-            } else {
-                this.emit(subject, fields);
-            }
+            this.processMessage(msg);
         }
     }
 
@@ -136,35 +118,18 @@ export class PRISM extends EventEmitter {
         const fieldsReady = fields.join("##^##").split("\n").map(v => v.split("##^##"));
         this.emit(Subject.Chat, fieldsReady);
     }
+
+    processMessage(msg: string) {
+        const data = msg.toString();
+
+        const subjectStr = data.split("\x01")[1].split("\x02")[0];
+        const fields = data.split("\x01")[1].split("\x02")[1].split("\x04")[0].split("\x03");
+
+        log(subjectStr, fields);
+
+        const subject = findSubject(subjectStr);
+        const processor = customProcessor(subject);
+
+        this.emit(subject, processor(fields));
+    }
 }
-
-
-const parseMessage = (msg: string): {
-    subject: Subject
-    fields: string[]
-} => {
-    const data = msg.toString();
-
-    const subjectStr = data.split("\x01")[1].split("\x02")[0];
-    const fields = data.split("\x01")[1].split("\x02")[1].split("\x04")[0].split("\x03");
-
-    log(subjectStr, fields);
-
-    const subject: Subject = (() => {
-        switch (subjectStr) {
-            case Subject.Login.toString(): return Subject.Login;
-            case Subject.Connected.toString(): return Subject.Connected;
-            case Subject.RAConfig.toString(): return Subject.RAConfig;
-            case Subject.Success.toString(): return Subject.Success;
-            case Subject.Error.toString(): return Subject.Error;
-            case Subject.Chat.toString(): return Subject.Chat;
-            case Subject.Kill.toString(): return Subject.Kill;
-            default: return Subject.Invalid;
-        }
-    })();
-
-    return {
-        subject: subject,
-        fields,
-    };
-};
