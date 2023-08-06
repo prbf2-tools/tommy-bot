@@ -1,7 +1,7 @@
 import { Client as DiscordClient, GatewayIntentBits, Collection, ButtonBuilder, ButtonInteraction, ModalBuilder, ModalSubmitInteraction, SlashCommandBuilder, CommandInteraction, ApplicationCommandData, RESTPostAPIChatInputApplicationCommandsJSONBody, Guild } from "discord.js";
 import config from "./config.js";
 import { registerComponents, registerEvents } from "./registry.js";
-import { PRISM } from "./handlers/prism/index.js";
+import { PRISM } from "./handlers/prism/client/index.js";
 import { EntityManager } from "@mikro-orm/core";
 
 interface Component {

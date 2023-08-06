@@ -1,3 +1,5 @@
+import { EmbedBuilder } from "discord.js";
+
 const NEW_LINE = "\x0A"
 
 
@@ -77,6 +79,12 @@ export function processError(fields: string[]): Error {
         code: Number(fields[0]),
         content: fields[1],
     }
+}
+
+export function errorToEmbed(error: Error): EmbedBuilder {
+    const embed = new EmbedBuilder()
+
+    return embed;
 }
 
 export interface Login1 {

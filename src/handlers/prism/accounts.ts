@@ -1,63 +1,183 @@
 
-import { EntityName, EventArgs, EventSubscriber } from "@mikro-orm/core";
-import { GuildMember, PartialGuildMember } from "discord.js";
+import { EntityName, EventArgs, EventSubscriber, QueryOrder } from "@mikro-orm/core";
+import { EmbedBuilder, GuildMember } from "discord.js";
 
+import logger from "../../logger.js";
 import { Client } from "../../client.js";
-import { User } from "../../entities/user.js";
-import { Role } from "../../entities/role.js";
+import { User } from "../../db/entities/user.js";
+import { Role } from "../../db/entities/role.js";
+import { prism } from "../../config.js";
+import { Commands } from "./client/commands.js";
+import { Error, errorToEmbed } from "./client/responses.js";
 
 
-class RoleSubscriber implements EventSubscriber<Role> {
-    client: Client;
+const log = logger("PRISM::Accounts");
+
+
+function generatePassword(): string {
+    return Math.random().toString(6).slice(-8);
+}
+
+function prepareDM(name: string, password: string): EmbedBuilder {
+    const embed = new EmbedBuilder()
+
+    embed.setTitle("PRISM Details")
+    embed.setDescription(`Client: https://files.realitymod.com/PRISM/PRISM.zip
+Data: https://files.realitymod.com/PRISM/Data.zip`)
+
+    embed.addFields([
+        {
+            name: "Host", value: `${prism.ip}: ${prism.port}`,
+        }, {
+            name: "Username", value: name,
+        }, {
+            name: "Password", value: password,
+        }
+    ])
+
+    return embed
+}
+
+class Accounts {
+    client: Client
+    commands: Commands
 
     constructor(client: Client) {
         this.client = client;
+        this.commands = client.prism.commands;
     }
 
-    async createAccounts(role: Role) {
-        if (role.prism !== true) {
+    async create(user: User) {
+        const guild = await this.client.guild();
+        const member = guild.members.cache.get(user.discordID);
+
+        if (!member) {
+            log(`Attemped to create account of user no longer in Discord Guild: ${user.discordID}`)
+            // TODO: remove DB object
             return
         }
 
-        const em = this.client.em.fork();
+        const password = generatePassword()
+
+        const roles = await user.roles.matching({ orderBy: { level: QueryOrder.ASC_NULLS_LAST, prism: QueryOrder.DESC } })
+
+        if (roles.length > 0 && roles[0].prism) {
+            this.commands.addUser(user.ign, password, roles[0].level || 0)
+                .then(this.sendDM(member, user.ign, password))
+                .catch(this.sendError(member))
+        }
+    }
+
+    async changeName(user: User, oldName: string) {
+        const accounts = await this.commands.getUsers();
+
+        const acc = accounts.find(u => u.name === oldName);
+        if (!acc) {
+            log(`Attemped to change name of non-existing account: ${oldName}`)
+            await this.create(user)
+            return
+        }
 
         const guild = await this.client.guild();
+        const member = guild.members.cache.get(user.discordID);
 
-        await guild.members.fetch()
+        if (!member) {
+            return
+        }
 
-        const discordRole = guild.roles.cache.get(role.discordID);
+        const password = generatePassword()
 
-        console.log(discordRole?.members)
+        this.commands.changeUser(oldName, user.ign, password, acc.level)
+            .then(this.sendDM(member, user.ign, password))
+            .catch(this.sendError(member))
+    }
 
-        discordRole?.members.forEach(async (member: GuildMember) => {
-            const user = await em.findOne(User, { discordID: member.id });
+    async updateLevel(user: User) {
+        const accounts = await this.commands.getUsers();
 
-            if (!user) {
-                return
-            }
+        const acc = accounts.find(u => u.name === user.ign);
+        if (!acc) {
+            log(`Attemped to change level of non-existing account: ${user.ign}`)
+            await this.create(user)
+            return
+        }
 
-            if (!user.prismCreated) {
-                const level = role.level || 0;
+        const guild = await this.client.guild();
+        const member = guild.members.cache.get(user.discordID);
 
-                const password = Math.random().toString(36).slice(-8);
+        if (!member) {
+            return
+        }
 
-                await this.client.prism.commands.addUser(user.ign, password, level)
+        const roles = await user.roles.matching({ orderBy: { level: QueryOrder.ASC_NULLS_LAST, prism: QueryOrder.DESC } })
 
-                user.prismCreated = true;
+        if (roles.length > 0 && roles[0].prism) {
+            this.commands.changeUser(user.ign, user.ign, "", roles[0].level || acc.level).catch(log)
+        }
+    }
 
-                const dm = await member.createDM();
+    async delete(user: User) {
+        this.commands.deleteUser(user.ign)
+            .then(() => log(`Removed user ${user.ign}`))
+            .catch(log)
+    }
 
-                dm.send(`
-Client: https://files.realitymod.com/PRISM/PRISM.zip
-Data: https://files.realitymod.com/PRISM/Data.zip
+    sendDM(member: GuildMember, name: string, password: string) {
+        return async function() {
+            const dm = await member.createDM();
+            dm.send({
+                embeds: [prepareDM(name, password)]
+            }).catch(() => {
+                // TODO: tag user in common channel, tell him to reset password (unable to send DM)
+            });
+        }
+    }
 
-Host: 185.132.132.54:4712
-Username: ${user.ign}
-Password: ${password}`).catch(console.error)
+    sendError(member: GuildMember) {
+        return async function(error: Error) {
+            const dm = await member.createDM();
+            dm.send({
+                embeds: [errorToEmbed(error)]
+            }).catch(() => {
+                // TODO: tag user in common channel, tell him his account wasn't created/updated
+            });
+        }
+    }
+}
+
+class RoleSubscriber implements EventSubscriber<Role> {
+    client: Client;
+    accounts: Accounts;
+
+    constructor(client: Client, accounts: Accounts) {
+        this.client = client;
+        this.accounts = accounts
+    }
+
+    async syncAccounts(role: Role) {
+        const em = this.client.em.fork()
+
+        role.users.toArray().forEach(async u => {
+            const user = await em.findOne(User, { discordID: u.discordID })
+
+            if (user) {
+                this.accounts.updateLevel(user);
             }
         })
+    }
 
-        em.flush();
+    async removeAccounts(role: Role) {
+        const em = this.client.em.fork()
+
+        role.users.toArray().forEach(async u => {
+            const user = await em.findOne(User, { discordID: u.discordID });
+            if (user) {
+                const roles = await user.roles.matching({ where: { prism: true }, orderBy: { level: QueryOrder.ASC_NULLS_LAST } })
+                if (roles.length === 0) {
+                    this.accounts.delete(user);
+                }
+            }
+        })
     }
 
     getSubscribedEntities(): EntityName<Role>[] {
@@ -65,68 +185,32 @@ Password: ${password}`).catch(console.error)
     }
 
     async afterUpdate(args: EventArgs<Role>) {
-        await this.createAccounts(args.entity)
+        if (!args.entity.prism && args.changeSet && args.changeSet.originalEntity?.prism === true) {
+            await this.removeAccounts(args.entity);
+            return
+        }
+
+        if (args.changeSet && args.changeSet.originalEntity?.level !== args.entity.level) {
+            this.syncAccounts(args.entity)
+        }
     }
 
     async afterCreate(args: EventArgs<Role>) {
-        await this.createAccounts(args.entity)
+        if (args.entity.prism) {
+            await this.syncAccounts(args.entity);
+        }
     }
 
-    async afterDelete() {
+    async afterDelete(args: EventArgs<Role>) {
+        await this.removeAccounts(args.entity);
     }
 }
 
 class UserSubscriber implements EventSubscriber<User> {
-    client: Client;
+    accounts: Accounts;
 
-    constructor(client: Client) {
-        this.client = client;
-    }
-
-    async createAccounts(user: User) {
-        if (role.prism !== true) {
-            return
-        }
-
-        const em = this.client.em.fork();
-
-        const guild = await this.client.guild();
-
-        await guild.members.fetch()
-
-        const discordRole = guild.roles.cache.get(role.discordID);
-
-        console.log(discordRole?.members)
-
-        discordRole?.members.forEach(async (member: GuildMember) => {
-            const user = await em.findOne(User, { discordID: member.id });
-
-            if (!user) {
-                return
-            }
-
-            if (!user.prismCreated) {
-                const level = role.level || 0;
-
-                const password = Math.random().toString(36).slice(-8);
-
-                await this.client.prism.commands.addUser(user.ign, password, level)
-
-                user.prismCreated = true;
-
-                const dm = await member.createDM();
-
-                dm.send(`
-Client: https://files.realitymod.com/PRISM/PRISM.zip
-Data: https://files.realitymod.com/PRISM/Data.zip
-
-Host: 185.132.132.54:4712
-Username: ${user.ign}
-Password: ${password}`).catch(console.error)
-            }
-        })
-
-        em.flush();
+    constructor(accounts: Accounts) {
+        this.accounts = accounts;
     }
 
     getSubscribedEntities(): EntityName<User>[] {
@@ -134,27 +218,25 @@ Password: ${password}`).catch(console.error)
     }
 
     async afterUpdate(args: EventArgs<User>) {
-        await this.createAccounts(args.entity)
+        if (args.changeSet && args.changeSet.entity.ign !== args.entity.ign) {
+            await this.accounts.changeName(args.entity, args.changeSet.entity.ign)
+        }
     }
 
     async afterCreate(args: EventArgs<User>) {
-        await this.createAccounts(args.entity)
+        await this.accounts.create(args.entity)
     }
 
-    async afterDelete() {
+    async afterDelete(args: EventArgs<User>) {
+        await this.accounts.delete(args.entity)
     }
 }
 
 export const registerPRISMAccounts = (client: Client) => {
-    const em = client.em.getEventManager();
+    const evm = client.em.getEventManager();
 
-    em.registerSubscriber(new RoleSubscriber(client));
-    em.registerSubscriber(new UserSubscriber(client));
+    const accounts = new Accounts(client);
 
-    // client.on("guildMemberUpdate", (oldMember: GuildMember | PartialGuildMember, newMember: GuildMember | PartialGuildMember) => {
-    //     // Role removed or added
-    //     if (oldMember.roles.cache.size !== newMember.roles.cache.size) {
-    //         creator.updateMemberAcc(newMember as GuildMember)
-    //     }
-    // })
+    evm.registerSubscriber(new RoleSubscriber(client, accounts));
+    evm.registerSubscriber(new UserSubscriber(accounts));
 }

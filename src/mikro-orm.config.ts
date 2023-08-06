@@ -1,7 +1,7 @@
 import { defineConfig } from '@mikro-orm/core';
 
-import { Role } from "./entities/role.js";
-import { User } from "./entities/user.js";
+import { Role } from "./db/entities/role.js";
+import { User } from "./db/entities/user.js";
 
 export default defineConfig({
     entities: [User, Role],

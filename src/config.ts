@@ -22,6 +22,12 @@ export const channels = {
     }
 };
 
+export const paths = {
+    server: process.env.SERVER_PATH,
+    raConfig: "mods/pr/python/game/realityconfig_admin.py",
+    reservedSlots: "mods/pr/settings/reservedslots.txt"
+}
+
 export const logs = {
     bans: process.env.LOGS_BANS || "logs/banlist_info.log",
     commands: process.env.LOGS_CMDS || "logs/ra_adminlog.txt",
@@ -53,4 +59,5 @@ export default {
     clientID,
     guildID,
     prism,
+    paths,
 };

@@ -1,7 +1,5 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
-import { Role as DiscordRole } from "discord.js";
-
-import { Client } from "../client.js";
+import { Collection, Entity, ManyToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { User } from "./user.js";
 
 @Entity()
 export class Role {
@@ -21,4 +19,7 @@ export class Role {
         default: false,
     })
     prism: boolean;
+
+    @ManyToMany()
+    users = new Collection<User>(this)
 }

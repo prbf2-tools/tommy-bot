@@ -1,9 +1,9 @@
-import { writeFile, readdir } from "fs/promises";
+import { writeFile } from "fs/promises";
 
 import { EntityName, EventSubscriber } from "@mikro-orm/core";
 import { Client } from "../../client.js";
-import { User } from "../../entities/user.js";
-import { Role } from "../../entities/role.js";
+import { User } from "../../db/entities/user.js";
+import { Role } from "../../db/entities/role.js";
 import { GuildMember, PartialGuildMember } from "discord.js";
 
 

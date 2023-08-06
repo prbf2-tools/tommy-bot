@@ -1,7 +1,7 @@
 import { EmbedBuilder, TextChannel } from "discord.js";
 
 import { Client } from "../../client.js";
-import { Subject } from "./index.js";
+import { Subject } from "./client/responses.js";
 import { channels } from "../../config.js";
 
 export default (client: Client) => {

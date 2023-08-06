@@ -15,7 +15,7 @@ import {
 } from "discord.js";
 
 import { Client } from "../../client.js";
-import { User } from "../../entities/user.js";
+import { User } from "../../db/entities/user.js";
 
 const ID = "adminhashid";
 
@@ -123,7 +123,6 @@ export const modal = {
                     discordID: user.id,
                     ign: ingameName,
                     hash: hashId,
-                    prismCreated: false,
                 });
             }
 

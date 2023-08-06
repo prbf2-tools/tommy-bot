@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 
 import { Client } from "../../client.js";
-import { Role } from "../../entities/role.js";
+import { Role } from "../../db/entities/role.js";
 
 export const command = {
     data: new SlashCommandBuilder()
