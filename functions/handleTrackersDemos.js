@@ -10,6 +10,7 @@ import { createCanvas, loadImage } from "canvas";
 import ftp from "basic-ftp";
 
 import locals from "../localization.json" assert { type: "json"};
+import { logs } from "../config.js";
 
 import {
     EmbedBuilder,
@@ -21,7 +22,7 @@ import {
 
 export default (client) => {
     client.handleTrackersDemos = async () => {
-        var ticketsLog = "logs/tickets.log";
+        var ticketsLog = logs.tickets;
         if (!fs.existsSync(ticketsLog)) fs.writeFileSync(ticketsLog, "");
         var tailTickets = new Tail(ticketsLog, "\n");
 
@@ -219,7 +220,9 @@ export default (client) => {
                         }
                     });
                 }
-            );
+            ).catch((reason) => {
+                console.error(`Couldnt load image for map ${prjson.MapName}`)
+            });
 
             let durationTimeRaw = prjson.EndTime - prjson.StartTime;
             let durationTime = durationTimeRaw / 60;

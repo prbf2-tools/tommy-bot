@@ -22,10 +22,13 @@ export const logs = {
     bans: process.env.LOGS_BANS || "logs/banlist_info.log",
     commands: process.env.LOGS_CMDS || "logs/ra_adminlog.txt",
     joins: process.env.LOGS_JOIN || "logs/joinlog.log",
+    tickets: process.env.LOGS_TICKETS || "logs/tickets.log",
 };
 
 export default {
     timezone: process.env.TZ || "+02:00",
+    serverDir: process.env.PRBF2_SV_DIR,
+    prspySvID: process.env.PRSPY_SV_ID,
     channels,
     logs,
 };

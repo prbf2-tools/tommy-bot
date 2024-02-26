@@ -452,7 +452,7 @@
             "name": "Quan seasonal (2km)",
             "imageUrl": "https://www.realitymod.com/mapgallery/images/maps/quan-seasonal/tile.jpg",
             "galleryUrl": "https://www.realitymod.com/mapgallery/#!/quan-seasonal/"
-        },        
+        },
         "icebound": {
             "name": "Icebound seasonal (4km)",
             "imageUrl": "https://www.realitymod.com/mapgallery/images/maps/icebound-seasonal/tile.jpg",
@@ -475,8 +475,8 @@
         },
         "road_to_damascus": {
             "name": "Road to Damascus (4km)",
-            "imageUrl": "https://www.realitymod.com/mapgallery/images/maps/roadtodamascus/tile.jpg",
-            "galleryUrl": "https://www.realitymod.com/mapgallery/#!/roadtodamascus/"
+            "imageUrl": "https://www.realitymod.com/mapgallery/images/maps/roadtodamascus-beta/tile.jpg",
+            "galleryUrl": "https://www.realitymod.com/mapgallery/#!/roadtodamascus-beta/"
         },
         "zakho": {
             "name": "Zakho - BETA (4km)",

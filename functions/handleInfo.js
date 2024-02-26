@@ -3,6 +3,7 @@ dotenv.config();
 
 import request from "request";
 import locals from "../localization.json" assert { type: "json"};
+import config from "../config.js";
 
 //Discord
 
@@ -16,7 +17,7 @@ export default (client) => {
                         var info = JSON.parse(body);
                         let mafiaInfo = info.servers.find((info2) => {
                             try {
-                                return info2.serverId.includes("e36e256110bcb081fdf8aace80b6f40db983b5ad");
+                                return info2.serverId.includes(config.prspySvID);
                             } catch {
                                 return false;
                             }

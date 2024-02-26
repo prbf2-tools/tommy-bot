@@ -4,11 +4,12 @@ import { fileURLToPath } from "url";
 
 import db from "../db/db.js";
 import { ServerCommands } from "../functions/handlePRISM.js";
+import config from "../config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const pathToRealityAdmin =
-    "C:/Users/Administrator/Desktop/Mafia/mods/pr/python/game/realityconfig_admin.py";
+    `${config.serverDir}/mods/pr/python/game/realityconfig_admin.py`;
 const pathToDb = path.join(__dirname, "..", "db");
 
 export const insertAdmins = () => {
