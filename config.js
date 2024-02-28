@@ -33,7 +33,7 @@ export default {
     prspySvID: process.env.PRSPY_SV_ID,
     bf2DemosDir: process.env.BF2_DEMOS_DIR || `${serverDir}/mods/pr/demos/`,
     prDemosDir: process.env.PR_DEMOS_DIR || `${serverDir}/demos/`,
-    chatlogsDir: process.env.CHATLOGS_DIR || `${serverDir}/logs/`,
+    chatlogsDir: process.env.CHATLOGS_DIR || `${serverDir}/admin/logs/`,
     channels,
     logs,
 };
