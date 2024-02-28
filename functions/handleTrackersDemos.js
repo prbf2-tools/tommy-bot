@@ -10,7 +10,7 @@ import { createCanvas, loadImage } from "canvas";
 import ftp from "basic-ftp";
 
 import locals from "../localization.json" assert { type: "json"};
-import { logs } from "../config.js";
+import config from "../config.js";
 
 import {
     EmbedBuilder,
@@ -20,9 +20,15 @@ import {
     AttachmentBuilder,
 } from "discord.js";
 
+const flagsDir = "assets/flags/";
+
+const gunGameWinnerCache = "cache/gungame_winner.txt";
+const jsonFormatedCache = "cache/json_formated/";
+const imagesCache = "cache/images/";
+
 export default (client) => {
     client.handleTrackersDemos = async () => {
-        var ticketsLog = logs.tickets;
+        var ticketsLog = config.logs.tickets;
         if (!fs.existsSync(ticketsLog)) fs.writeFileSync(ticketsLog, "");
         var tailTickets = new Tail(ticketsLog, "\n");
 
@@ -36,7 +42,7 @@ export default (client) => {
             console.log(Team2Tickets + " - " + Team1Tickets);
         });
 
-        var ggWinnerLog = "logs/gungame_winner.txt";
+        var ggWinnerLog = gunGameWinnerCache;
         if (!fs.existsSync(ggWinnerLog)) fs.writeFileSync(ggWinnerLog, "");
         var tailggWinner = new Tail(ggWinnerLog, "\n");
         let GGWinner = "None";
@@ -46,7 +52,7 @@ export default (client) => {
         });
 
         //chatlogPath watcherChat
-        var watcherChat = chokidar.watch("logs/chatlogs", {
+        var watcherChat = chokidar.watch(config.chatlogsDir, {
             ignored: ["]/^./", "demos/index.php"],
             persistent: true,
         });
@@ -57,7 +63,7 @@ export default (client) => {
         });
 
         //demoPath watcherDemo
-        var watcherDemo = chokidar.watch("logs/demos", {
+        var watcherDemo = chokidar.watch(config.bf2DemosDir, {
             ignored: ["]/^./", "demos/index.php"],
             persistent: true,
         });
@@ -67,7 +73,7 @@ export default (client) => {
             console.log(`File ${demoPath}.bf2demo has been cached`);
         });
 
-        var watcher = chokidar.watch("logs/json", {
+        var watcher = chokidar.watch(config.jsonDir, {
             ignored: "/^./",
             persistent: true,
         });
@@ -92,8 +98,8 @@ export default (client) => {
             var demoPathFormat = fileName1.replace("tracker", "demo");
 
             fs.rename(
-                "logs/demos/" + demoPath + ".bf2demo",
-                "logs/demos/" + demoPathFormat + ".bf2demo",
+                config.bf2DemosDir + demoPath + ".bf2demo",
+                config.bf2DemosDir + demoPathFormat + ".bf2demo",
                 function(err) {
                     if (err) console.log("ERROR: " + err);
                 }
@@ -105,7 +111,7 @@ export default (client) => {
             prjson.truet2t = Team2Tickets;
 
             fs.writeFile(
-                "logs/json_formated/" + fileName1 + ".json",
+                jsonFormatedCache + fileName1 + ".json",
                 JSON.stringify(prjson, null, 4),
                 (err) => {
                     if (err) throw err;
@@ -123,7 +129,7 @@ export default (client) => {
                 async (image) => {
                     context.drawImage(image, 0, 0, width, height);
 
-                    loadImage("logs/images/Flags/template.png").then(async (image2) => {
+                    loadImage(flagsDir + "template.png").then(async (image2) => {
                         context.drawImage(image2, 0, 0, width, height);
 
                         context.textAlign = "center";
@@ -145,7 +151,7 @@ export default (client) => {
                         );
 
                         if (prjson.MapMode == "gpm_gungame") {
-                            fs.readFile("logs/gungame_winner.txt", "utf8", (err, data) => {
+                            fs.readFile(gunGameWinnerCache, "utf8", (err, data) => {
                                 console.log("\x1b[36m", data, "\x1b[0m");
                                 GGWinner = data;
                             });
@@ -165,7 +171,7 @@ export default (client) => {
                             context.fillText(GGWinner, 200, 75);
 
                             var buffer = canvas.toBuffer("image/png");
-                            fs.writeFileSync("logs/images/" + fileName1 + ".png", buffer);
+                            fs.writeFileSync(imagesCache + fileName1 + ".png", buffer);
                             console.log("\x1b[36m", "IMAGE DONE GG", "\x1b[0m");
                         } else {
                             context.textAlign = "center";
@@ -180,23 +186,23 @@ export default (client) => {
                             context.textBaseline = "top";
                             context.fillText(Team2Tickets, 239, 62);
 
-                            loadImage("logs/images/Flags/" + prjson.Team1Name + ".png").then(
+                            loadImage(flagsDir + prjson.Team1Name + ".png").then(
                                 (imageTeam1) => {
                                     context.drawImage(imageTeam1, 280, 70, 50, 28);
 
                                     loadImage(
-                                        "logs/images/Flags/" + prjson.Team2Name + ".png"
+                                        flagsDir + prjson.Team2Name + ".png"
                                     ).then((imageTeam2) => {
                                         context.drawImage(imageTeam2, 71, 70, 50, 28);
 
                                         if (prjson.MapMode == "gpm_insurgency") {
-                                            loadImage("logs/images/Flags/Cache.png").then(
+                                            loadImage(flagsDir + "Cache.png").then(
                                                 (imageCache) => {
                                                     context.drawImage(imageCache, 249, 68, 32, 32);
 
                                                     var buffer = canvas.toBuffer("image/png");
                                                     fs.writeFileSync(
-                                                        "logs/images/" + fileName1 + ".png",
+                                                        imagesCache + fileName1 + ".png",
                                                         buffer
                                                     );
                                                     console.log(
@@ -209,7 +215,7 @@ export default (client) => {
                                         } else {
                                             var buffer = canvas.toBuffer("image/png");
                                             fs.writeFileSync(
-                                                "logs/images/" + fileName1 + ".png",
+                                                imagesCache + fileName1 + ".png",
                                                 buffer
                                             );
                                             console.log("\x1b[36m", "IMAGE DONE STD", "\x1b[0m");
@@ -256,10 +262,10 @@ export default (client) => {
                 )
                 .setImage("attachment://" + fileName1 + ".png")
                 .setTimestamp(prjson.EndTime * 1000);
-            const file = new AttachmentBuilder("logs/images/" + fileName1 + ".png");
+            const file = new AttachmentBuilder(imagesCache + fileName1 + ".png");
             //const filecl = new AttachmentBuilder('logs/chatlogs/'+chatlogPath+'.txt');
             const filetracker = new AttachmentBuilder(
-                "logs/trackers/" + fileName1 + ".PRdemo"
+                config.prDemosDir + fileName1 + ".PRdemo"
             );
             var row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
@@ -294,15 +300,15 @@ export default (client) => {
                         password: process.env.FTP_PASS,
                     });
                     await clientFTP.uploadFrom(
-                        "logs/json_formated/" + fileName1 + ".json",
+                        jsonFormatedCache + fileName1 + ".json",
                         "br/json_formated/" + fileName1 + ".json"
                     );
                     await clientFTP.uploadFrom(
-                        "logs/trackers/" + fileName1 + ".PRdemo",
+                        config.prDemosDir + fileName1 + ".PRdemo",
                         "br/trackers/" + fileName1 + ".PRdemo"
                     );
                     await clientFTP.uploadFrom(
-                        "logs/demos/" + demoPathFormat + ".bf2demo",
+                        config.bf2DemosDir + demoPathFormat + ".bf2demo",
                         "br/demos/" + demoPathFormat + ".bf2demo"
                     );
                     clientFTP.close();
@@ -322,10 +328,10 @@ export default (client) => {
                 /*await client.channels.cache.get('1033130739505565716').threads.create({
           name: `__**${locals.mapNames[prjson.MapName].name}**__ -  ${locals.gameModes[prjson.MapMode].name}, ${locals.layers[prjson.MapLayer].name}`,
           message: {
-            content: `<t:${prjson.StartTime}:d> <t:${prjson.StartTime}:T> **-** <t:${prjson.EndTime}:d> <t:${prjson.EndTime}:T> **│** ${locals.factions[prjson.Team2Name]} \` ${Team1Tickets} \` **-** ${locals.factions[prjson.Team1Name]} \` ${Team2Tickets} \``, 
+            content: `<t:${prjson.StartTime}:d> <t:${prjson.StartTime}:T> **-** <t:${prjson.EndTime}:d> <t:${prjson.EndTime}:T> **│** ${locals.factions[prjson.Team2Name]} \` ${Team1Tickets} \` **-** ${locals.factions[prjson.Team1Name]} \` ${Team2Tickets} \``,
             embeds: [roundEmbed],
-            components: [row], 
-            files: [file, filecl] 
+            components: [row],
+            files: [file, filecl]
           },
           appliedTags: [locals.gameModes[prjson.MapMode].tagPriv, locals.layers[prjson.MapLayer].tagPriv]
         })*/

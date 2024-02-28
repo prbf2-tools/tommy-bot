@@ -25,10 +25,15 @@ export const logs = {
     tickets: process.env.LOGS_TICKETS || "logs/tickets.log",
 };
 
+const serverDir = process.env.PRBF2_SV_DIR;
+
 export default {
     timezone: process.env.TZ || "+02:00",
-    serverDir: process.env.PRBF2_SV_DIR,
+    serverDir: serverDir,
     prspySvID: process.env.PRSPY_SV_ID,
+    bf2DemosDir: process.env.BF2_DEMOS_DIR || `${serverDir}/mods/pr/demos/`,
+    prDemosDir: process.env.PR_DEMOS_DIR || `${serverDir}/demos/`,
+    chatlogsDir: process.env.CHATLOGS_DIR || `${serverDir}/logs/`,
     channels,
     logs,
 };
