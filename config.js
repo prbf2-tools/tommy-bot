@@ -34,6 +34,7 @@ export default {
     bf2DemosDir: process.env.BF2_DEMOS_DIR || `${serverDir}/mods/pr/demos/`,
     prDemosDir: process.env.PR_DEMOS_DIR || `${serverDir}/demos/`,
     chatlogsDir: process.env.CHATLOGS_DIR || `${serverDir}/admin/logs/`,
+    jsonDir: process.env.JSON_DIR || `${serverDir}/json/`,
     channels,
     logs,
 };
