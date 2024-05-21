@@ -5,14 +5,14 @@ export default {
     data: new SlashCommandBuilder()
         .setName("prprism")
         .setDescription("Execute a command from PRISM")
-        .addStringOption(subcommand => subcommand
-            .setName("hashid")
+        .addStringOption(option => option
+            .setName("command")
             .setDescription("Command as if you typing it in PRISM or in-game")
             .setRequired(true)),
     async execute(interaction) {
-        writeSayToPrism(`${interaction.options.getString("hashid")} - Discord User ${interaction.user.username}`);
+        writeSayToPrism(`${interaction.options.getString("command")} - Discord User ${interaction.user.username}`);
         await interaction.reply({
-            content: `addKeyToBanList ${interaction.options.getString("hashid")} ${interaction.options.getString("duration")} ${interaction.options.getString("reason")}`,
+            content: `Ran command \`${interaction.options.getString("command")}\` using PRISM.`,
             ephemeral: true
         });
     },
