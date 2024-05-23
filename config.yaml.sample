@@ -1,0 +1,87 @@
+discord:
+    token:
+    clientID:
+    guildID:
+
+server:
+    # Host timezone (used to accurately report time to Discord)
+    timezone: "+00:00"
+
+prism:
+  auth:
+    ip:
+    port:
+    username:
+    password:
+  generalChannelID:
+  teamkillChannelID:
+
+demos:
+  # Directories where files are stored
+  source:
+    # Example: /pr//server/mods/pr/demos/
+    bf2demos:
+    # Example: /pr/server/demos/
+    prdemos:
+    # Example: /pr/server/json/
+    prjson:
+  ftp:
+    host:
+    username:
+    password:
+    # Directories where files should be uploaded to
+    destination:
+      # Example: demos/bf2/
+      bf2demos:
+      # Example: demos/pr/
+      prdemos:
+      # Example: demos/json/
+      prjson:
+  channelID:
+  urls:
+    # URL where BF2Demos can be accessed on the internet (without the filename)
+    # Example: https://demos.myserver.gg/bf2/
+    bf2demos:
+    # URL where PRDemos can be accessed on the internet (without the filename)
+    # Example: https://demos.myserver.gg/pr/
+    prdemos:
+    # URL where tracker viewer can be accesseded
+    # Domain needs to be the same as the one used for prdemo (for CORS)
+    # Example: https://demos.myserver.gg/realitytracker/
+    trackerViewer:
+
+prspy:
+  # PRSPY server ID
+  # Open your server on PRSPY and grab the ID from the URL
+  # This ID changes on IP or port change (and probably some other things)
+  # Example: ceab9bd17f51d08acc4da77120574bd57e248c98
+  id:
+  mapChannelID:
+  detailsChannelID:
+
+contactadmin:
+  application:
+    public:
+      channelID:
+      tagIDs: []
+      # Example:
+      # tagIDs:
+        # - "123456789012345678"
+        # - "123456789012345678"
+    private:
+      channelID:
+      tagIDs: []
+  appeal:
+    public:
+      channelID:
+      tagIDs: []
+    private:
+      channelID:
+      tagIDs: []
+  report:
+    public:
+      channelID:
+      tagIDs: []
+    private:
+      channelID:
+      tagIDs: []
