@@ -37,38 +37,76 @@ Additionally the bot will upload JSON files produced by the server at the round 
 
 ```yaml
 demos:
-  # Directories where files are stored
-  source:
-    # Example: /pr//server/mods/pr/demos/
-    bf2demos:
-    # Example: /pr/server/demos/
-    prdemos:
-    # Example: /pr/server/json/
-    prjson:
+  channelID:
   ftp:
     host:
     username:
     password:
-    # Directories where files should be uploaded to
+
+  # URL where tracker viewer can be accesseded
+  # Domain needs to be the same as the one used for prdemo (for CORS)
+  # Example: https://demos.myserver.gg/realitytracker/
+  trackerViewerUrl:
+
+  # source is the path where the files can be found
+  # destination is the path where the files will be uploaded via FTP
+  # url is the URL where the files can be accessed on the internet
+
+  bf2:
+    # Example: /pr/server/mods/pr/demos/
+    source:
+    # Example: demos/bf2/
     destination:
-      # Example: demos/bf2/
-      bf2demos:
-      # Example: demos/pr/
-      prdemos:
-      # Example: demos/json/
-      prjson:
-  channelID:
-  urls:
-    # URL where BF2Demos can be accessed on the internet (without the filename)
     # Example: https://demos.myserver.gg/bf2/
-    bf2demos:
-    # URL where PRDemos can be accessed on the internet (without the filename)
+    url:
+
+  pr:
+    # Example: /pr/server/demos/
+    source:
+    # Example: demos/pr/
+    destination:
     # Example: https://demos.myserver.gg/pr/
-    prdemos:
-    # URL where tracker viewer can be accesseded
-    # Domain needs to be the same as the one used for prdemo (for CORS)
-    # Example: https://demos.myserver.gg/realitytracker/
-    trackerViewer:
+    url:
+
+  json:
+    # Example: /pr/server/json/
+    source:
+    # Example: demos/json/
+    destination:
+```
+
+### Logs
+
+Join, commands and ban logs are read from files and posted to Discord channels.
+
+Additionally tickets log is used to determine winner of the round.
+
+- `bans` - `admin/logs/banlist_info.log`
+- `commands` - `admin/logs/commandlog.log`
+- `joins` - `admin/logs/joinlog.log`
+- `tickets` - `admin/logs/tickets.log`
+
+Paths need to be absolute.
+
+```yaml
+logs:
+  bans:
+    # {SV_DIR}/admin/logs/banlist_info.log
+    path:
+    publicChannelID:
+    privateChannelID:
+  commands:
+    # {SV_DIR}/admin/logs/ra_adminlog.txt
+    path:
+    publicChannelID:
+    privateChannelID:
+  joinlog:
+    # {SV_DIR}/admin/logs/joinlog.log
+    path:
+    privateChannelID:
+  tickets:
+    # {SV_DIR}/admin/logs/tickets.log
+    path:
 ```
 
 ### Server information
@@ -151,14 +189,16 @@ contactadmin:
 
 This command uses PRISM to ban/unban a player.
 
+It posts a message to two configured channels.
+
 Configuration:
 ```yaml
 prban:
-  pubChannelID:
-  privChannelID:
+  firsChannelID:
+  secondChannelID:
 prunban:
-  pubChannelID:
-  privChannelID:
+  firsChannelID:
+  secondChannelID:
 ```
 
 ### Run admin command on the server

@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
+import config from "../../config.js";
 import { decideIssuerType, descriptionLine, obfuscateIP, flagFromIP, fullName } from "./utils.js";
 import { UserType } from "./interfaces.js";
-import config from "../../config.js";
 var Duration;
 (function (Duration) {
     Duration["Permanent"] = "perm";
@@ -69,7 +69,7 @@ export const parseBanLine = (line) => {
             duration = Number(groups.duration);
     }
     const out = {
-        date: new Date(groups.date + "T" + groups.time + config.timezone),
+        date: new Date(groups.date + "T" + groups.time + config.server.timezone),
         body: groups.body,
         issuer: {
             typ: decideIssuerType(groups),

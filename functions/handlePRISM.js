@@ -1,12 +1,12 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import net from "net";
 import crypto from "crypto";
 import fs from "fs";
 
 import rand from "csprng";
 import { EmbedBuilder } from "discord.js";
+
+import config from "../config.js";
+import { gungameWinnerCache } from "./handleTrackersDemos.js";
 
 const netClient = new net.Socket();
 
@@ -22,7 +22,7 @@ const MSG_END = "\x04\x00";
 
 export default (client) => {
     client.handlePRISM = async () => {
-        const netConnect = () => { netClient.connect(process.env.PRISM_PORT, process.env.PRISM_IP); };
+        const netConnect = () => { netClient.connect(config.prism.auth.port, config.prism.auth.ip); };
         try {
             netClient.once("connect", () => {
                 console.log("Connected to PRISM API");
@@ -86,7 +86,7 @@ export const ServerCommands = {
 };
 
 const login1 = () => {
-    writeToClient("login1", "1" + MSG_FIELD + process.env.PRISM_USRNAME + MSG_FIELD + theCCK);
+    writeToClient("login1", "1" + MSG_FIELD + config.prism.auth.username + MSG_FIELD + theCCK);
 };
 
 const login2 = (passHash, serverChallenge) => {
@@ -94,9 +94,9 @@ const login2 = (passHash, serverChallenge) => {
     const saltedpass = crypto.createHash("sha1");
     const challengedigest = crypto.createHash("sha1");
 
-    passwordhash.update(process.env.PRISM_USRPW);
+    passwordhash.update(config.prism.auth.password);
     saltedpass.update(passHash + MSG_START + passwordhash.digest("hex"));
-    challengedigest.update(process.env.PRISM_USRNAME + MSG_FIELD + theCCK + MSG_FIELD + serverChallenge + MSG_FIELD + saltedpass.digest("hex"));
+    challengedigest.update(config.prism.auth.username + MSG_FIELD + theCCK + MSG_FIELD + serverChallenge + MSG_FIELD + saltedpass.digest("hex"));
     writeToClient("login2", challengedigest.digest("hex"));
 };
 
@@ -189,8 +189,8 @@ const messageHandler = (client, messages) => {
 
                 var tkString = fields[fields.length - 1].split(" ");
 
-                client.channels.cache.get("1022258448508928031").send(formatedFields);
-                //client.channels.cache.get('1022258448508928031').send("`"+fields+"`");
+                client.channels.cache.get(config.prism.generalChannelID).send(formatedFields);
+                //client.channels.cache.get(config.prism.generalChannelID).send("`"+fields+"`");
                 if (tkString[5] == "m]") {
                     tkString = fields[fields.length - 1].split(" ");
                     //console.log(fields[fields.length-1].split(' '))
@@ -206,12 +206,12 @@ const messageHandler = (client, messages) => {
                         .setFooter({
                             text: "IN-GAME"
                         });
-                    client.channels.cache.get("1033130972264276018").send({ content: "`" + fields[fields.length - 1].split(" ") + "`", embeds: [adminLogPost] });
+                    client.channels.cache.get(config.prism.teamkillChannelID).send({ content: "`" + fields[fields.length - 1].split(" ") + "`", embeds: [adminLogPost] });
                 }
                 else if (dataLenght[dataLenght.length - 1].includes("is victorious!") == true) {
                     var ggWinner = dataLenght[dataLenght.length - 1].split(" ");
                     console.log("GUNGAME WINNER::::" + ggWinner[1].slice(0, -2));
-                    fs.writeFile("logs/gungame_winner.txt", ggWinner[1].slice(0, -2), function(err) {
+                    fs.writeFile(gungameWinnerCache, ggWinner[1].slice(0, -2), function(err) {
                         if (err) {
                             // append failed
                         } else {

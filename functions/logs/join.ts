@@ -1,9 +1,11 @@
 import { EmbedBuilder } from "discord.js";
 import dayjs from "dayjs";
 
+
+import config from "../../config.js";
+
 import { descriptionLine, flagFromIP, prepareDiscordDate } from "./utils.js";
 import { DiscordTimeFormat, Embeds, UserDetailed, UserType } from "./interfaces.js";
-import config from "../../config.js";
 
 interface JoinData extends UserDetailed {
     joined: dayjs.Dayjs,
@@ -26,8 +28,8 @@ export const parseJoinLine = (line: string): JoinData | null => {
     const groups = match.groups;
 
     return {
-        joined: dayjs(groups.date + "T" + groups.time + config.timezone),
-        created: dayjs(groups.created + "T" + "00:00:00" + config.timezone),
+        joined: dayjs(groups.date + "T" + groups.time + config.server.timezone),
+        created: dayjs(groups.created + "T" + "00:00:00" + config.server.timezone),
 
         typ: UserType.Player,
         name: groups.name,

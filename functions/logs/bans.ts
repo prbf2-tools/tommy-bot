@@ -1,8 +1,9 @@
 import { EmbedBuilder } from "discord.js";
-import { decideIssuerType, descriptionLine, obfuscateIP, flagFromIP, fullName } from "./utils.js";
-import { Embeds, User, UserDetailed, UserType } from "./interfaces.js";
 
 import config from "../../config.js";
+
+import { decideIssuerType, descriptionLine, obfuscateIP, flagFromIP, fullName } from "./utils.js";
+import { Embeds, User, UserDetailed, UserType } from "./interfaces.js";
 
 enum Duration {
     Permanent = "perm",
@@ -89,7 +90,7 @@ export const parseBanLine = (line: string): BanData | null => {
     }
 
     const out: BanData = {
-        date: new Date(groups.date + "T" + groups.time + config.timezone),
+        date: new Date(groups.date + "T" + groups.time + config.server.timezone),
 
         body: groups.body,
         issuer: {

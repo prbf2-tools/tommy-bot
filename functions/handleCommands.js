@@ -2,8 +2,10 @@ import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import fs from "fs";
 
-const clientId = process.env.CLIENT_ID;
-const guildId = process.env.GUILD_ID;
+import config from "../config.js";
+
+const clientID = config.discord.clientID
+const guildID = config.discord.guildID;
 
 
 export default (client) => {
@@ -20,14 +22,14 @@ export default (client) => {
         }
         const rest = new REST({
             version: "9"
-        }).setToken(process.env.TOKEN);
+        }).setToken(config.discord.token);
 
         (async () => {
             try {
                 console.log("\x1b[42m", "==================================== \n            BOT RESTARTED!            \n ====================================", "\x1b[0m");
                 console.log("Started refreshing application (/) commands.");
                 await rest.put(
-                    Routes.applicationGuildCommands(clientId, guildId),
+                    Routes.applicationGuildCommands(clientID, guildID),
                     {
                         body: client.commandArray
                     },

@@ -1,10 +1,9 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import fs from "fs";
 import { Client, GatewayIntentBits, Events, Collection } from "discord.js";
 
+import config from "./config.js";
 import { getAdmins } from "./helpers/getAdmins.js";
+
 
 const client = new Client({
     intents: [
@@ -15,7 +14,7 @@ const client = new Client({
     ],
 });
 
-client.login(process.env.TOKEN);
+client.login(config.discord.token);
 
 client.once(Events.ClientReady, () => {
     client.commands = new Collection();

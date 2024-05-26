@@ -17,7 +17,7 @@ test("parseBanLine", () => {
                     "tag": "",
                     "typ": 0,
                 },
-                "date": new Date("2023-04-02T21:13:00.000" + config.timezone),
+                "date": new Date("2023-04-02T21:13:00.000" + config.server.timezone),
                 "duration": 10800,
                 "body": "No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info!",
             }
@@ -25,7 +25,7 @@ test("parseBanLine", () => {
             in: "[2023-04-02 20:34] c79068163db043379abacb66ed6ab6df [TAG] some_user 192.168.240.229 No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info! banned by KIA rPoXoTauJIo (10800)",
             out: {
                 "body": "No mic! We advise you to get the WO MIC app on your phone and connect it to your PC, google it for more info!",
-                "date": new Date("2023-04-02T20:34:00.000" + config.timezone),
+                "date": new Date("2023-04-02T20:34:00.000" + config.server.timezone),
                 "duration": 10800,
                 "issuer": {
                     "name": "rPoXoTauJIo",

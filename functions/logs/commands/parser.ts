@@ -25,7 +25,7 @@ export const parseCommandLine = (line: string): CommandData | null => {
 
     const out: CommandData = {
         command: groups.command,
-        date: new Date(groups.date + "T" + groups.time + config.timezone),
+        date: new Date(groups.date + "T" + groups.time + config.server.timezone),
         issuer: {
             typ: decideIssuerType(groups),
             name: groups.prism || groups.server || groups.i_name,

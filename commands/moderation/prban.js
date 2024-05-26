@@ -1,7 +1,7 @@
 import { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder } from "discord.js";
+
+import config from "../../config.js";
 import { ServerCommands } from "../../functions/handlePRISM.js";
-
-
 
 function sleep(ms) {
     return new Promise((resolve) => {
@@ -79,8 +79,8 @@ export default {
                 .setTimestamp(new Date())
                 .setFooter({ text: "DISCORD" });
             await interaction.reply({ embeds: [embedReply] });
-            await interaction.member.guild.channels.cache.get("995387208947204257").send({ embeds: [embedReply] });
-            await interaction.member.guild.channels.cache.get("995520998554218557").send({ embeds: [embedReply] });
+            await interaction.member.guild.channels.cache.get(config.prban.firstChannelID).send({ embeds: [embedReply] });
+            await interaction.member.guild.channels.cache.get(config.prban.secondChannelID).send({ embeds: [embedReply] });
         } else {
             const file = new AttachmentBuilder(attachment.attachment);
             console.log(file.attachment.split("/")[-1]);
@@ -92,8 +92,8 @@ export default {
                 .setTimestamp(new Date())
                 .setFooter({ text: "DISCORD" });
             await interaction.reply({ embeds: [embedReply], files: [file] });
-            await interaction.member.guild.channels.cache.get("995387208947204257").send({ embeds: [embedReply], files: [file] });
-            await interaction.member.guild.channels.cache.get("995520998554218557").send({ embeds: [embedReply], files: [file] });
+            await interaction.member.guild.channels.cache.get(config.prban.firstChannelID).send({ embeds: [embedReply], files: [file] });
+            await interaction.member.guild.channels.cache.get(config.prban.secondChannelID).send({ embeds: [embedReply], files: [file] });
         }
     },
 };
