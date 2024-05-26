@@ -1,7 +1,6 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import { EmbedBuilder } from "discord.js";
+
+import config from "../../config.js";
 
 export default {
     data: {
@@ -20,13 +19,13 @@ export default {
                 **What did he do: **
                 ${interaction.fields.getTextInputValue("why")}\n
             `);
-        await interaction.member.guild.channels.cache.get("1021942980950634597").threads.create({
+        await interaction.member.guild.channels.cache.get(config.contactadmin.appeal.public.channelID).threads.create({
             name: `🟢 ${interaction.user.username}'s Appeal`,
             message: {
-                content: `<@&${process.env.ADMIN_ID}>`,
+                content: `<@&${config.contactadmin.adminRoleID}>`,
                 embeds: [embed]
             },
-            appliedTags: ["1021973561918902333"]
+            appliedTags: config.contactadmin.appeal.public.tags
         })
             .then(threadChannel => {
                 threadChannel.members.add(interaction.user.id);
@@ -48,13 +47,13 @@ export default {
                     **The bannable offence: **
                     ${interaction.fields.getTextInputValue("why")}\n
                 `);
-                interaction.member.guild.channels.cache.get("1022285742799589416").threads.create({
+                interaction.member.guild.channels.cache.get(config.contactadmin.appeal.private.channelID).threads.create({
                     name: `🔒🟢 ${interaction.user.username}'s Appeal`,
                     message: {
-                        content: `<@&${process.env.ADMIN_ID}>`,
+                        content: `<@&${config.contactadmin.adminRoleID}>`,
                         embeds: [embed]
                     },
-                    appliedTags: ["1022300302659039272"]
+                    appliedTags: config.contactadmin.appeal.private.tags
                 });
             });
     }

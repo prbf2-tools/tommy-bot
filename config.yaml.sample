@@ -89,6 +89,8 @@ prspy:
 
 
 contactadmin:
+  # The role that should be tagged when a form is posted
+  adminRoleID:
   application:
     public:
       channelID:

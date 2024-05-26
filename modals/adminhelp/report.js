@@ -1,7 +1,6 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import { EmbedBuilder } from "discord.js";
+
+import config from "../../config.js";
 
 export default {
     data: {
@@ -22,13 +21,13 @@ export default {
                 **What happened: **
                 ${interaction.fields.getTextInputValue("what")}\n
             `);
-        await interaction.member.guild.channels.cache.get("1021942980950634597").threads.create({
+        await interaction.member.guild.channels.cache.get(config.contactadmin.report.public.channelID).threads.create({
             name: `🔴 ${interaction.user.username}'s Report`,
             message: {
-                content: `<@&${process.env.ADMIN_ID}>`,
+                content: `<@&${config.contactadmin.adminRoleID}>`,
                 embeds: [embed]
             },
-            appliedTags: ["1021973747546210305"]
+            appliedTags: config.contactadmin.report.public.tags
         })
             .then(threadChannel => {
                 threadChannel.members.add(interaction.user.id);
@@ -52,13 +51,13 @@ export default {
                         **What happened: **
                         ${interaction.fields.getTextInputValue("what")}\n
                     `);
-                interaction.member.guild.channels.cache.get("1022285742799589416").threads.create({
+                interaction.member.guild.channels.cache.get(config.contactadmin.report.private.channelID).threads.create({
                     name: `🔒🔴 ${interaction.user.username}'s Report`,
                     message: {
-                        content: `<@&${process.env.ADMIN_ID}>`,
+                        content: `<@&${config.contactadmin.adminRoleID}>`,
                         embeds: [embed]
                     },
-                    appliedTags: ["1022300442023186462"]
+                    appliedTags: config.contactadmin.report.private.tags
                 });
             });
     }

@@ -158,6 +158,8 @@ It is common to create one Forum channel and direct all forms to it with differe
 
 ```yaml
 contactadmin:
+  # The role that should be tagged when a form is posted
+  adminRoleID:
   application:
     public:
       channelID:

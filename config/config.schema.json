@@ -21,6 +21,9 @@
         "ContactAdmin": {
             "additionalProperties": false,
             "properties": {
+                "adminRoleID": {
+                    "type": "string"
+                },
                 "appeal": {
                     "$ref": "#/definitions/FormConfig"
                 },
@@ -32,6 +35,7 @@
                 }
             },
             "required": [
+                "adminRoleID",
                 "appeal",
                 "application",
                 "report"

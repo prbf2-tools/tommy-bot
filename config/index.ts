@@ -84,6 +84,7 @@ interface FormConfig {
 }
 
 interface ContactAdmin {
+    adminRoleID: string;
     application: FormConfig;
     appeal: FormConfig;
     report: FormConfig;
