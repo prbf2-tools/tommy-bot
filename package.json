@@ -14,9 +14,9 @@
     "request": "^2.88.2",
     "tail": "^2.2.4"
   },
-  "name": "mafia-bot",
+  "name": "tommy-bot",
   "version": "0.5.5D",
-  "description": "Bot for MAFIA PR Discord server",
+  "description": "Bot for PR Discord server",
   "main": "index.js",
   "scripts": {
     "start": "npm run build && node bot.js",
