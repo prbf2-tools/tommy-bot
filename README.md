@@ -81,7 +81,7 @@ Join, commands and ban logs are read from files and posted to Discord channels.
 
 Additionally tickets log is used to determine winner of the round.
 
-- `bans` - `admin/logs/banlist_info.log`
+- `bans` - `mods/pr/settings/banlist_info.log`
 - `commands` - `admin/logs/commandlog.log`
 - `joins` - `admin/logs/joinlog.log`
 - `tickets` - `admin/logs/tickets.log`
@@ -91,7 +91,7 @@ Paths need to be absolute.
 ```yaml
 logs:
   bans:
-    # {SV_DIR}/admin/logs/banlist_info.log
+    # {SV_DIR}/mods/pr/settings/banlist_info.log
     path:
     publicChannelID:
     privateChannelID:

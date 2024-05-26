@@ -60,7 +60,7 @@ demos:
 
 logs:
   bans:
-    # {SV_DIR}/admin/logs/banlist_info.log
+    # {SV_DIR}/mods/pr/settings/banlist_info.log
     path:
     publicChannelID:
     privateChannelID:
