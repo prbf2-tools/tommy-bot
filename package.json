@@ -22,7 +22,7 @@
   "description": "Bot for PR Discord server",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && node bot.js",
+    "start": "node bot.js",
     "dev": "nodemon --ignore logs/ bot.js",
     "lint": "eslint .",
     "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest",
