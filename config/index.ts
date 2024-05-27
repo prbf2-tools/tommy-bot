@@ -1,7 +1,8 @@
+// @ts-nocheck
 import { readFileSync } from 'fs';
 import { parse } from 'yaml'
 import { Ajv } from 'ajv';
-import * as schema from './config.schema.json';
+import * as schema from './config.schema.json' assert { type: "json" };
 
 interface Discord {
     token: string;
