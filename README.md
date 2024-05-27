@@ -4,6 +4,24 @@ Creator: @MaxZK [R-DEV]Max_
 
 Maintainer: @emilekm [R-CON]cassius23
 
+## Requirements
+
+- Discord server
+- FTP server
+- HTTP server
+- Node.js
+
+If you're using Windows you might need to follow the installation instructions for [node-gyp](https://github.com/nodejs/node-gyp?tab=readme-ov-file#on-windows).
+
+## Running
+
+```sh
+# Install dependencies
+npm install
+# Run the bot
+npm start
+```
+
 ## Features
 
 Below is a list of features the bot provides along with configuration for each of the features.
