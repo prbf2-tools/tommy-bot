@@ -1,12 +1,12 @@
 import fs from "fs";
 import Tail from "always-tail";
+import config from "../../config.js";
 import { prepareEmbeds as prepareBanEmbeds, parseBanLine } from "./bans.js";
 import { parseCommandLine } from "./commands/parser.js";
 import { parseJoinLine, prepareEmbeds as prepareJoinEmbeds } from "./join.js";
 import { prepareEmbeds as prepareCommandEmbeds } from "./commands/embeds.js";
-import { channels, logs } from "../../config.js";
 export const watchBanlist = (client) => {
-    const filenameBans = logs.bans;
+    const filenameBans = config.logs.bans.path;
     if (!fs.existsSync(filenameBans))
         fs.writeFileSync(filenameBans, "");
     const tailBans = new Tail(filenameBans, "\n");
@@ -17,10 +17,10 @@ export const watchBanlist = (client) => {
         }
         const { priv, pub } = prepareBanEmbeds(ban);
         if (priv) {
-            client.channels.cache.get(channels.bans.priv).send({ embeds: [priv] });
+            client.channels.cache.get(config.logs.bans.privateChannelID).send({ embeds: [priv] });
         }
         if (pub) {
-            client.channels.cache.get(channels.bans.pub).send({ embeds: [pub] });
+            client.channels.cache.get(config.logs.bans.publicChannelID).send({ embeds: [pub] });
         }
     });
     tailBans.on("error", function (error) {
@@ -29,7 +29,7 @@ export const watchBanlist = (client) => {
     tailBans.watch();
 };
 export const watchCommands = (client) => {
-    const filenameAdmin = logs.commands;
+    const filenameAdmin = config.logs.commands.path;
     if (!fs.existsSync(filenameAdmin))
         fs.writeFileSync(filenameAdmin, "");
     const tailAdmins = new Tail(filenameAdmin, "\n");
@@ -50,10 +50,10 @@ export const watchCommands = (client) => {
         }
         const { priv, pub } = prepareCommandEmbeds(command);
         if (priv) {
-            client.channels.cache.get(channels.commands.priv).send({ embeds: [priv] });
+            client.channels.cache.get(config.logs.commands.privateChannelID).send({ embeds: [priv] });
         }
         if (pub) {
-            client.channels.cache.get(channels.commands.pub).send({ embeds: [pub] });
+            client.channels.cache.get(config.logs.commands.publicChannelID).send({ embeds: [pub] });
         }
     });
     tailAdmins.on("error", function (error) {
@@ -62,7 +62,7 @@ export const watchCommands = (client) => {
     tailAdmins.watch();
 };
 export const watchJoin = (client) => {
-    const filenameJoin = logs.joins;
+    const filenameJoin = config.logs.joins.path;
     if (!fs.existsSync(filenameJoin))
         fs.writeFileSync(filenameJoin, "");
     const tailJoin = new Tail(filenameJoin, "\n");
@@ -73,7 +73,7 @@ export const watchJoin = (client) => {
         }
         const { priv } = prepareJoinEmbeds(join);
         if (priv) {
-            client.channels.cache.get(channels.join.priv).send({ embeds: [priv] });
+            client.channels.cache.get(config.logs.joins.privateChannelID).send({ embeds: [priv] });
         }
     });
     tailJoin.on("error", function (error) {

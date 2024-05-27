@@ -1,4 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from "discord.js";
+
+import config from "../../config.js";
 import { ServerCommands } from "../../functions/handlePRISM.js";
 
 export default {
@@ -27,7 +29,7 @@ export default {
             .setTimestamp(new Date())
             .setFooter({ text: "DISCORD" });
         await interaction.reply({ embeds: [embedReply] });
-        await interaction.member.guild.channels.cache.get("995387208947204257").send({ embeds: [embedReply] });
-        await interaction.member.guild.channels.cache.get("995520998554218557").send({ embeds: [embedReply] });
+        await interaction.member.guild.channels.cache.get(config.prunban.firstChannelID).send({ embeds: [embedReply] });
+        await interaction.member.guild.channels.cache.get(config.prunban.secondChannelID).send({ embeds: [embedReply] });
     },
 };

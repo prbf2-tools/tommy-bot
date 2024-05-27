@@ -1,0 +1,380 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
+    "definitions": {
+        "BanInfo": {
+            "additionalProperties": false,
+            "properties": {
+                "firstChannelID": {
+                    "type": "string"
+                },
+                "secondChannelID": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "firstChannelID",
+                "secondChannelID"
+            ],
+            "type": "object"
+        },
+        "ContactAdmin": {
+            "additionalProperties": false,
+            "properties": {
+                "adminRoleID": {
+                    "type": "string"
+                },
+                "appeal": {
+                    "$ref": "#/definitions/FormConfig"
+                },
+                "application": {
+                    "$ref": "#/definitions/FormConfig"
+                },
+                "report": {
+                    "$ref": "#/definitions/FormConfig"
+                }
+            },
+            "required": [
+                "adminRoleID",
+                "appeal",
+                "application",
+                "report"
+            ],
+            "type": "object"
+        },
+        "Demo": {
+            "additionalProperties": false,
+            "properties": {
+                "destination": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "destination",
+                "source",
+                "url"
+            ],
+            "type": "object"
+        },
+        "Demos": {
+            "additionalProperties": false,
+            "properties": {
+                "bf2": {
+                    "$ref": "#/definitions/Demo"
+                },
+                "channelID": {
+                    "type": "string"
+                },
+                "ftp": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "host": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        },
+                        "username": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "host",
+                        "password",
+                        "username"
+                    ],
+                    "type": "object"
+                },
+                "json": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "destination": {
+                            "type": "string"
+                        },
+                        "source": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "destination",
+                        "source"
+                    ],
+                    "type": "object"
+                },
+                "pr": {
+                    "$ref": "#/definitions/Demo"
+                },
+                "trackerViewerUrl": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "bf2",
+                "channelID",
+                "ftp",
+                "json",
+                "pr",
+                "trackerViewerUrl"
+            ],
+            "type": "object"
+        },
+        "Discord": {
+            "additionalProperties": false,
+            "properties": {
+                "clientID": {
+                    "type": "string"
+                },
+                "guildID": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "clientID",
+                "guildID",
+                "token"
+            ],
+            "type": "object"
+        },
+        "FormConfig": {
+            "additionalProperties": false,
+            "properties": {
+                "private": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "channelID": {
+                            "type": "string"
+                        },
+                        "tags": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "channelID",
+                        "tags"
+                    ],
+                    "type": "object"
+                },
+                "public": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "channelID": {
+                            "type": "string"
+                        },
+                        "tags": {
+                            "items": {
+                                "type": "string"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "channelID",
+                        "tags"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "private",
+                "public"
+            ],
+            "type": "object"
+        },
+        "Log": {
+            "additionalProperties": false,
+            "properties": {
+                "path": {
+                    "type": "string"
+                },
+                "privateChannelID": {
+                    "type": "string"
+                },
+                "publicChannelID": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "path",
+                "privateChannelID",
+                "publicChannelID"
+            ],
+            "type": "object"
+        },
+        "Logs": {
+            "additionalProperties": false,
+            "properties": {
+                "bans": {
+                    "$ref": "#/definitions/Log"
+                },
+                "commands": {
+                    "$ref": "#/definitions/Log"
+                },
+                "joins": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "path": {
+                            "type": "string"
+                        },
+                        "privateChannelID": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "path",
+                        "privateChannelID"
+                    ],
+                    "type": "object"
+                },
+                "tickets": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "path": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "path"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "bans",
+                "commands",
+                "joins",
+                "tickets"
+            ],
+            "type": "object"
+        },
+        "PRSPY": {
+            "additionalProperties": false,
+            "properties": {
+                "detailsChannelID": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "mapChannelID": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "detailsChannelID",
+                "id",
+                "mapChannelID"
+            ],
+            "type": "object"
+        },
+        "Prism": {
+            "additionalProperties": false,
+            "properties": {
+                "auth": {
+                    "$ref": "#/definitions/PrismAuth"
+                },
+                "generalChannelID": {
+                    "type": "string"
+                },
+                "teamkillChannelID": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "auth",
+                "generalChannelID",
+                "teamkillChannelID"
+            ],
+            "type": "object"
+        },
+        "PrismAuth": {
+            "additionalProperties": false,
+            "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "number"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "ip",
+                "password",
+                "port",
+                "username"
+            ],
+            "type": "object"
+        },
+        "Server": {
+            "additionalProperties": false,
+            "properties": {
+                "timezone": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "timezone"
+            ],
+            "type": "object"
+        }
+    },
+    "properties": {
+        "contactadmin": {
+            "$ref": "#/definitions/ContactAdmin"
+        },
+        "demos": {
+            "$ref": "#/definitions/Demos"
+        },
+        "discord": {
+            "$ref": "#/definitions/Discord"
+        },
+        "logs": {
+            "$ref": "#/definitions/Logs"
+        },
+        "prban": {
+            "$ref": "#/definitions/BanInfo"
+        },
+        "prism": {
+            "$ref": "#/definitions/Prism"
+        },
+        "prspy": {
+            "$ref": "#/definitions/PRSPY"
+        },
+        "prunban": {
+            "$ref": "#/definitions/BanInfo"
+        },
+        "server": {
+            "$ref": "#/definitions/Server"
+        }
+    },
+    "required": [
+        "contactadmin",
+        "demos",
+        "discord",
+        "logs",
+        "prban",
+        "prism",
+        "prspy",
+        "prunban",
+        "server"
+    ],
+    "type": "object"
+}
+

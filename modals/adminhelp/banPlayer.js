@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import { writePrism } from "../../functions/handlePRISM.js";
 
 export default {

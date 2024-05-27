@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "ajv": "^8.13.0",
     "always-tail": "^0.2.0",
     "basic-ftp": "^5.0.2",
     "canvas": "^2.11.0",
@@ -12,19 +13,22 @@
     "geoip-lite": "^1.4.6",
     "lowdb": "^1.0.0",
     "request": "^2.88.2",
-    "tail": "^2.2.4"
+    "tail": "^2.2.4",
+    "typescript-json-schema": "^0.63.0",
+    "yaml": "^2.4.2"
   },
-  "name": "mafia-bot",
+  "name": "tommy-bot",
   "version": "0.5.5D",
-  "description": "Bot for MAFIA PR Discord server",
+  "description": "Bot for PR Discord server",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && node bot.js",
+    "start": "node bot.js",
     "dev": "nodemon --ignore logs/ bot.js",
     "lint": "eslint .",
     "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules npx jest",
-    "build": "tsc functions/logs/*.ts --module node16 && tsc functions/logs/commands/*.ts --module node16",
-    "cleanup": "cd functions/logs/ && find . -name '*.js' -delete"
+    "build": "tsc functions/logs/*.ts --module node16 && tsc functions/logs/commands/*.ts --module node16 && tsc config/*.ts --module node16 --resolveJsonModule",
+    "cleanup": "cd functions/logs/ && find . -name '*.js' -delete",
+    "config-schema": "typescript-json-schema config/index.ts Config --noExtraProps --required --o config/config.schema.json"
   },
   "repository": {
     "type": "git",

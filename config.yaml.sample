@@ -1,0 +1,118 @@
+discord:
+    token:
+    clientID:
+    guildID:
+
+
+server:
+    # Host timezone (used to accurately report time to Discord)
+    timezone: "+00:00"
+
+
+prism:
+  auth:
+    ip:
+    port:
+    username:
+    password:
+  generalChannelID:
+  teamkillChannelID:
+
+
+demos:
+  channelID:
+  ftp:
+    host:
+    username:
+    password:
+
+  # URL where tracker viewer can be accesseded
+  # Domain needs to be the same as the one used for prdemo (for CORS)
+  # Example: https://demos.myserver.gg/realitytracker/
+  trackerViewerUrl:
+
+  # source is the path where the files can be found
+  # destination is the path where the files will be uploaded via FTP
+  # url is the URL where the files can be accessed on the internet
+
+  bf2:
+    # Example: /pr/server/mods/pr/demos/
+    source:
+    # Example: demos/bf2/
+    destination:
+    # Example: https://demos.myserver.gg/bf2/
+    url:
+
+  pr:
+    # Example: /pr/server/demos/
+    source:
+    # Example: demos/pr/
+    destination:
+    # Example: https://demos.myserver.gg/pr/
+    url:
+
+  json:
+    # Example: /pr/server/json/
+    source:
+    # Example: demos/json/
+    destination:
+
+
+logs:
+  bans:
+    # {SV_DIR}/mods/pr/settings/banlist_info.log
+    path:
+    publicChannelID:
+    privateChannelID:
+  commands:
+    # {SV_DIR}/admin/logs/ra_adminlog.txt
+    path:
+    publicChannelID:
+    privateChannelID:
+  joinlog:
+    # {SV_DIR}/admin/logs/joinlog.log
+    path:
+    privateChannelID:
+  tickets:
+    # {SV_DIR}/admin/logs/tickets.log
+    path:
+
+
+prspy:
+  # PRSPY server ID
+  # Open your server on PRSPY and grab the ID from the URL
+  # This ID changes on IP or port change (and probably some other things)
+  # Example: ceab9bd17f51d08acc4da77120574bd57e248c98
+  id:
+  mapChannelID:
+  detailsChannelID:
+
+
+contactadmin:
+  # The role that should be tagged when a form is posted
+  adminRoleID:
+  application:
+    public:
+      channelID:
+      tagIDs: []
+      # Example:
+      # tagIDs:
+        # - "123456789012345678"
+        # - "123456789012345678"
+    private:
+      channelID:
+      tagIDs: []
+  appeal:
+    public:
+      channelID:
+      tagIDs: []
+    private:
+      channelID:
+      tagIDs: []
+  report:
+    public:
+      channelID:
+      tagIDs: []
+    private:
+      channelID:
+      tagIDs: []

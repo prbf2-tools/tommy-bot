@@ -1,8 +1,8 @@
 import { EmbedBuilder } from "discord.js";
 import dayjs from "dayjs";
+import config from "../../config.js";
 import { descriptionLine, flagFromIP, prepareDiscordDate } from "./utils.js";
 import { DiscordTimeFormat, UserType } from "./interfaces.js";
-import config from "../../config.js";
 const regex = /\[(?<date>(\d{4})-(\d{2})-(\d{2}))\s(?<time>(\d{2}):(\d{2})(:\d{2})?)\]\s(?<hash>\w+)\s(?<level>\d)\s(?<player>(?<tag>\S*)\s(?<name>\S+))\s(?<created>(\d{4})-(\d{2})-(\d{2}))\s+(?<ip>(\d{1,3}\.?){4})\s+(\((?<legacy>LEGACY)\))?(\((?<vac_ban>VAC BANNED)\))?/;
 export const parseJoinLine = (line) => {
     const match = line.match(regex);
@@ -12,8 +12,8 @@ export const parseJoinLine = (line) => {
     }
     const groups = match.groups;
     return {
-        joined: dayjs(groups.date + "T" + groups.time + config.timezone),
-        created: dayjs(groups.created + "T" + "00:00:00" + config.timezone),
+        joined: dayjs(groups.date + "T" + groups.time + config.server.timezone),
+        created: dayjs(groups.created + "T" + "00:00:00" + config.server.timezone),
         typ: UserType.Player,
         name: groups.name,
         tag: groups.tag,

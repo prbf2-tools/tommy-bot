@@ -1,16 +1,14 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import fs from "fs";
 import pather from "path";
+import { join as joinPath } from "path";
 
 import chokidar from "chokidar";
 import Tail from "always-tail";
 import { createCanvas, loadImage } from "canvas";
 import ftp from "basic-ftp";
 
-import locals from "../localization.json" assert { type: "json"};
 import config from "../config.js";
+import locals from "../localization.json" assert { type: "json"};
 
 import {
     EmbedBuilder,
@@ -22,13 +20,13 @@ import {
 
 const flagsDir = "assets/flags/";
 
-const gunGameWinnerCache = "cache/gungame_winner.txt";
+export const gunGameWinnerCache = "cache/gungame_winner.txt";
 const jsonFormatedCache = "cache/json_formated/";
 const imagesCache = "cache/images/";
 
 export default (client) => {
     client.handleTrackersDemos = async () => {
-        var ticketsLog = config.logs.tickets;
+        var ticketsLog = config.logs.tickets.path;
         if (!fs.existsSync(ticketsLog)) fs.writeFileSync(ticketsLog, "");
         var tailTickets = new Tail(ticketsLog, "\n");
 
@@ -52,18 +50,18 @@ export default (client) => {
         });
 
         //chatlogPath watcherChat
-        var watcherChat = chokidar.watch(config.chatlogsDir, {
-            ignored: ["]/^./", "demos/index.php"],
-            persistent: true,
-        });
-        var chatlogPath = "none";
-        watcherChat.on("add", (path2) => {
-            chatlogPath = pather.basename(path2, ".txt");
-            console.log(`File ${chatlogPath}.txt has been cached`);
-        });
+        // var watcherChat = chokidar.watch(config.chatlogsDir, {
+        //     ignored: ["]/^./", "demos/index.php"],
+        //     persistent: true,
+        // });
+        // var chatlogPath = "none";
+        // watcherChat.on("add", (path2) => {
+        //     chatlogPath = pather.basename(path2, ".txt");
+        //     console.log(`File ${chatlogPath}.txt has been cached`);
+        // });
 
         //demoPath watcherDemo
-        var watcherDemo = chokidar.watch(config.bf2DemosDir, {
+        var watcherDemo = chokidar.watch(config.demos.bf2.source, {
             ignored: ["]/^./", "demos/index.php"],
             persistent: true,
         });
@@ -73,7 +71,7 @@ export default (client) => {
             console.log(`File ${demoPath}.bf2demo has been cached`);
         });
 
-        var watcher = chokidar.watch(config.jsonDir, {
+        var watcher = chokidar.watch(config.demos.json.source, {
             ignored: "/^./",
             persistent: true,
         });
@@ -98,8 +96,8 @@ export default (client) => {
             var demoPathFormat = fileName1.replace("tracker", "demo");
 
             fs.rename(
-                config.bf2DemosDir + demoPath + ".bf2demo",
-                config.bf2DemosDir + demoPathFormat + ".bf2demo",
+                config.demos.bf2.source + demoPath + ".bf2demo",
+                config.demos.bf2.source + demoPathFormat + ".bf2demo",
                 function(err) {
                     if (err) console.log("ERROR: " + err);
                 }
@@ -265,26 +263,28 @@ export default (client) => {
             const file = new AttachmentBuilder(imagesCache + fileName1 + ".png");
             //const filecl = new AttachmentBuilder('logs/chatlogs/'+chatlogPath+'.txt');
             const filetracker = new AttachmentBuilder(
-                config.prDemosDir + fileName1 + ".PRdemo"
+                config.demos.pr.source + fileName1 + ".PRdemo"
             );
             var row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setLabel("Download Battle Recorder")
                     .setStyle(ButtonStyle.Link)
                     .setURL(
-                        "https://www.prmafia.online/br/demos/" + demoPathFormat + ".bf2demo"
+                        config.demos.bf2.url + demoPathFormat + ".bf2demo"
                     ),
                 new ButtonBuilder()
                     .setLabel("Download Tracker")
                     .setStyle(ButtonStyle.Link)
                     .setURL(
-                        "https://www.prmafia.online/br/trackers/" + fileName1 + ".PRdemo"
+                        config.demos.pr.url + fileName1 + ".PRdemo"
                     ),
                 new ButtonBuilder()
                     .setLabel("View Tracker")
                     .setStyle(ButtonStyle.Link)
                     .setURL(
-                        "https://www.prmafia.online/br/realitytracker_master/index.html?demo=../trackers/" +
+                        config.demos.trackerViewerUrl +
+                        "index.html?demo=" +
+                        config.demos.pr.url +
                         fileName1 +
                         ".PRdemo"
                     )
@@ -295,21 +295,21 @@ export default (client) => {
                 clientFTP.ftp.verbose = true;
                 try {
                     await clientFTP.access({
-                        host: process.env.FTP_HOST,
-                        user: process.env.FTP_USER,
-                        password: process.env.FTP_PASS,
+                        host: config.demos.ftp.host,
+                        user: config.demos.ftp.user,
+                        password: config.demos.ftp.password,
                     });
                     await clientFTP.uploadFrom(
                         jsonFormatedCache + fileName1 + ".json",
-                        "br/json_formated/" + fileName1 + ".json"
+                        joinPath(config.demos.json.destination, fileName1) + ".json"
                     );
                     await clientFTP.uploadFrom(
-                        config.prDemosDir + fileName1 + ".PRdemo",
-                        "br/trackers/" + fileName1 + ".PRdemo"
+                        joinPath(config.demos.pr.source, fileName1) + ".PRdemo",
+                        joinPath(config.demos.pr.destination, fileName1) + ".PRdemo"
                     );
                     await clientFTP.uploadFrom(
-                        config.bf2DemosDir + demoPathFormat + ".bf2demo",
-                        "br/demos/" + demoPathFormat + ".bf2demo"
+                        joinPath(config.demos.bf2.source, demoPathFormat) + ".bf2demo",
+                        joinPath(config.demos.bf2.destination, demoPathFormat) + ".bf2demo"
                     );
                     clientFTP.close();
                 } catch (err) {
@@ -318,7 +318,7 @@ export default (client) => {
                 clientFTP.close();
                 console.log("\x1b[36m", "Ready for next round!", "\x1b[0m");
                 await client.channels.cache
-                    .get("995387003409539073")
+                    .get(config.demos.channelID)
                     .send({
                         embeds: [roundEmbed],
                         components: [row],
