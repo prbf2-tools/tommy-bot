@@ -6,7 +6,7 @@ import rand from "csprng";
 import { EmbedBuilder } from "discord.js";
 
 import config from "../config.js";
-import { gungameWinnerCache } from "./handleTrackersDemos.js";
+import { gunGameWinnerCache } from "./handleTrackersDemos.js";
 
 const netClient = new net.Socket();
 
@@ -211,7 +211,7 @@ const messageHandler = (client, messages) => {
                 else if (dataLenght[dataLenght.length - 1].includes("is victorious!") == true) {
                     var ggWinner = dataLenght[dataLenght.length - 1].split(" ");
                     console.log("GUNGAME WINNER::::" + ggWinner[1].slice(0, -2));
-                    fs.writeFile(gungameWinnerCache, ggWinner[1].slice(0, -2), function(err) {
+                    fs.writeFile(gunGameWinnerCache, ggWinner[1].slice(0, -2), function(err) {
                         if (err) {
                             // append failed
                         } else {
